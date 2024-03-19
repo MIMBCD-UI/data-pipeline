@@ -1,45 +1,74 @@
 #!/usr/bin/env python
 
-"""prepare_dataset.py: Script to anonymize DICOM files and prepare dataset."""
+"""
+prepare_dataset.py: Script to anonymize DICOM files and prepare dataset for ML projects.
+"""
 
 __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
-import os
 import pydicom
+from pydicom.filereader import InvalidDicomError
 import csv
 from datetime import datetime
 from pathlib import Path
-from dicomanonymizer import anonymize
+import subprocess
+import logging
 
-# Existing functions like update_id_mapping, extract_info, generate_anon_id remain unchanged
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def anonymize_dicom_file(file_path, output_folder, instance_count, mapping_file):
-  try:
-    ds = pydicom.dcmread(str(file_path))
-    real_id, modality, sequence = extract_info(ds)
-    anon_patient_id = generate_anon_id(real_id)
+def update_id_mapping(mapping_file, real_id, anon_id):
+    with mapping_file.open('a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([real_id, anon_id])
 
-    # Update mapping with real to anonymized ID
-    update_id_mapping(mapping_file, real_id, anon_patient_id)
+def generate_anon_id(real_id):
+    return f"A{real_id[-6:]}"  # Placeholder for actual anonymization logic
 
-    # Use dicom-anonymizer to anonymize the dataset
-    anonymized_ds = anonymize(dataset=ds)
+def is_dicom_file(file_path):
+    if file_path.name.upper() == 'DICOMDIR':
+        return False  # Skip DICOMDIR files
+    try:
+        pydicom.dcmread(str(file_path), stop_before_pixels=True)
+        return True
+    except InvalidDicomError:
+        return False
 
-    # Construct new file name and save the anonymized DICOM
-    exam_date = datetime.strptime(anonymized_ds.StudyDate, '%Y%m%d').strftime('%Y%m%d')
-    new_file_name = f"{anon_patient_id}_{exam_date}_{modality}_{sequence}_{str(instance_count).zfill(5)}.dcm"
-    anonymized_ds.save_as(str(output_folder / new_file_name))
+def should_skip_file(file_name):
+    # Define logic to skip files based on their names or extensions
+    return file_name.upper() in ['DICOMDIR', 'VERSION', 'LOCKFILE']  # Example
 
-    return True, anon_patient_id
-  except Exception as e:
-    print(f"Error processing {file_path}: {e}")
-    return False, None
+def anonymize_dicom_file(file_path, output_folder, mapping_file):
+    output_file_path = output_folder / f"{file_path.stem}_anonymized{file_path.suffix}"
+    try:
+        subprocess.run(["dicom-anonymizer", str(file_path), str(output_file_path)], check=True)
+        logging.info(f"Anonymized file saved to {output_file_path}")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Anonymization failed for {file_path}: {e}")
 
-# The rest of your script for defining paths and processing DICOM files remains the same
+def process_directory(directory, output_folder, mapping_file):
+    for item in directory.rglob('*'):
+        if item.is_file() and not item.name.startswith('.') and not should_skip_file(item.name):
+            if is_dicom_file(item):
+                anonymize_dicom_file(item, output_folder, mapping_file)
+            else:
+                logging.info(f"Skipping non-DICOM file: {item}")
+
+root_directory = Path(__file__).resolve().parent.parent.parent
+source_folder = root_directory / "dicom-images-breast" / "tests" / "testing_data-pipeline_t001" / "known" / "raw"
+output_folder = root_directory / "dataset-multimodal-breast" / "tests" / "dicom"
+mapping_file = root_directory / "dicom-images-breast" / "data" / "mapping.csv"
+
+output_folder.mkdir(parents=True, exist_ok=True)
+if not mapping_file.exists():
+    with mapping_file.open('w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["RealID", "AnonID"])
+
+process_directory(source_folder, output_folder, mapping_file)
