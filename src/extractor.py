@@ -1,8 +1,7 @@
-
 #!/usr/bin/env python
 
 """
-.py: TODO
+extractor.py: TODO
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -15,6 +14,7 @@ __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
 import pydicom
+import logging
 
 def extract_dicom_info(dicom_file):
     """
@@ -24,15 +24,16 @@ def extract_dicom_info(dicom_file):
         dicom_file (str): Path to the DICOM file.
 
     Returns:
-        dict: Dictionary containing extracted information (PatientID, StudyDate, Modality, Sequence).
+        dict: Dictionary containing extracted information (Modality, Side, View, StudyDate, Sequence).
     """
     try:
         ds = pydicom.dcmread(dicom_file)
         info = {
-            "PatientID": ds.PatientID,
-            "StudyDate": ds.StudyDate,
             "Modality": ds.Modality,
-            "Sequence": ds.SequenceName if hasattr(ds, "SequenceName") else "Unknown"
+            "Side": ds.BodyPartExamined if hasattr(ds, "BodyPartExamined") else "NA",
+            "View": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NA",
+            "StudyDate": ds.StudyDate,
+            "Sequence": ds.SequenceName if hasattr(ds, "SequenceName") else "NA"
         }
         return info
     except Exception as e:

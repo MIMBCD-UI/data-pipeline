@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-.py: TODO
+main.py: TODO
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -14,15 +14,15 @@ __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
 import os
+import logging
 from processor import process_directory
 
-if __name__ == "__main__":
-    # Define input and output folders
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def main():
     source_folder = "/Users/francisco/Git/dicom-images-breast/tests/testing_data-pipeline_t001/known/raw"
     output_folder = "/Users/francisco/Git/dataset-multimodal-breast/tests/dicom"
-
-    # Create output folder if it doesn't exist
-    os.makedirs(output_folder, exist_ok=True)
-
-    # Process directory to anonymize DICOM files
     process_directory(source_folder, output_folder)
+
+if __name__ == "__main__":
+    main()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-.py: TODO
+processor.py: TODO
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -14,9 +14,10 @@ __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
 import os
-from extract import extract_dicom_info
-from anonymizer import is_dicom_file, anonymize_dicom_file
 import logging
+from extractor import extract_dicom_info
+from anonymizer import is_dicom_file, anonymize_dicom_file
+import random
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -33,32 +34,43 @@ def process_directory(source_folder, output_folder):
         f.write("Original_ID,Anonymized_ID\n")
 
     for root, dirs, files in os.walk(source_folder):
-        # Ensure output directory structure is maintained
-        relative_root = os.path.relpath(root, source_folder)
-        output_root = os.path.join(output_folder, relative_root)
-        os.makedirs(output_root, exist_ok=True)
-        
-        for i, file in enumerate(files):
+        for file in files:
             input_path = os.path.join(root, file)
             # Check if the file is a DICOM file
-            if not is_dicom_file(input_path):
-                logging.info(f"Skipping non-DICOM file: {input_path}")
-                continue
-            # Extract DICOM information
-            dicom_info = extract_dicom_info(input_path)
-            if dicom_info:
-                anon_patient_id = f"Patient{i+1}"
-                modality = dicom_info["Modality"]
-                date = dicom_info["StudyDate"].replace("-", "")
-                sequence = dicom_info["Sequence"]
-                instance = f"{i+1:03}"
-                # Construct output path
-                relative_path = os.path.relpath(input_path, source_folder)
-                output_path = os.path.join(output_folder, relative_path.replace(".dcm", "_anonymized.dcm"))
-                # Anonymize DICOM files
-                anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, date, sequence, instance)
-                # Write mapping to file
-                original_id = os.path.basename(input_path)
-                anonymized_id = os.path.basename(output_path)
-                with open(mapping_file, "a") as f:
-                    f.write(f"{original_id},{anonymized_id}\n")
+            if is_dicom_file(input_path):
+                # Extract DICOM information
+                dicom_info = extract_dicom_info(input_path)
+                if dicom_info:
+                    # Generate a random integer as the anonymized patient ID
+                    anon_patient_id = f"{random.randint(100000, 999999)}"
+                    modality = dicom_info["Modality"]
+                    side = dicom_info["Side"]
+                    view = dicom_info["View"]
+                    date = dicom_info["StudyDate"].replace("-", "")
+                    sequence = dicom_info["Sequence"]
+                    instance = f"{len(files):03}"
+                    
+                    # Construct filename prefix
+                    if modality == "MG":
+                        filename_prefix = f"{anon_patient_id}_MG"
+                    elif modality == "US":
+                        if side == "Unknown":
+                            filename_prefix = f"{anon_patient_id}_US_NA"
+                        else:
+                            filename_prefix = f"{anon_patient_id}_US_{side}"
+                    elif modality.startswith("MRI"):
+                        filename_prefix = f"{anon_patient_id}_{modality}"
+                    else:
+                        filename_prefix = f"{anon_patient_id}_{modality}"
+                    
+                    # Construct output path
+                    output_path = os.path.join(output_folder, f"{filename_prefix}_{view}_{date}_{sequence}_{instance}.dcm")
+                    
+                    # Anonymize DICOM file
+                    anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, side, view, date, sequence, instance)
+                    
+                    # Write mapping to file
+                    original_id = os.path.basename(input_path)
+                    anonymized_id = os.path.basename(output_path)
+                    with open(mapping_file, "a") as f:
+                        f.write(f"{original_id},{anonymized_id}\n")
