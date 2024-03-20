@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-extractor.py: TODO
+extractor.py: Module to extract relevant information from DICOM files.
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -16,26 +16,28 @@ __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 import pydicom
 import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 def extract_dicom_info(dicom_file):
-    """
-    Extract relevant information from a DICOM file.
+  """
+  Extract relevant information from a DICOM file.
 
-    Args:
-        dicom_file (str): Path to the DICOM file.
+  Args:
+    dicom_file (str): Path to the DICOM file.
 
-    Returns:
-        dict: Dictionary containing extracted information (Modality, Side, View, StudyDate, Sequence).
-    """
-    try:
-        ds = pydicom.dcmread(dicom_file)
-        info = {
-            "Modality": ds.Modality,
-            "Side": ds.BodyPartExamined if hasattr(ds, "BodyPartExamined") else "NA",
-            "View": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NA",
-            "StudyDate": ds.StudyDate,
-            "Sequence": ds.SequenceName if hasattr(ds, "SequenceName") else "NA"
-        }
-        return info
-    except Exception as e:
-        logging.error(f"Failed to extract DICOM info from {dicom_file}: {e}")
-        return None
+  Returns:
+    dict: Dictionary containing extracted information (Modality, Side, View, StudyDate, Sequence).
+  """
+  try:
+    ds = pydicom.dcmread(dicom_file)
+    info = {
+      "Modality": ds.Modality,
+      "Side": ds.BodyPartExamined if hasattr(ds, "BodyPartExamined") else "NA",
+      "View": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NA",
+      "StudyDate": ds.StudyDate,
+      "Sequence": ds.SequenceName if hasattr(ds, "SequenceName") else "NA"
+    }
+    return info
+  except Exception as e:
+    logging.error(f"Failed to extract DICOM info from {dicom_file}: {e}")
+    return None
