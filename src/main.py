@@ -13,19 +13,27 @@ __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
-import os
 import logging
+import os
 from processor import process_directory
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Define source, output, and mapping file paths
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t002")
+output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
+mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping.csv")
+
 def main():
-  """
-  Main function to execute the data processing pipeline.
-  """
-  source_folder = "/Users/francisco/Git/dicom-images-breast/tests/testing_data-pipeline_t001/known/raw"
-  output_folder = "/Users/francisco/Git/dataset-multimodal-breast/tests/dicom"
-  process_directory(source_folder, output_folder)
+  # Print information about the data processing pipeline
+  print("Current directory: ", root_dir)
+  print("Source folder: ", source_folder)
+  print("Output folder: ", output_folder)
+  print("Mapping file: ", mapping_file)
+
+  # Process DICOM files
+  process_directory(source_folder, output_folder, mapping_file)
 
 if __name__ == "__main__":
   main()

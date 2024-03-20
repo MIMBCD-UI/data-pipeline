@@ -35,7 +35,7 @@ def is_dicom_file(file_path):
   except Exception:
     return False
 
-def anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, side, view, date, sequence, instance):
+def anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, view, laterality, date, sequence, instance):
   """
   Anonymize a DICOM file and rename it according to the specified format.
 
@@ -44,7 +44,7 @@ def anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, sid
     output_path (str): Path to save the anonymized DICOM file.
     anon_patient_id (str): Anonymized patient ID.
     modality (str): Imaging modality (e.g., MR, CT, US).
-    side (str): Side of the breast (e.g., L, R, NA for US).
+    laterality (str): Laterality of the breast (e.g., L, R, NA for US).
     view (str): View of the breast (e.g., CC, MLO, NA for US).
     date (str): Date of the exam in YYYYMMDD format.
     sequence (str): Sequence or protocol used within the modality.
@@ -68,7 +68,7 @@ def anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, sid
     if modality == "US":
       filename_suffix = f"_{view}_{date}_{instance}.dcm"
     else:
-      filename_suffix = f"_{side}_{view}_{date}_{sequence}_{instance}.dcm"
+      filename_suffix = f"_{view}_{laterality}_{date}_{sequence}_{instance}.dcm"
     
     # Rename anonymized file according to the specified format
     os.rename(output_path, os.path.join(os.path.dirname(output_path), filename_prefix + filename_suffix))

@@ -31,11 +31,11 @@ def extract_dicom_info(dicom_file):
   try:
     ds = pydicom.dcmread(dicom_file)
     info = {
-      "Modality": ds.Modality,
-      "Side": ds.BodyPartExamined if hasattr(ds, "BodyPartExamined") else "NA",
-      "View": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NA",
-      "StudyDate": ds.StudyDate,
-      "Sequence": ds.SequenceName if hasattr(ds, "SequenceName") else "NA"
+      "Modality": ds.Modality if hasattr(ds, "Modality") else "NOMODALITY",
+      "ImageLaterality": ds.ImageLaterality if hasattr(ds, "ImageLaterality") else "NOIMAGELATERALITY",
+      "ViewPosition": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NOVIEWPOSITION",
+      "StudyDate": ds.StudyDate if hasattr(ds, "StudyDate") else "NOSTUDYDATE",
+      "ScanningSequence": ds.ScanningSequence if hasattr(ds, "ScanningSequence") else "NOSCANNINGSEQUENCE"
     }
     return info
   except Exception as e:
