@@ -30,9 +30,10 @@ def extract_dicom_info(dicom_file):
   """
   try:
     ds = pydicom.dcmread(dicom_file)
+    modality = ds.Modality if hasattr(ds, "Modality") else "NOMODALITY"
     info = {
-      "Modality": ds.Modality if hasattr(ds, "Modality") else "NOMODALITY",
-      "ImageLaterality": ds.ImageLaterality if hasattr(ds, "ImageLaterality") else "NOIMAGELATERALITY",
+      "Modality": modality,
+      "ImageLaterality": ds.ImageLaterality if modality != "MRI" and hasattr(ds, "ImageLaterality") else None,
       "ViewPosition": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NOVIEWPOSITION",
       "StudyDate": ds.StudyDate if hasattr(ds, "StudyDate") else "NOSTUDYDATE",
       "ScanningSequence": ds.ScanningSequence if hasattr(ds, "ScanningSequence") else "NOSCANNINGSEQUENCE"
