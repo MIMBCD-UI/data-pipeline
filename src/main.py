@@ -15,15 +15,20 @@ __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
 import logging
 import os
+from datetime import datetime
 from processor import process_directory
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Define source, output, and mapping file paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t002")
+source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t001")
 output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
-mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping.csv")
+
+# Add timestamp to mapping file name
+timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+mapping_fn = f"mapping_{timestamp}.csv"
+mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", mapping_fn)
 
 def main():
   # Print information about the data processing pipeline

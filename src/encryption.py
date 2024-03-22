@@ -13,11 +13,30 @@ __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
 
+import os
 import hashlib
 
+# Define the root folder path
+root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+secret_folder = os.path.join(root_folder, "secrets", "phrases")
+secret_file_path = os.path.join(secret_folder, "data_pipeline_secret_phrase.txt")
+
+# Define the function to read the secret phrase from an external file
+def read_secret_phrase(rsp_secret_file_path):
+  """
+  Reads the secret phrase from an external file located in the root folder.
+
+  Returns:
+    str: Secret phrase read from the file.
+  """
+  with open(rsp_secret_file_path, "r") as file:
+    rsp_secret_phrase = file.read().strip()
+  return rsp_secret_phrase
+
+# Define the function to encrypt the patient ID
 def encrypt_patient_id(patient_id):
   """
-  Encrypts the patient ID using SHA-256 hash function.
+  Encrypts the patient ID using SHA-256 hash function with a secret phrase.
 
   Args:
     patient_id (str): Original patient ID.
@@ -25,8 +44,24 @@ def encrypt_patient_id(patient_id):
   Returns:
     str: Encrypted patient ID with the same length as the original.
   """
+  # Read the secret phrase from the file
+  print("secret_file_path", secret_file_path)
+  epi_secret_phrase = read_secret_phrase(secret_file_path)
+  print("epi_secret_phrase", epi_secret_phrase)
+  
+  # Combine the patient ID and secret phrase
+  # combined_str = f"{epi_secret_phrase}"
+  combined_str = f"{epi_secret_phrase}{patient_id}"
+
+  print("combined_str", combined_str)
+  print("combined_str.encode()", combined_str.encode())
+  print("hashlib.sha256(combined_str.encode())", hashlib.sha256(combined_str.encode()))
+  
   # Use SHA-256 hash function for encryption
-  encrypted_id = hashlib.sha256(patient_id.encode()).hexdigest()
+  encrypted_id = hashlib.sha256(combined_str.encode()).hexdigest()
+  print("encrypted_id", encrypted_id)
+  
   # Truncate the encrypted ID to match the length of the original patient ID
   encrypted_id = encrypted_id[:len(patient_id)]
+  
   return encrypted_id
