@@ -97,9 +97,9 @@ def process_directory(source_folder, output_folder, mapping_file):
 
             # Construct filename prefix
             if modality == "MG":
-              filename_prefix = f"{anon_patient_id}_{modality}_{breast_laterality}_{view}"
+              filename_prefix = f"{anon_patient_id}_{modality}_{view}_{breast_laterality}"
             elif modality == "US":
-              filename_prefix = f"{anon_patient_id}_{modality}_{breast_laterality}_{view}" if laterality else f"{anon_patient_id}_{modality}_{view}"
+              filename_prefix = f"{anon_patient_id}_{modality}_{view}_{breast_laterality}" if laterality else f"{anon_patient_id}_{modality}_{view}"
             elif modality.startswith("MR"):
               filename_prefix = f"{anon_patient_id}_{modality}"
             else:
@@ -107,10 +107,27 @@ def process_directory(source_folder, output_folder, mapping_file):
 
             # Construct output path
             output_path = os.path.join(output_folder, f"{filename_prefix}_{date}_{instance}.dcm")
+            logging.info(f"Anonymizing DICOM file: {input_path} -> {output_path}")
+
+            # Construct anonymization parameters dictionary
+            anon_params = {
+              'anon_patient_id': anon_patient_id,
+              'modality': modality,
+              'view': view,
+              'laterality': laterality,
+              'date': date,
+              'sequence': sequence,
+              'instance': instance
+            }
+
+            # Create output folder if it doesn't exist
+            # if not os.path.exists(output_folder):
+            #   os.makedirs(output_folder)
+            #   logging.info(f"Created output folder: {output_folder}")
 
             # Anonymize DICOM file
-            anonymize_dicom_file(input_path, output_path, anon_patient_id, modality, view, laterality,
-                                  date, sequence, instance)
+            anonymize_dicom_file(input_path, output_path, anon_params)
+            logging.info(f"Anonymized DICOM file: {input_path} -> {output_path}")
 
         except pydicom.errors.InvalidDicomError:
           logging.warning(f"Ignoring DICOM file with invalid value: {input_path}")

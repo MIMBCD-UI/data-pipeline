@@ -22,8 +22,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # Define source, output, and mapping file paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t003")
-output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test003")
+source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t001")
+output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test001")
 
 # Add timestamp to mapping file name
 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -31,14 +31,21 @@ mapping_fn = f"mapping_{timestamp}.csv"
 mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", mapping_fn)
 
 def main():
-  # Print information about the data processing pipeline
-  print("Current directory: ", root_dir)
-  print("Source folder: ", source_folder)
-  print("Output folder: ", output_folder)
-  print("Mapping file: ", mapping_file)
+  """
+  Main function for running the data processing pipeline.
+  """
+  logging.info("Starting data processing pipeline...")
+  logging.info(f"Source folder: {source_folder}")
+  logging.info(f"Output folder: {output_folder}")
+  logging.info(f"Mapping file: {mapping_file}")
 
+  # Create output folder if it doesn't exist
+  if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
   # Process DICOM files
   process_directory(source_folder, output_folder, mapping_file)
+  logging.info("Data processing pipeline completed.")
 
+# Run main function if script is called directly from the command line
 if __name__ == "__main__":
   main()
