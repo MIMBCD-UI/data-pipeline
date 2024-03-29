@@ -65,7 +65,7 @@ def save_meta_pre(meta_to_save_path, dicom_file_path, anon_params):
     elif anon_params['modality'] == "US":
       filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}"
     elif anon_params['modality'] == "MR":
-      filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}_{anon_params['sequence']}"
+      filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}_{anon_params['series']}"
     else:
       filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}_{anon_params['view']}_{anon_params['date']}"
 
@@ -197,7 +197,7 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     elif anon_params['modality'] == "US":
       filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}"
     elif anon_params['modality'] == "MR":
-      filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}_{anon_params['sequence']}"
+      filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}_{anon_params['series']}"
     else:
       filename_prefix = f"{anon_params['anon_patient_id']}_{anon_params['modality']}_{anon_params['view']}_{anon_params['date']}"
 

@@ -87,10 +87,12 @@ def process_directory(source_folder, output_folder, mapping_file):
             laterality = dicom_info.get("ImageLaterality")
             view = dicom_info.get("ViewPosition", "NOVIEWPOSITION")
             sequence = dicom_info.get("ScanningSequence", "NOSCANNINGSEQUENCE")
+            series = dicom_info.get("SeriesDescription", "NOSERIESDESCRIPTION")
+            instance_number = dicom_info.get("InstanceNumber", "NOINSTANCENUMBER")
             instance_counter += 1
 
-            # Convert instance_counter to 4-digit string
-            instance = f"{instance_counter:04}"
+            # Convert instance_counter to 8-digit string
+            instance = f"{instance_number}_{instance_counter:08}"
 
             # Determine breast side abbreviation (L for left, R for right)
             breast_laterality = laterality.upper() if laterality else ""
@@ -101,7 +103,7 @@ def process_directory(source_folder, output_folder, mapping_file):
             elif modality == "US":
               filename_prefix = f"{anon_patient_id}_{modality}_{view}_{breast_laterality}" if laterality else f"{anon_patient_id}_{modality}_{view}"
             elif modality.startswith("MR"):
-              filename_prefix = f"{anon_patient_id}_{modality}"
+              filename_prefix = f"{anon_patient_id}_{modality}_{series}"
             else:
               filename_prefix = f"{anon_patient_id}_{modality}"
 
@@ -117,6 +119,7 @@ def process_directory(source_folder, output_folder, mapping_file):
               'laterality': laterality,
               'date': date,
               'sequence': sequence,
+              'series': series,
               'instance': instance
             }
 

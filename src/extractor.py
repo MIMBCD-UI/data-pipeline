@@ -35,10 +35,12 @@ def extract_dicom_info(dicom_file):
     info = {
       "PatientID": patientid,
       "Modality": modality,
-      "ImageLaterality": ds.ImageLaterality if modality != "MRI" and hasattr(ds, "ImageLaterality") else "NOIMAGELATERALITY",
+      "ImageLaterality": ds.ImageLaterality if modality != "MR" and hasattr(ds, "ImageLaterality") else "NOIMAGELATERALITY",
       "ViewPosition": ds.ViewPosition if hasattr(ds, "ViewPosition") else "NOVIEWPOSITION",
       "StudyDate": ds.StudyDate if hasattr(ds, "StudyDate") else "NOSTUDYDATE",
-      "ScanningSequence": ds.ScanningSequence if hasattr(ds, "ScanningSequence") else "NOSCANNINGSEQUENCE"
+      "ScanningSequence": ds.ScanningSequence if hasattr(ds, "ScanningSequence") else "NOSCANNINGSEQUENCE",
+      "SeriesDescription": ds.SeriesDescription if hasattr(ds, "SeriesDescription") else "NOSERIESDESCRIPTION",
+      "InstanceNumber": ds.InstanceNumber if hasattr(ds, "InstanceNumber") else "NOINSTANCENUMBER"
     }
     return info
   except Exception as e:
