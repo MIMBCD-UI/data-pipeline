@@ -12,7 +12,9 @@ __license__ = "ACADEMIC & COMMERCIAL"
 __version__ = "0.5.0"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
-__credits__ = ["Carlos Santiago", "Jacinto C. Nascimento"]
+__credits__ = ["Carlos Santiago",
+               "Jacinto C. Nascimento",
+               "Diogo Araújo"]
 
 import pydicom
 import os
