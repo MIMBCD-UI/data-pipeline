@@ -26,8 +26,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 # source_folder = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
 # output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
-source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t002")
-output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test002")
+source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t001")
+output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test001")
+
+print(source_folder + "\n")
+print(output_folder + "\n")
 
 # Add timestamp to mapping file name
 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
