@@ -1,22 +1,56 @@
 #!/bin/bash
+#
+# Author: Francisco Maria Calisto
+# Date: 2024-04-04
+# Usage: ./clean_tests.sh
+# Example: ./clean_tests.sh
+# Description: This script is used to clear all files in the specified directories
+
+# Define home directory
+home="$HOME"
+
+# Define base directories relative to the home directory
+dataset_multimodal_breast="$home/Git/dataset-multimodal-breast"
+dicom_images_breast="$home/Git/dicom-images-breast"
 
 # Define directories to clear
 directories=(
-  "/Users/francisco/Git/dataset-multimodal-breast/tests/dicom/"
-  "/Users/francisco/Git/dataset-multimodal-breast/tests/test001/"
-  "/Users/francisco/Git/dataset-multimodal-breast/tests/test002/"
-  "/Users/francisco/Git/dataset-multimodal-breast/tests/test003/"
-  "/Users/francisco/Git/dataset-multimodal-breast/tests/test004/"
-  "/Users/francisco/Git/dicom-images-breast/data/meta/pre/"
-  "/Users/francisco/Git/dicom-images-breast/data/meta/post/"
-  "/Users/francisco/Git/dicom-images-breast/data/mapping/"
-  "/Users/francisco/Git/dicom-images-breast/data/logs/"
+  "$dataset_multimodal_breast/tests/dicom/"
+  "$dataset_multimodal_breast/tests/test001/"
+  "$dataset_multimodal_breast/tests/test002/"
+  "$dataset_multimodal_breast/tests/test003/"
+  "$dataset_multimodal_breast/tests/test004/"
+  "$dicom_images_breast/data/meta/pre/"
+  "$dicom_images_breast/data/meta/post/"
+  "$dicom_images_breast/data/mapping/"
+  "$dicom_images_breast/data/logs/"
 )
+
+# Function to remove files from a directory and handle permission errors
+remove_files() {
+  local dir="$1"
+  echo "Removing all files in $dir"
+  if [ -d "$dir" ]; then
+    if rm -f "${dir}"* 2>/dev/null; then
+      echo "Files in $dir removed successfully"
+    else
+      echo "Failed to remove files in $dir. Checking permissions..."
+      if [ -w "$dir" ]; then
+        echo "You have write permission for $dir, but there was an error removing files."
+      else
+        echo "You do not have write permission for $dir. Please check permissions."
+      fi
+    fi
+  else
+    echo "$dir does not exist."
+  fi
+}
 
 # Loop through each directory and remove its contents
 for dir in "${directories[@]}"; do
-  echo "Removing all files in $dir"
-  rm -f "${dir}"*
+  remove_files "$dir"
 done
 
 echo "All specified directories have been cleared."
+
+# End of script

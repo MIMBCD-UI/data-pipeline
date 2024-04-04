@@ -8,7 +8,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -168,9 +168,9 @@ def process_directory(source_folder, output_folder, mapping_file):
             logging.info(f"Constructed anonymization parameters dictionary: {anon_params}")
 
             # Create output folder if it doesn't exist
-            # if not os.path.exists(output_folder):
-            #   os.makedirs(output_folder)
-            #   logging.info(f"Created output folder: {output_folder}")
+            if not os.path.exists(output_folder):
+              os.makedirs(output_folder)
+              logging.info(f"Created output folder: {output_folder}")
 
             # Anonymize DICOM file
             logging.info(f"Anonymizing DICOM file: {input_path} -> {output_path}")

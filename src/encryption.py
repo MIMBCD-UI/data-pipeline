@@ -8,7 +8,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -31,6 +31,7 @@ def read_secret_phrase(rsp_secret_file_path):
   Returns:
     str: Secret phrase read from the file.
   """
+  # Open the secret phrase file in read mode
   with open(rsp_secret_file_path, "r") as file:
     # Read the secret phrase from the file
     rsp_secret_phrase = file.read().strip()

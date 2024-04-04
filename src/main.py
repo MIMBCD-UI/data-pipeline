@@ -8,7 +8,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -22,8 +22,8 @@ from processor import process_directory
 
 # Set up logging
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t001")
-output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test001")
+source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t004")
+output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test004")
 
 # Define the folder to save logs
 logs_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -48,8 +48,13 @@ logging.root.addHandler(console_handler)
 logging.root.setLevel(logging.INFO)
 
 # Define the mapping file path
-mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", "mapping.csv")
+logging.info("Loading mapping file...")
 
+# Load mapping file
+mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", "mapping.csv")
+logging.info(f"Mapping file loaded: {mapping_file}")
+
+# Main function
 def main():
   """
   Main function for running the data processing pipeline.
@@ -65,7 +70,6 @@ def main():
 
   # Process DICOM files
   process_directory(source_folder, output_folder, mapping_file)
-
   logging.info("Data processing pipeline completed.")
 
 if __name__ == "__main__":
