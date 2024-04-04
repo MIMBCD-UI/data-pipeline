@@ -209,3 +209,5 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     logging.info(f"Anonymized file saved as {filename_prefix}{filename_suffix}")
   except Exception as e:
     logging.error(f"Anonymization failed for {input_path}: {e}")
+
+# End of file

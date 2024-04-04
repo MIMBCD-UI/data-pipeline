@@ -20,22 +20,35 @@ import os
 from datetime import datetime
 from processor import process_directory
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Define source, output, and mapping file paths
+# Set up logging
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-# source_folder = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
-# output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
 source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t001")
 output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test001")
 
-print(source_folder + "\n")
-print(output_folder + "\n")
+# Define the folder to save logs
+logs_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+logs_fs = f"log_{logs_timestamp}.log"
+logs_folder = os.path.join(root_dir, "dicom-images-breast", "data", "logs")
+logs_file = os.path.join(logs_folder, logs_fs)
 
-# Add timestamp to mapping file name
-timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-mapping_fn = f"mapping_{timestamp}.csv"
-mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", mapping_fn)
+# Create logs folder if it doesn't exist
+if not os.path.exists(logs_folder):
+  os.makedirs(logs_folder)
+
+# Set up logging to write to the file and console
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler = logging.FileHandler(logs_file)
+file_handler.setFormatter(formatter)
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
+# Add both handlers to the root logger
+logging.root.addHandler(file_handler)
+logging.root.addHandler(console_handler)
+logging.root.setLevel(logging.INFO)
+
+# Define the mapping file path
+mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", "mapping.csv")
 
 def main():
   """
@@ -49,10 +62,13 @@ def main():
   # Create output folder if it doesn't exist
   if not os.path.exists(output_folder):
     os.makedirs(output_folder)
+
   # Process DICOM files
   process_directory(source_folder, output_folder, mapping_file)
+
   logging.info("Data processing pipeline completed.")
 
-# Run main function if script is called directly from the command line
 if __name__ == "__main__":
   main()
+
+# End of file

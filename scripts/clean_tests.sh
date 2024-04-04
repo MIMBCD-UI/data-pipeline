@@ -10,6 +10,7 @@ directories=(
   "/Users/francisco/Git/dicom-images-breast/data/meta/pre/"
   "/Users/francisco/Git/dicom-images-breast/data/meta/post/"
   "/Users/francisco/Git/dicom-images-breast/data/mapping/"
+  "/Users/francisco/Git/dicom-images-breast/data/logs/"
 )
 
 # Loop through each directory and remove its contents

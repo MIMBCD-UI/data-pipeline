@@ -61,3 +61,5 @@ def encrypt_patient_id(patient_id):
   encrypted_id = encrypted_id[:len(patient_id)]
   
   return encrypted_id
+
+# End of file

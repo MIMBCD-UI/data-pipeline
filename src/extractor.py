@@ -48,3 +48,5 @@ def extract_dicom_info(dicom_file):
   except Exception as e:
     logging.error(f"Failed to extract DICOM info from {dicom_file}: {e}")
     return None
+
+# End of file
