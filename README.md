@@ -1,4 +1,15 @@
+<meta http-equiv="refresh" content="0; url='https://mimbcd-ui.github.io/data-pipeline/web/index.html'" />
+
 # Data Pipeline
+
+<img src="https://github.com/MIMBCD-UI/data-pipeline/blob/master/assets/diagram.png?raw=true" width="100%" />
+
+[![License](https://img.shields.io/badge/License-Academic%20%2B%20Commercial-blue?style=flat-square)](https://github.com/MIMBCD-UI/data-pipeline/blob/master/LICENSE.md)
+[![Last commit](https://img.shields.io/github/last-commit/MIMBCD-UI/data-pipeline?style=flat-square)](https://github.com/MIMBCD-UI/data-pipeline/commits/master)
+[![OpenCollective](https://opencollective.com/oppr/backers/badge.svg?style=flat-square)](#backers)
+[![OpenCollective](https://opencollective.com/oppr/sponsors/badge.svg?style=flat-square)](#sponsors)
+[![Gitter](https://img.shields.io/gitter/room/gitterHQ/gitter.svg?style=flat-square)](https://gitter.im/opprTeam)
+[![Twitter](https://flat.badgen.net/badge/icon/twitter?icon=twitter&label)](https://twitter.com/opprGroup)
 
 This repository contains a data pipeline for processing medical imaging data. It includes modules for anonymizing DICOM files, encrypting patient IDs, extracting metadata, and processing the data.
 
