@@ -22,8 +22,8 @@ from processor import process_directory
 
 # Set up logging
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-source_folder = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_data-pipeline_t004")
-output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "test004")
+source_folder = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
+output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
 
 # Define the folder to save logs
 logs_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
