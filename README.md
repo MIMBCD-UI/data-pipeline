@@ -2,7 +2,7 @@
 
 # Data Pipeline
 
-<img src="https://github.com/MIMBCD-UI/data-pipeline/blob/master/assets/header.png?raw=true" width="100%" />
+<img src="assets/header.png" width="100%" />
 
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/MIMBCD-UI/data-pipeline/blob/master/LICENSE.md)
 [![Last commit](https://img.shields.io/github/last-commit/MIMBCD-UI/data-pipeline?style=flat-square)](https://github.com/MIMBCD-UI/data-pipeline/commits/master)
