@@ -49,7 +49,13 @@ Our team brings everything together sharing ideas and the same purpose, developi
 
 * Francisco Maria Calisto [ [Academic Website](https://web.tecnico.ulisboa.pt/francisco.calisto) | [ResearchGate](https://www.researchgate.net/profile/Francisco_Maria_Calisto) | [GitHub](https://github.com/FMCalisto) | [Twitter](https://twitter.com/FMCalisto) | [LinkedIn](https://www.linkedin.com/in/fmcalisto/) ]
 
+* Diogo Araújo
+
 * Carlos Santiago [ [ResearchGate](https://www.researchgate.net/profile/Carlos-Santiago-4) ]
+
+* Catarina Barata
+
+* Jacinto C. Nascimento [ [ResearchGate](https://www.researchgate.net/profile/Jacinto_Nascimento) ]
 
 #### Promoters
 
@@ -60,8 +66,6 @@ Our team brings everything together sharing ideas and the same purpose, developi
 * João Maria Abrantes [ [ResearchGate](https://www.researchgate.net/profile/Joao-Abrantes-2) ]
 
 * Nuno Nunes [ [ResearchGate](https://www.researchgate.net/profile/Nuno_Nunes2) ]
-
-* Jacinto C. Nascimento [ [ResearchGate](https://www.researchgate.net/profile/Jacinto_Nascimento) ]
 
 #### Companions
 
@@ -75,7 +79,6 @@ Our team brings everything together sharing ideas and the same purpose, developi
 * Bruno Dias
 * Bruno Oliveira
 * Luís Ribeiro Gomes
-* Pedro Miraldo
 
 #### Acknowledgements
 
