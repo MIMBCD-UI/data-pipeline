@@ -11,7 +11,19 @@
 [![Gitter](https://img.shields.io/gitter/room/gitterHQ/gitter.svg?style=flat-square)](https://gitter.im/opprTeam)
 [![Twitter](https://flat.badgen.net/badge/icon/twitter?icon=twitter&label)](https://twitter.com/opprGroup)
 
-This repository contains a data pipeline for processing medical imaging data. It includes modules for anonymizing DICOM files, encrypting patient IDs, extracting metadata, and processing the data.
+This repository contains a data pipeline for processing medical imaging data. It includes modules for anonymizing DICOM files, encrypting patient IDs, extracting metadata, and processing the data. Additionally, the data pipeline offers flexibility and extensibility, allowing users to customize and expand its functionality according to specific project requirements. With a focus on scalability and performance optimization, the pipeline is capable of handling large volumes of medical imaging data efficiently. Its modular design fosters modularity and code reusability, promoting ease of maintenance and future enhancements.
+
+Below are the key functionalities encapsulated within the pipeline:
+
+1. **Anonymization Module**: This module is responsible for anonymizing DICOM files, ensuring the removal of sensitive patient-related information while adhering to regulatory compliance standards. It sanitizes the data by eliminating identifiable attributes, thereby safeguarding patient privacy.
+
+2. **Encryption Module**: The encryption module adds an extra layer of security by encrypting patient IDs, thus enhancing data protection measures. By encrypting sensitive identifiers, the module ensures that patient information remains confidential and inaccessible to unauthorized parties.
+
+3. **Metadata Extraction**: This module facilitates the extraction of metadata from DICOM files, enabling users to access valuable information embedded within the imaging data. It parses the DICOM headers to retrieve essential metadata attributes, providing insights into the imaging parameters and acquisition details.
+
+4. **Data Processing**: The data processing module orchestrates the sequential execution of various operations, including preprocessing, analysis, and transformation of medical imaging data. It streamlines the processing pipeline, enabling seamless integration of diverse data processing tasks.
+
+Encompassing these modules, the data pipeline provides a robust framework for effectively managing medical imaging data. Whether it involves anonymizing patient information, encrypting identifiers, extracting metadata, or processing imaging data, the pipeline offers a versatile solution tailored to meet the intricate [demands of medical and biomedical imaging](https://medium.com/oppr/medical-imaging-downloader-for-cornerstonejs-and-orthanc-d08c3a508d9b) workflows ([10.1007/s10278-021-00522-6](https://doi.org/10.1007/s10278-021-00522-6)). With its modular architecture, the pipeline facilitates seamless integration into existing healthcare systems and can be customized to accommodate specific use cases and requirements.
 
 ## Modules
 
