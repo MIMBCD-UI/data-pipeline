@@ -22,7 +22,7 @@ from processor import process_directory
 
 # Set up logging
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-source_folder = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
+source_folder = os.path.join(root_dir, "dicom-images-breast", "pipeline", "processed")
 output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
 
 # Define the folder to save logs
