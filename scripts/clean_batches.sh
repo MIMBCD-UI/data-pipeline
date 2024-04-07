@@ -3,8 +3,10 @@
 # Author: Francisco Maria Calisto
 # Date: 2024-04-04
 # Usage: ./clean_batches.sh
-# Example: ./clean_batches.sh
-# Description: This script efficiently clears files in specified directories by removing them in batches, optimized for directories with a very large number of files.
+# Example: ./script/clean_batches.sh
+# Description: This script efficiently clears files in specified
+# directories by removing them in batches, optimized for
+# directories with a very large number of files.
 
 # Define home directory
 home="$HOME"
@@ -36,8 +38,17 @@ remove_files_in_batches() {
     return
   fi
   
+  # Count files before removal
+  file_count=$(find "$dir" -type f | wc -l)
+  echo "Number of files in $dir before removal: $file_count"
+  
   # Use find with -print0 and xargs -0 to efficiently handle many files, including those with special characters
+  echo "Removing files in batches of 100..."
   find "$dir" -type f -print0 | xargs -0 -n100 rm -f
+  
+  # Count files after removal
+  file_count=$(find "$dir" -type f | wc -l)
+  echo "Number of files in $dir after removal: $file_count"
   
   # The -n100 option with xargs processes files in batches of 100 to keep memory usage low
 }

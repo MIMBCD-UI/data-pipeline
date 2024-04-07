@@ -3,7 +3,7 @@
 # Author: Francisco Maria Calisto
 # Date: 2024-04-04
 # Usage: ./clean_tests.sh
-# Example: ./clean_tests.sh
+# Example: ./script/clean_tests.sh
 # Description: This script is used to clear all files in the specified directories
 
 # Define home directory

@@ -146,34 +146,52 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     logging.info(f"Anonymizing patient-related fields...")
 
     # Anonymize Patient Name
-    logging.info(f"Anonymizing Patient Name: {ds.PatientName}")
-    ds.PatientName = "Anonymous"
-    logging.info(f"PatientName: {ds.PatientName}")
+    if hasattr(ds, 'PatientName'):
+      logging.info(f"Anonymizing Patient Name: {ds.PatientName}")
+      ds.PatientName = "Anonymous"
+      logging.info(f"PatientName: {ds.PatientName}")
+    else:
+      logging.info("Attribute 'PatientName' not found in DICOM file.")
 
     # Anonymize Patient ID
-    logging.info(f"Anonymizing Patient ID: {ds.PatientID}")
-    ds.PatientID = anon_params['anon_patient_id']
-    logging.info(f"PatientID: {ds.PatientID}")
+    if hasattr(ds, 'PatientID'):
+      logging.info(f"Anonymizing Patient ID: {ds.PatientID}")
+      ds.PatientID = anon_params['anon_patient_id']
+      logging.info(f"PatientID: {ds.PatientID}")
+    else:
+      logging.info("Attribute 'PatientID' not found in DICOM file.")
 
     # Anonymize Patient's Birth Date
-    logging.info(f"Anonymizing Patient's Birth Date: {ds.PatientBirthDate}")
-    ds.PatientBirthDate = ""
-    logging.info(f"PatientBirthDate: {ds.PatientBirthDate}")
+    if hasattr(ds, 'PatientBirthDate'):
+      logging.info(f"Anonymizing Patient's Birth Date: {ds.PatientBirthDate}")
+      ds.PatientBirthDate = ""
+      logging.info(f"PatientBirthDate: {ds.PatientBirthDate}")
+    else:
+      logging.info("Attribute 'PatientBirthDate' not found in DICOM file.")
     
     # Anonymize Patient's Sex
-    logging.info(f"Anonymizing Patient's Sex: {ds.PatientSex}")
-    ds.PatientSex = ""
-    logging.info(f"PatientSex: {ds.PatientSex}")
+    if hasattr(ds, 'PatientSex'):
+      logging.info(f"Anonymizing Patient's Sex: {ds.PatientSex}")
+      ds.PatientSex = ""
+      logging.info(f"PatientSex: {ds.PatientSex}")
+    else:
+      logging.info("Attribute 'PatientSex' not found in DICOM file.")
     
     # Anonymize Patient's Age
-    logging.info(f"Anonymizing Patient's Age: {ds.PatientAge}")
-    ds.PatientAge = ""
-    logging.info(f"PatientAge: {ds.PatientAge}")
+    if hasattr(ds, 'PatientAge'):
+      logging.info(f"Anonymizing Patient's Age: {getattr(ds, 'PatientAge', 'N/A')}")
+      ds.PatientAge = ""
+      logging.info(f"PatientAge: {ds.PatientAge}")
+    else:
+      logging.info("Attribute 'PatientAge' not found in DICOM file.")
 
     # Anonymize Study Description
-    logging.info(f"Anonymizing Study Description: {ds.StudyDescription}")
-    ds.StudyDescription = ""
-    logging.info(f"StudyDescription: {ds.StudyDescription}")
+    if hasattr(ds, 'StudyDescription'):
+      logging.info(f"Anonymizing Study Description: {ds.StudyDescription}")
+      ds.StudyDescription = ""
+      logging.info(f"StudyDescription: {ds.StudyDescription}")
+    else:
+      logging.info("Attribute 'StudyDescription' not found in DICOM file.")
 
     # Anonymize Series Description
     if hasattr(ds, 'SeriesDescription'):
@@ -186,9 +204,12 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     # Anonymize institution-related fields
 
     # Anonymize Institution Name
-    logging.info(f"Anonymizing Institution Name: {ds.InstitutionName}")
-    ds.InstitutionName = ""
-    logging.info(f"InstitutionName: {ds.InstitutionName}")
+    if hasattr(ds, 'InstitutionName'):
+      logging.info(f"Anonymizing Institution Name: {ds.InstitutionName}")
+      ds.InstitutionName = ""
+      logging.info(f"InstitutionName: {ds.InstitutionName}")
+    else:
+      logging.info("Attribute 'InstitutionName' not found in DICOM file.")
 
     # Anonymize Institution Address
     if hasattr(ds, 'InstitutionAddress'):
@@ -209,9 +230,12 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     # Anonymize referring physician-related fields
 
     # Anonymize Referring Physician's Name
-    logging.info(f"Anonymizing Referring Physician's Name:  {ds.ReferringPhysicianName}")
-    ds.ReferringPhysicianName = ""
-    logging.info(f"ReferringPhysicianName: {ds.ReferringPhysicianName}")
+    if hasattr(ds, 'ReferringPhysicianName'):
+      logging.info(f"Anonymizing Referring Physician's Name:  {ds.ReferringPhysicianName}")
+      ds.ReferringPhysicianName = ""
+      logging.info(f"ReferringPhysicianName: {ds.ReferringPhysicianName}")
+    else:
+      logging.info("Attribute 'ReferringPhysicianName' not found in DICOM file.")
 
     # Anonymize Physician of Record if it exists
     if hasattr(ds, 'PhysiciansOfRecord'):
@@ -241,11 +265,11 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
 
     # Anonymize Requested Procedure Description if it exists
     if hasattr(ds, 'RequestedProcedureDescription'):
-        logging.info(f"Anonymizing Requested Procedure Description: {ds.RequestedProcedureDescription}")
-        ds.RequestedProcedureDescription = ""
-        logging.info(f"RequestedProcedureDescription: {ds.RequestedProcedureDescription}")
+      logging.info(f"Anonymizing Requested Procedure Description: {ds.RequestedProcedureDescription}")
+      ds.RequestedProcedureDescription = ""
+      logging.info(f"RequestedProcedureDescription: {ds.RequestedProcedureDescription}")
     else:
-        logging.info("RequestedProcedureDescription attribute not found.")
+      logging.info("RequestedProcedureDescription attribute not found.")
 
     # Anonymize Performed Procedure Step Description
     if hasattr(ds, 'PerformedProcedureStepDescription'):
@@ -264,20 +288,28 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
       logging.info("Attribute 'ScheduledProcedureStepDescription' not found in DICOM file.")
 
     # Anonymize Private tag data (07a3, 1019) if it exists
-    if (0x07a3, 0x1019) in ds:
+    if hasattr(ds, '(0x07a3, 0x1019)'):
       logging.info(f"Anonymizing Private tag data (07a3, 1019): {ds[(0x07a3, 0x1019)].value}")
       ds[(0x07a3, 0x1019)].value = ""
       logging.info(f"Private tag data (07a3, 1019): {ds[(0x07a3, 0x1019)].value}")
+    else:
+      logging.info("Attribute (0x07a3, 0x1019) not found in DICOM file.")
 
     # Anonymize Private tag data (07a3, 101c) if it exists
-    if (0x07a3, 0x101c) in ds:
+    if hasattr(ds, '(0x07a3, 0x101c)'):
+      logging.info(f"Anonymizing Private tag data (07a3, 101c): {ds[(0x07a3, 0x101c)].value}")
       ds[(0x07a3, 0x101c)].value = ""
+      logging.info(f"Private tag data (07a3, 101c): {ds[(0x07a3, 0x101c)].value}")
+    else:
+      logging.info("Attribute (0x07a3, 0x101c) not found in DICOM file.")
     
     # Anonymize Private tag data (0040, 0007) if it exists
-    if (0x0040, 0x0007) in ds:
+    if hasattr(ds, '(0x0040, 0x0007)'):
       logging.info(f"Anonymizing Private tag data (0040, 0007): {ds[(0x0040, 0x0007)].value}")
       ds[(0x0040, 0x0007)].value = ""
       logging.info(f"Private tag data (0040, 0007): {ds[(0x0040, 0x0007)].value}")
+    else:
+      logging.info("Attribute (0x0040, 0x0007) not found in DICOM file.")
 
     # Iterate over anonymized Requested Procedure Code Sequence
     if hasattr(ds, 'RequestedProcedureCodeSequence'):
@@ -289,6 +321,10 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
           logging.info(f"Anonymizing Requested Procedure Code Sequence item code meaning: {seq_item.CodeMeaning}")
           seq_item.CodeMeaning = ""
           logging.info(f"Requested Procedure Code Sequence item code meaning: {seq_item.CodeMeaning}")
+        else:
+          logging.info("No 'CodeMeaning' attribute found in Requested Procedure Code Sequence item.")
+    else:
+      logging.info("Attribute 'RequestedProcedureCodeSequence' not found in DICOM file.")
 
     # Iterate over Request Attributes Sequence
     logging.info(f"Anonymizing Request Attributes Sequence")
@@ -300,8 +336,10 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
           logging.info(f"Anonymizing Request Attributes Sequence item Scheduled Procedure Step Description: {seq_item.ScheduledProcedureStepDescription}")
           seq_item.ScheduledProcedureStepDescription = ""
           logging.info(f"Request Attributes Sequence item Scheduled Procedure Step Description: {seq_item.ScheduledProcedureStepDescription}")
+        else:
+          logging.info("Attribute 'ScheduledProcedureStepDescription' not found in Request Attributes Sequence item.")
     else:
-      logging.info("Request Attributes Sequence attribute not found.")
+      logging.info("Attribute 'RequestAttributesSequence' not found in DICOM file.")
 
     # Anonymize Concept Name Code Sequence
     logging.info(f"Anonymizing Concept Name Code Sequence")
@@ -309,6 +347,8 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
       logging.info(f"Anonymizing Concept Name Code Sequence item: {ds.ConceptNameCodeSequence[0]}")
       ds.ConceptNameCodeSequence[0].CodeMeaning = ""
       logging.info(f"Concept Name Code Sequence item: {ds.ConceptNameCodeSequence[0].CodeMeaning}")
+    else:
+      logging.info("Attribute 'ConceptNameCodeSequence' not found in DICOM file.")
 
     # Anonymize Performing Physician Name
     if hasattr(ds, 'PerformingPhysicianName'):
@@ -318,14 +358,15 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     else:
       logging.info("Attribute 'PerformingPhysicianName' not found in DICOM file.")
 
-    # Procedure Code Sequence
+    # Anonymize Procedure Code Sequence
     logging.info(f"Anonymizing Procedure Code Sequence")
     if 'ProcedureCodeSequence' in ds:
-      logging.info(f"Anonymizing Procedure Code Sequence item: {seq_item}")
       for seq_item in ds.ProcedureCodeSequence:
         logging.info(f"Anonymizing Procedure Code Sequence item: {seq_item}")
         seq_item.CodeMeaning = ""
         logging.info(f"Procedure Code Sequence item: {seq_item.CodeMeaning}")
+    else:
+      logging.info("Attribute 'ProcedureCodeSequence' not found in DICOM file.")
 
     # Anonymize Code Meaning if it exists
     if hasattr(ds, 'CodeMeaning'):
