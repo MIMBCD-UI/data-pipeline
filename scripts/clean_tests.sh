@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
-# Date: 2024-04-04
+# Created Date: 2024-04-04
+# Revised Date: 2024-04-09
 # Usage: ./clean_tests.sh
 # Example: ./script/clean_tests.sh
 # Description: This script is used to clear all files in the specified directories
@@ -20,6 +21,7 @@ directories=(
   "$dataset_multimodal_breast/tests/test002/"
   "$dataset_multimodal_breast/tests/test003/"
   "$dataset_multimodal_breast/tests/test004/"
+  "$dataset_multimodal_breast/tests/test005/"
   "$dicom_images_breast/data/meta/pre/"
   "$dicom_images_breast/data/meta/post/"
   "$dicom_images_breast/data/mapping/"

@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
-# Date: 2024-04-07
+# Created Date: 2024-04-07
+# Revised Date: 2024-04-09
 # Usage: ./copy_testing_files.sh
 # Example: ./script/copy_testing_files.sh
 # Description: This script reads a list of file paths
