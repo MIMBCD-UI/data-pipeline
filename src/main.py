@@ -28,7 +28,7 @@ output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "di
 # Define the folder to save logs
 logs_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 logs_fs = f"log_{logs_timestamp}.log"
-logs_folder = os.path.join(root_dir, "dicom-images-breast", "data", "logs")
+logs_folder = os.path.join(root_dir, "dicom-images-breast", "data", "logs", "toprocess")
 logs_file = os.path.join(logs_folder, logs_fs)
 
 # Create logs folder if it doesn't exist
