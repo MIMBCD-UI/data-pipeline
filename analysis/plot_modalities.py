@@ -55,10 +55,6 @@ MG_COLUMNS = ['birads_ccl', 'birads_ccr', 'birads_mlol', 'birads_mlor']
 US_COLUMNS = ['birads_usl', 'birads_usr']
 MR_COLUMNS = ['birads_mril', 'birads_mrir']
 
-# Clean data: Convert non-numeric entries to NaN and count only numeric entries
-# for col in MG_COLUMNS + US_COLUMNS + MR_COLUMNS:
-#   df[col] = pd.to_numeric(df[col], errors='coerce')
-
 # Count non-empty valid entries for each modality per patient
 df['MG_count'] = df[MG_COLUMNS].notna().sum(axis=1)
 df['US_count'] = df[US_COLUMNS].notna().sum(axis=1)
