@@ -22,7 +22,7 @@ import plotly.graph_objects as go
 import os
 
 # Define the file names
-apbpc_csv_file = "anonymized_patients_birads_preliminary_curation_12042023.csv"
+apbpc_csv_file = "anonymized_patients_birads_preliminary_curation_17042023.csv"
 pbf_web_file = "plot_birads_frequency.html"
 
 # Set up paths for data input and output
