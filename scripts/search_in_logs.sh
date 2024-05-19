@@ -16,7 +16,7 @@ home="$HOME"
 LOG_DIR="$home/Git/dicom-images-breast/data/logs/processed"
 
 # Hardcoded word to search for in the log files
-SEARCH_WORD="(tudo bem)"
+SEARCH_WORD="0af800"
 
 # Ensure the directory exists
 if [ ! -d "$LOG_DIR" ]; then

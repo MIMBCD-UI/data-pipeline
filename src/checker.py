@@ -32,8 +32,8 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 # Define paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-anonymized_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checking")
-non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw", "test001")
+anonymized_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "dicom")
+non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
 output_csv_file = os.path.join(root_dir, "dicom-images-breast", "data", "checking", "mapping.csv")
 
 # Modality to be used
