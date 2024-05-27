@@ -45,15 +45,15 @@ MR_COLUMNS = ['birads_mril', 'birads_mrir']
 
 # Function to prepare data for plotting
 def prepare_data(columns, label):
-    # Process each column to handle multiple entries and convert to maximum BIRADS score
-    # Supports different delimiters for list values in cells
-    modality_data = df[columns].apply(lambda col: col.apply(
-        lambda x: max(map(int, map(float, str(x).replace(';', ',').split(',')))) if pd.notna(x) else None))
-    modality_data = modality_data.stack().reset_index(name=label)
-    # Filter non-null and valid BIRADS scores (1 to 5)
-    modality_data = modality_data[modality_data[label].isin([1, 2, 3, 4, 5])]
-    # Count occurrences
-    return modality_data.groupby(label).size().reindex([1, 2, 3, 4, 5], fill_value=0)
+  # Process each column to handle multiple entries and convert to maximum BIRADS score
+  # Supports different delimiters for list values in cells
+  modality_data = df[columns].apply(lambda col: col.apply(
+    lambda x: max(map(int, map(float, str(x).replace(';', ',').split(',')))) if pd.notna(x) else None))
+  modality_data = modality_data.stack().reset_index(name=label)
+  # Filter non-null and valid BIRADS scores (1 to 5)
+  modality_data = modality_data[modality_data[label].isin([1, 2, 3, 4, 5])]
+  # Count occurrences
+  return modality_data.groupby(label).size().reindex([1, 2, 3, 4, 5], fill_value=0)
 
 # Prepare data for each modality
 mg_counts = prepare_data(MG_COLUMNS, 'BIRADS_MG')
@@ -62,18 +62,19 @@ mr_counts = prepare_data(MR_COLUMNS, 'BIRADS_MR')
 
 # Create a grouped bar chart
 fig = go.Figure(data=[
-    go.Bar(name='MG', x=mg_counts.index, y=mg_counts.values, marker_color='indianred'),
-    go.Bar(name='US', x=us_counts.index, y=us_counts.values, marker_color='lightblue'),
-    go.Bar(name='MR', x=mr_counts.index, y=mr_counts.values, marker_color='violet')
+  go.Bar(name='MG', x=mg_counts.index, y=mg_counts.values, marker_color='indianred', text=mg_counts.values, textposition='auto'),
+  go.Bar(name='US', x=us_counts.index, y=us_counts.values, marker_color='lightblue', text=us_counts.values, textposition='auto'),
+  go.Bar(name='MR', x=mr_counts.index, y=mr_counts.values, marker_color='#2F4F4F', text=mr_counts.values, textposition='auto')
 ])
 
 # Change the bar mode to group
 fig.update_layout(
-    barmode='group',
-    title="Frequency of BIRADS Scores by Modality",
-    xaxis_title="BIRADS Score",
-    yaxis_title="Frequency",
-    legend_title="Modality"
+  barmode='group',
+  title="Frequency of BIRADS Scores by Modality",
+  xaxis_title="BIRADS Score",
+  yaxis_title="Frequency",
+  legend_title="Modality",
+  legend=dict(font=dict(size=18))  # Increase the font size of modality labels
 )
 
 # Write the figure
