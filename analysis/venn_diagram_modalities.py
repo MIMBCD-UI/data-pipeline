@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-plot_modalities.py: Plot the number of patients per imaging modality.
+venn_diagram_modalities.py: Plot a Venn diagram of patients with different combinations of imaging modalities.
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -16,10 +16,10 @@ __credits__ = ["Carlos Santiago",
                "Diogo Araújo"]
 
 import os
-import time
 import logging
 import pandas as pd
-import plotly.express as px
+from matplotlib_venn import venn3
+import matplotlib.pyplot as plt
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -29,7 +29,7 @@ root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 # Define the file names
 apbpc_csv_file = "anonymized_patients_birads_preliminary_curation_12042023.csv"
-pm_web_file = "plot_modalities.html"
+venn_diagram_file = "venn_diagram_modalities.png"
 
 # Define the folder to read data
 dmb_repo_folder = os.path.join(root_dir, "dataset-multimodal-breast")
@@ -37,10 +37,13 @@ dmb_data_folder = os.path.join(dmb_repo_folder, "data")
 dmb_birads_folder = os.path.join(dmb_data_folder, "birads")
 dmb_birads_file = os.path.join(dmb_birads_folder, apbpc_csv_file)
 
-# Define the folder to save web files
+# Define the folder to save the Venn diagram
 dp_repo_folder = os.path.join(root_dir, "data-pipeline")
-dp_web_folder = os.path.join(dp_repo_folder, "web")
-dp_pm_file = os.path.join(dp_web_folder, pm_web_file)
+dp_fig_folder = os.path.join(dp_repo_folder, "figures")
+dp_venn_file = os.path.join(dp_fig_folder, venn_diagram_file)
+
+# Ensure the output directory exists
+os.makedirs(dp_fig_folder, exist_ok=True)
 
 # Load your dataset
 try:
@@ -56,22 +59,40 @@ US_COLUMNS = ['birads_usl', 'birads_usr']
 MR_COLUMNS = ['birads_mril', 'birads_mrir']
 
 # Count non-empty valid entries for each modality per patient
-df['MG_count'] = df[MG_COLUMNS].notna().sum(axis=1)
-df['US_count'] = df[US_COLUMNS].notna().sum(axis=1)
-df['MR_count'] = df[MR_COLUMNS].notna().sum(axis=1)
+df['MG'] = df[MG_COLUMNS].notna().any(axis=1)
+df['US'] = df[US_COLUMNS].notna().any(axis=1)
+df['MR'] = df[MR_COLUMNS].notna().any(axis=1)
 
-# Determine number of patients per modality
-modality_counts = {
-  'Mammogram': (df['MG_count'] > 0).sum(),
-  'Ultrasound': (df['US_count'] > 0).sum(),
-  'MRI': (df['MR_count'] > 0).sum()
+# Calculate the counts for the Venn diagram
+mg_only = df['MG'] & ~df['US'] & ~df['MR']
+us_only = ~df['MG'] & df['US'] & ~df['MR']
+mr_only = ~df['MG'] & ~df['US'] & df['MR']
+mg_us = df['MG'] & df['US'] & ~df['MR']
+mg_mr = df['MG'] & ~df['US'] & df['MR']
+us_mr = ~df['MG'] & df['US'] & df['MR']
+mg_us_mr = df['MG'] & df['US'] & df['MR']
+
+# Prepare the counts for the Venn diagram
+venn_counts = {
+  '100': mg_only.sum(),
+  '010': us_only.sum(),
+  '001': mr_only.sum(),
+  '110': mg_us.sum(),
+  '101': mg_mr.sum(),
+  '011': us_mr.sum(),
+  '111': mg_us_mr.sum()
 }
 
-# Prepare data for plotting
-modality_df = pd.DataFrame(list(modality_counts.items()), columns=['Modality', 'Number of Patients'])
+# Plot the Venn diagram
+plt.figure(figsize=(10, 10))
+venn = venn3(subsets=venn_counts, set_labels=('Mammogram', 'Ultrasound', 'MRI'))
 
-fig = px.bar(modality_df, x='Modality', y='Number of Patients', title='Number of Patients per Imaging Modality')
-fig.write_html(dp_pm_file)
-logging.info("Plot displayed successfully.")
+# Update layout and save the plot
+plt.title('Venn Diagram of Imaging Modality Combinations')
+plt.savefig(dp_venn_file)
+logging.info("Venn diagram saved successfully to {}".format(dp_venn_file))
+
+# Show the plot (optional, remove if running in a non-GUI environment)
+plt.show()
 
 # End of file

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-plot_modalities.py: Plot the number of patients per imaging modality.
+heatmap_modalities.py: Plot the frequency of patients with different combinations of imaging modalities using a heatmap.
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -16,7 +16,6 @@ __credits__ = ["Carlos Santiago",
                "Diogo Araújo"]
 
 import os
-import time
 import logging
 import pandas as pd
 import plotly.express as px
@@ -29,7 +28,7 @@ root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 # Define the file names
 apbpc_csv_file = "anonymized_patients_birads_preliminary_curation_12042023.csv"
-pm_web_file = "plot_modalities.html"
+heatmap_web_file = "heatmap_modalities.html"
 
 # Define the folder to read data
 dmb_repo_folder = os.path.join(root_dir, "dataset-multimodal-breast")
@@ -40,7 +39,7 @@ dmb_birads_file = os.path.join(dmb_birads_folder, apbpc_csv_file)
 # Define the folder to save web files
 dp_repo_folder = os.path.join(root_dir, "data-pipeline")
 dp_web_folder = os.path.join(dp_repo_folder, "web")
-dp_pm_file = os.path.join(dp_web_folder, pm_web_file)
+dp_heatmap_file = os.path.join(dp_web_folder, heatmap_web_file)
 
 # Load your dataset
 try:
@@ -56,22 +55,40 @@ US_COLUMNS = ['birads_usl', 'birads_usr']
 MR_COLUMNS = ['birads_mril', 'birads_mrir']
 
 # Count non-empty valid entries for each modality per patient
-df['MG_count'] = df[MG_COLUMNS].notna().sum(axis=1)
-df['US_count'] = df[US_COLUMNS].notna().sum(axis=1)
-df['MR_count'] = df[MR_COLUMNS].notna().sum(axis=1)
+df['MG'] = df[MG_COLUMNS].notna().any(axis=1)
+df['US'] = df[US_COLUMNS].notna().any(axis=1)
+df['MR'] = df[MR_COLUMNS].notna().any(axis=1)
 
-# Determine number of patients per modality
-modality_counts = {
-  'Mammogram': (df['MG_count'] > 0).sum(),
-  'Ultrasound': (df['US_count'] > 0).sum(),
-  'MRI': (df['MR_count'] > 0).sum()
-}
+# Create a new column for modality combination
+df['modality_combination'] = df.apply(
+  lambda row: '_'.join([mod for mod in ['MG', 'US', 'MR'] if row[mod]]), axis=1)
 
-# Prepare data for plotting
-modality_df = pd.DataFrame(list(modality_counts.items()), columns=['Modality', 'Number of Patients'])
+# Count the number of patients for each combination
+combination_counts = df['modality_combination'].value_counts().reset_index()
+combination_counts.columns = ['Combination', 'Number of Patients']
 
-fig = px.bar(modality_df, x='Modality', y='Number of Patients', title='Number of Patients per Imaging Modality')
-fig.write_html(dp_pm_file)
-logging.info("Plot displayed successfully.")
+# Prepare data for the heatmap
+heatmap_data = combination_counts.pivot_table(index='Combination', values='Number of Patients', aggfunc='sum').fillna(0)
+
+# Create the heatmap
+fig = px.imshow(
+  heatmap_data.values.reshape(-1, 1),
+  labels=dict(x="Imaging Modality Combination", y="Combination", color="Number of Patients"),
+  x=['Patients'],
+  y=combination_counts['Combination'],
+  color_continuous_scale='Viridis'
+)
+
+# Update layout
+fig.update_layout(
+  title='Frequency of Patients with Different Imaging Modality Combinations',
+  xaxis_title='',
+  yaxis_title='Combination',
+  coloraxis_colorbar=dict(title="Number of Patients")
+)
+
+# Save the plot as an HTML file
+fig.write_html(dp_heatmap_file)
+logging.info("Heatmap displayed successfully.")
 
 # End of file

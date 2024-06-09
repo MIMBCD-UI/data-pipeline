@@ -62,22 +62,21 @@ mr_counts = prepare_data(MR_COLUMNS, 'BIRADS_MR')
 
 # Create a grouped bar chart
 fig = go.Figure(data=[
-  go.Bar(name='MG', x=mg_counts.index, y=mg_counts.values, marker_color='indianred', text=mg_counts.values, textposition='auto'),
-  go.Bar(name='US', x=us_counts.index, y=us_counts.values, marker_color='lightblue', text=us_counts.values, textposition='auto'),
-  go.Bar(name='MR', x=mr_counts.index, y=mr_counts.values, marker_color='#2F4F4F', text=mr_counts.values, textposition='auto')
+  go.Bar(name='MG', x=mg_counts.index, y=mg_counts.values, marker_color='indianred', text=mg_counts.values, textposition='auto', textfont=dict(size=22)),
+  go.Bar(name='US', x=us_counts.index, y=us_counts.values, marker_color='lightblue', text=us_counts.values, textposition='auto', textfont=dict(size=22)),
+  go.Bar(name='MR', x=mr_counts.index, y=mr_counts.values, marker_color='#2F4F4F', text=mr_counts.values, textposition='auto', textfont=dict(size=22))
 ])
 
 # Change the bar mode to group
 fig.update_layout(
   barmode='group',
-  title="Frequency of BIRADS Scores by Modality",
-  xaxis_title="BIRADS Score",
-  yaxis_title="Frequency",
-  legend_title="Modality",
-  legend=dict(font=dict(size=18))  # Increase the font size of modality labels
+  title=dict(text="Frequency of BIRADS Scores by Medical Imaging Modality", font=dict(size=24)),
+  xaxis=dict(title=dict(text="BIRADS Score", font=dict(size=20)), tickfont=dict(size=18)),
+  yaxis=dict(title=dict(text="Frequency of Images", font=dict(size=20)), tickfont=dict(size=18)),
+  legend=dict(title=dict(text="Modality", font=dict(size=28)), font=dict(size=24))
 )
 
 # Write the figure
 fig.write_html(dp_pbf_file)
 
-# End of script
+# End of file

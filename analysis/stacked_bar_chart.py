@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-plot_modalities.py: Plot the number of patients per imaging modality.
+stacked_bar_chart.py: Plot the number of patients per imaging modality.
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -19,7 +19,7 @@ import os
 import time
 import logging
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -29,7 +29,7 @@ root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 # Define the file names
 apbpc_csv_file = "anonymized_patients_birads_preliminary_curation_12042023.csv"
-pm_web_file = "plot_modalities.html"
+pm_web_file = "stacked_bar_chart.html"
 
 # Define the folder to read data
 dmb_repo_folder = os.path.join(root_dir, "dataset-multimodal-breast")
@@ -56,21 +56,46 @@ US_COLUMNS = ['birads_usl', 'birads_usr']
 MR_COLUMNS = ['birads_mril', 'birads_mrir']
 
 # Count non-empty valid entries for each modality per patient
-df['MG_count'] = df[MG_COLUMNS].notna().sum(axis=1)
-df['US_count'] = df[US_COLUMNS].notna().sum(axis=1)
-df['MR_count'] = df[MR_COLUMNS].notna().sum(axis=1)
+df['MG'] = df[MG_COLUMNS].notna().any(axis=1)
+df['US'] = df[US_COLUMNS].notna().any(axis=1)
+df['MR'] = df[MR_COLUMNS].notna().any(axis=1)
 
-# Determine number of patients per modality
-modality_counts = {
-  'Mammogram': (df['MG_count'] > 0).sum(),
-  'Ultrasound': (df['US_count'] > 0).sum(),
-  'MRI': (df['MR_count'] > 0).sum()
-}
+# Create a new column for modality combination
+df['modality_combination'] = df.apply(
+  lambda row: '_'.join([mod for mod in ['MG', 'US', 'MR'] if row[mod]]), axis=1)
+
+# Count the number of patients for each combination
+combination_counts = df['modality_combination'].value_counts().reset_index()
+combination_counts.columns = ['Combination', 'Number of Patients']
+
+# Define the order of combinations for the stacked bar chart
+combination_order = ['MG', 'US', 'MR', 'MG_US', 'MG_MR', 'US_MR', 'MG_US_MR']
 
 # Prepare data for plotting
-modality_df = pd.DataFrame(list(modality_counts.items()), columns=['Modality', 'Number of Patients'])
+plot_data = combination_counts.set_index('Combination').reindex(combination_order).fillna(0)
 
-fig = px.bar(modality_df, x='Modality', y='Number of Patients', title='Number of Patients per Imaging Modality')
+# Create the stacked bar chart
+fig = go.Figure()
+
+for combination in combination_order:
+  fig.add_trace(go.Bar(
+    x=['Patients'],
+    y=[plot_data.loc[combination, 'Number of Patients']],
+    name=combination,
+    text=[plot_data.loc[combination, 'Number of Patients']],
+    textposition='auto'
+  ))
+
+# Update layout
+fig.update_layout(
+  barmode='stack',
+  title='Number of Patients per Imaging Modality Combination',
+  xaxis_title='',
+  yaxis_title='Number of Patients',
+  legend_title='Modality Combination'
+)
+
+# Save the plot as an HTML file
 fig.write_html(dp_pm_file)
 logging.info("Plot displayed successfully.")
 
