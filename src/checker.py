@@ -12,6 +12,7 @@ Key Functions:
 
 Intended Use Case:
 - This script is intended for use in environments where maintaining a connection between anonymized and non-anonymized medical imaging data is crucial. It is particularly useful in scenarios requiring validation of anonymization processes or in studies involving the comparison of anonymized data against the original datasets, such as in the MIMBCD-UI initiative.
+
 """
 
 __author__ = "Francisco Maria Calisto"
