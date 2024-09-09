@@ -1,7 +1,17 @@
 #!/usr/bin/env python
 
 """
-checker.py: Compare two DICOM files and save paths to CSV.
+checker.py:
+
+This script compares anonymized and non-anonymized DICOM files to identify matching files based on the `InstanceNumber` metadata. It traverses specified directories, reads DICOM files, and checks for matches. The paths of the matching DICOM files are then saved to a CSV file for further analysis or verification.
+
+Key Functions:
+- Identify and validate DICOM files in the anonymized and non-anonymized directories.
+- Compare DICOM files based on `InstanceNumber` to find matching pairs.
+- Save the paths of matched DICOM files to a CSV file for traceability.
+
+Intended Use Case:
+- This script is intended for use in environments where maintaining a connection between anonymized and non-anonymized medical imaging data is crucial. It is particularly useful in scenarios requiring validation of anonymization processes or in studies involving the comparison of anonymized data against the original datasets, such as in the MIMBCD-UI initiative.
 """
 
 __author__ = "Francisco Maria Calisto"

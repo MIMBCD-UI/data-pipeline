@@ -13,7 +13,6 @@ Key Functions:
 
 Intended Use Case:
 - This script is intended for environments where maintaining patient privacy through anonymization is crucial while ensuring that medical imaging files are correctly matched and organized based on their metadata. It is particularly relevant in scenarios involving large datasets of breast imaging (e.g., mammograms).
-
 """
 
 __author__ = "Francisco Maria Calisto"
