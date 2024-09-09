@@ -1,14 +1,25 @@
 #!/usr/bin/env python
 
 """
-compare.py: Compare anonymized and non-anonymized DICOM files, rename them based on metadata, and move to a checked directory.
+compare.py: 
+
+This script processes and compares anonymized and non-anonymized DICOM files, typically used in medical imaging. It matches DICOM files based on specific metadata, such as `InstanceNumber`, `ViewPosition`, and `ImageLaterality`. Once matched, the script renames the anonymized files using the metadata and organizes them into a designated directory for further analysis or storage.
+
+Key Functions:
+- Load a mapping between anonymized and real patient IDs from a CSV file.
+- Identify and validate DICOM files within specified directories.
+- Extract and compare relevant metadata from anonymized and non-anonymized DICOM files.
+- Rename files according to metadata (e.g., `ViewPosition`, `ImageLaterality`) and move them to a 'checked' directory for finalized processing.
+
+Intended Use Case:
+- This script is intended for environments where maintaining patient privacy through anonymization is crucial while ensuring that medical imaging files are correctly matched and organized based on their metadata. It is particularly relevant in scenarios involving large datasets of breast imaging (e.g., mammograms).
 """
 
 __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago", "Catarina Barata", "Jacinto C. Nascimento", "Diogo Araújo"]
