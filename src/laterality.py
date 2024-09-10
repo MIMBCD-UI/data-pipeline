@@ -110,7 +110,7 @@ def check_patient_id(dicom_file, anonymized_id):
   """Check if the Patient ID inside the DICOM file matches the anonymized ID."""
   logging.info(f"Checking Patient ID in DICOM file {dicom_file}")
   try:
-    logging   logging.info(f"Reading DICOM file {dicom_file}")
+    logging.info(f"Reading DICOM file {dicom_file}")
     dicom_data = pydicom.dcmread(dicom_file)
     logging.info(f"Reading DICOM file {dicom_file} metadata")
     dicom_patient_id = dicom_data.get("PatientID", "Unknown")
