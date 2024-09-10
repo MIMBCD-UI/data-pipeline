@@ -47,13 +47,13 @@ git clone https://github.com/MIMBCD-UI/data-pipeline.git
 
 ```bash
 cd data-pipeline
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 3. Run the main script to execute the data processing pipeline:
 
 ```bash
-python main.py
+python3 src/main.py
 ```
 
 ## DICOM Post-Processing Verification Pipeline
@@ -90,16 +90,16 @@ To execute the pipeline, follow the order outlined above:
 
 ```bash
 # Step 1: Run laterality.py
-python3 laterality.py
+python3 src/laterality.py
 
 # Step 2: Run compare.py
-python3 compare.py
+python3 src/compare.py
 
 # Step 3: Run checker.py
-python3 checker.py
+python3 src/checker.py
 
 # Step 4: Run reanonimyzer.py
-python3 reanonimyzer.py
+python3 src/reanonimyzer.py
 ```
 
 ## Contributing
