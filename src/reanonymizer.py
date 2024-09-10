@@ -1,17 +1,31 @@
 #!/usr/bin/env python
 
 """
-reanonimyzer.py: Compare anonymized and non-anonymized DICOM files, correct filenames and metadata based on mappings, and move to a checked directory.
+reanonimyzer.py:
+
+This script processes DICOM files by comparing anonymized and non-anonymized versions to ensure that the anonymized patient IDs are correct. It corrects any discrepancies in filenames and DICOM metadata based on predefined mappings, and then moves the corrected files to a designated 'checked' directory. This ensures the integrity and consistency of patient data, which is crucial for maintaining accurate and reliable datasets in research projects like the MIMBCD-UI initiative.
+
+Key Functions:
+- Load and use mappings between real and anonymized patient IDs to validate and correct DICOM files.
+- Compare instance numbers between anonymized and non-anonymized files to identify corresponding pairs.
+- Update filenames and DICOM metadata to reflect the correct anonymized patient ID.
+- Move processed and validated files to a designated directory for further use.
+
+Intended Use Case:
+- This script is vital in environments where maintaining the integrity of anonymized medical imaging data is crucial. It supports the correct linkage between anonymized and non-anonymized datasets, ensuring accurate data management in research projects like the MIMBCD-UI initiative.
 """
 
 __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
-__credits__ = ["Carlos Santiago", "Catarina Barata", "Jacinto C. Nascimento", "Diogo Araújo"]
+__credits__ = ["Carlos Santiago",
+               "Catarina Barata",
+               "Jacinto C. Nascimento",
+               "Diogo Araújo"]
 
 import os
 import logging
