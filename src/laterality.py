@@ -1,7 +1,17 @@
 #!/usr/bin/env python
 
 """
-laterality.py: Convert anonymized patient IDs to real patient IDs, extract DICOM metadata, and rename/move files.
+laterality.py:
+
+This script processes DICOM files by converting anonymized patient IDs to their corresponding real patient IDs, extracting specific metadata (such as laterality and instance number), and then renaming and moving the files accordingly. It is designed to ensure that medical imaging data is correctly linked and organized, particularly in the context of anonymization, making it useful for research projects like the MIMBCD-UI initiative.
+
+Key Functions:
+- Load mappings between anonymized and real patient IDs from a CSV file.
+- Validate and extract metadata (e.g., laterality, instance number) from DICOM files.
+- Rename files based on extracted metadata and move them to the appropriate directory.
+
+Intended Use Case:
+- This script is essential in environments where it is necessary to maintain connections between anonymized and non-anonymized medical imaging data, ensuring proper file management and data integrity within research projects like the MIMBCD-UI initiative.
 """
 
 __author__ = "Francisco Maria Calisto"
