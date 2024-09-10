@@ -22,7 +22,10 @@ __license__ = "ACADEMIC & COMMERCIAL"
 __version__ = "1.0.1"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
-__credits__ = ["Carlos Santiago", "Catarina Barata", "Jacinto C. Nascimento", "Diogo Araújo"]
+__credits__ = ["Carlos Santiago",
+               "Catarina Barata",
+               "Jacinto C. Nascimento",
+               "Diogo Araújo"]
 
 import os
 import csv
