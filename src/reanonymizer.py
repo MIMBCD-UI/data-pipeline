@@ -44,13 +44,16 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 # Mapping file name
 mapping_fn = "mamo_patients_mapping_data_curated_21052024.csv"
 
-# Define paths
+# Define root directory
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+# Define paths
 non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
 checking_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checking")
 checked_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checked")
 mapping_csv_path = os.path.join(root_dir, "dataset-multimodal-breast", "data", "inconsistencies", mapping_fn)
 
+# Debugging output for paths
 # non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "tests", "testing_checking_test001")
 # checking_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "tests_to_delete", "checking_test001")
 # checked_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "tests_to_delete", "checked_test001")

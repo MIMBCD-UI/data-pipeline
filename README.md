@@ -56,6 +56,51 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## DICOM Post-Processing Verification Pipeline
+
+This section details the scripts involved in processing DICOM files within the MIMBCD-UI data pipeline. These scripts are responsible for handling various aspects of anonymization, metadata extraction, and file validation, ensuring the integrity and consistency of medical imaging data.
+
+### Post-Processing Verification Workflow Overview
+
+The following scripts should be executed in sequence as part of the data processing pipeline. Each script serves a specific purpose and contributes to the overall goal of maintaining high-quality, anonymized medical imaging data.
+
+1. **`laterality.py` - Initial Metadata Extraction and File Preparation**
+   - **Purpose:** This script processes DICOM files by converting anonymized patient IDs to their corresponding real patient IDs. It extracts critical metadata such as laterality (which side of the body the image represents) and renames/moves the files accordingly.
+   - **When to Run:** Start with this script to organize and prepare the DICOM files before any further processing.
+   - **Outcome:** The files are organized with accurate metadata, making them ready for comparison and validation.
+
+2. **`compare.py` - Verification of Anonymized and Non-Anonymized File Correspondence**
+   - **Purpose:** This script compares anonymized and non-anonymized DICOM files to ensure they match based on metadata like `InstanceNumber`, `ViewPosition`, and `ImageLaterality`. It also renames the files and moves them to a "checked" directory for further processing.
+   - **When to Run:** Run this script after `laterality.py` to verify the correspondence between anonymized and non-anonymized files.
+   - **Outcome:** Matched files are confirmed and organized in the "checked" directory.
+
+3. **`checker.py` - File Comparison and Logging**
+   - **Purpose:** This script provides an additional verification step by comparing anonymized and non-anonymized DICOM files based on `InstanceNumber`. It logs the paths of matching files to a CSV file for auditing and further analysis.
+   - **When to Run:** Execute this script after `compare.py` to ensure a documented trail of matched files.
+   - **Outcome:** A CSV file is generated, listing the paths of successfully matched files, ensuring traceability in the pipeline.
+
+4. **`reanonimyzer.py` - Final Correction and Re-Anonymization**
+   - **Purpose:** The final script in the sequence, `reanonimyzer.py`, corrects any discrepancies in the anonymized patient IDs and metadata based on predefined mappings. It updates the filenames and DICOM metadata as necessary and moves the corrected files to the final "checked" directory.
+   - **When to Run:** This script should be run last, after `checker.py`, to finalize the anonymization and ensure data consistency.
+   - **Outcome:** The DICOM files are fully re-anonymized, with all metadata and filenames accurately reflecting the correct anonymized patient IDs, ensuring they are ready for secure storage or further analysis.
+
+### How to Run the Scripts
+
+To execute the pipeline, follow the order outlined above:
+
+```bash
+# Step 1: Run laterality.py
+python3 laterality.py
+
+# Step 2: Run compare.py
+python3 compare.py
+
+# Step 3: Run checker.py
+python3 checker.py
+
+# Step 4: Run reanonimyzer.py
+python3 reanonimyzer.py
+
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request with your proposed changes.
