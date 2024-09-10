@@ -100,6 +100,7 @@ python3 checker.py
 
 # Step 4: Run reanonimyzer.py
 python3 reanonimyzer.py
+```
 
 ## Contributing
 
