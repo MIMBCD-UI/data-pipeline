@@ -27,6 +27,7 @@ Encompassing these modules, the data pipeline provides a robust framework for ef
 
 ## Modules
 
+- `identifier.py`: This script processes DICOM files in the "checking" folder by extracting the SOP Instance UID and comparing it to files in the "raw" folder. If a match is found, it renames the file with the corresponding Anonymized Patient ID and moves it to the "identified" folder.
 - `anonymizer.py`: Module for anonymizing DICOM files by removing patient-related information and renaming them according to a specified format.
 - `encryption.py`: Module for encrypting patient IDs.
 - `extractor.py`: Module for extracting metadata from DICOM files.
@@ -60,45 +61,72 @@ python3 src/main.py
 
 This section details the scripts involved in processing DICOM files within the MIMBCD-UI data pipeline. These scripts are responsible for handling various aspects of anonymization, metadata extraction, and file validation, ensuring the integrity and consistency of medical imaging data.
 
+### Data Post-Processing Curation Order
+
+The data post-processing curation involves a series of steps to verify, anonymize, and validate DICOM files. Inside the [`curation/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/curation) folder of the [`dataset-multimodal-breast`](https://github.com/MIMBCD-UI/dataset-multimodal-breast) repository, containing DICOM files at different stages of processing.
+
+The following sequence outlines the steps involved in the post-processing pipeline inside the [`curation/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/curation) folder:
+
+<img src="https://github.com/MIMBCD-UI/meta-private/blob/master/diagrams/schematics/data_pipeline_folder_workflows.png?raw=true" width="100%" />
+
+If at any stage we find the file to be incorrect, we move it to the `curation/unsolvable/` folder. If the file is correct, we move it to the `dicom/` folder.
+
 ### Post-Processing Verification Workflow Overview
 
 The following scripts should be executed in sequence as part of the data processing pipeline. Each script serves a specific purpose and contributes to the overall goal of maintaining high-quality, anonymized medical imaging data.
 
-1. **`laterality.py` - Initial Metadata Extraction and File Preparation**
+1. **`identifier.py` - Initial DICOM File Identification**
+   - **Purpose:** This script processes DICOM files in the "checking" folder by extracting the SOP Instance UID and comparing it to files in the "raw" folder. If a match is found, it renames the file with the corresponding Anonymized Patient ID and moves it to the "identified" folder.
+   - **When to Run:** Run this script first to identify and organize the DICOM files before any further processing.
+   - **Outcome:** The files are identified and renamed based on the SOP Instance UID, making them ready for further processing.
+
+2. **`laterality.py` - Initial Metadata Extraction and File Preparation**
    - **Purpose:** This script processes DICOM files by converting anonymized patient IDs to their corresponding real patient IDs. It extracts critical metadata such as laterality (which side of the body the image represents) and renames/moves the files accordingly.
-   - **When to Run:** Start with this script to organize and prepare the DICOM files before any further processing.
+   - **When to Run:** Run this script after `identifier.py` to further organize and prepare the DICOM files.
    - **Outcome:** The files are organized with accurate metadata, making them ready for comparison and validation.
 
-2. **`compare.py` - Verification of Anonymized and Non-Anonymized File Correspondence**
+3. **`compare.py` - Verification of Anonymized and Non-Anonymized File Correspondence**
    - **Purpose:** This script compares anonymized and non-anonymized DICOM files to ensure they match based on metadata like `InstanceNumber`, `ViewPosition`, and `ImageLaterality`. It also renames the files and moves them to a "checked" directory for further processing.
    - **When to Run:** Run this script after `laterality.py` to verify the correspondence between anonymized and non-anonymized files.
    - **Outcome:** Matched files are confirmed and organized in the "checked" directory.
 
-3. **`checker.py` - File Comparison and Logging**
+4. **`checker.py` - File Comparison and Logging**
    - **Purpose:** This script provides an additional verification step by comparing anonymized and non-anonymized DICOM files based on `InstanceNumber`. It logs the paths of matching files to a CSV file for auditing and further analysis.
    - **When to Run:** Execute this script after `compare.py` to ensure a documented trail of matched files.
    - **Outcome:** A CSV file is generated, listing the paths of successfully matched files, ensuring traceability in the pipeline.
 
-4. **`reanonimyzer.py` - Final Correction and Re-Anonymization**
+5. **`reanonimyzer.py` - Final Correction and Re-Anonymization**
    - **Purpose:** The final script in the sequence, `reanonimyzer.py`, corrects any discrepancies in the anonymized patient IDs and metadata based on predefined mappings. It updates the filenames and DICOM metadata as necessary and moves the corrected files to the final "checked" directory.
    - **When to Run:** This script should be run last, after `checker.py`, to finalize the anonymization and ensure data consistency.
    - **Outcome:** The DICOM files are fully re-anonymized, with all metadata and filenames accurately reflecting the correct anonymized patient IDs, ensuring they are ready for secure storage or further analysis.
 
 ### How to Run the Scripts
 
-To execute the pipeline, follow the order outlined above:
+1. To execute the pipeline, follow the order outlined above:
 
 ```bash
-# Step 1: Run laterality.py
+# Step 1: Run main.py
+python3 src/main.py
+```
+
+2. After that, open the `curation/verifynig/` folder and move the files to the `curation/checking/` folder.
+
+```bash
+# Step 3: Run identifier.py
+python3 src/identifier.py
+```
+
+# Step 4: Run laterality.py
 python3 src/laterality.py
 
-# Step 2: Run compare.py
+# Step 5: Run compare.py
 python3 src/compare.py
 
-# Step 3: Run checker.py
+# Step 6: Run checker.py
 python3 src/checker.py
 
-# Step 4: Run reanonimyzer.py
+```
+# Step 7: Run reanonimyzer.py
 python3 src/reanonimyzer.py
 ```
 

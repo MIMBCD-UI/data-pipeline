@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 
 """
-compare.py: 
+compare.py:
 
-This script processes and compares anonymized and non-anonymized DICOM files, typically used in medical imaging. It matches DICOM files based on specific metadata, such as `InstanceNumber`, `ViewPosition`, and `ImageLaterality`. Once matched, the script renames the anonymized files using the metadata and organizes them into a designated directory for further analysis or storage.
+WARNING: This script is designed to process DICOM files specifically for the MG (Mammography) modality. 
+It checks for the "_MG_" pattern in the filenames and will only process files that match this pattern. 
+If you intend to process other modalities, you will need to modify the script accordingly.
+
+This script processes and compares anonymized and non-anonymized DICOM files, typically used in medical imaging. It matches DICOM files based on specific metadata, such as `SOPInstanceUID`, `ViewPosition`, and `ImageLaterality`. Once matched, the script renames the anonymized files using the metadata and organizes them into a designated directory for further analysis or storage.
 
 Key Functions:
 - Load a mapping between anonymized and real patient IDs from a CSV file.
 - Identify and validate DICOM files within specified directories.
 - Extract and compare relevant metadata from anonymized and non-anonymized DICOM files.
-- Rename files according to metadata (e.g., `ViewPosition`, `ImageLaterality`) and move them to a 'checked' directory for finalized processing.
+- Rename files according to metadata (e.g., `ViewPosition`, `ImageLaterality`) and move them to a 'compared' directory for finalized processing.
 
 Intended Use Case:
 - This script is intended for environments where maintaining patient privacy through anonymization is crucial while ensuring that medical imaging files are correctly matched and organized based on their metadata. It is particularly relevant in scenarios involving large datasets of breast imaging (e.g., mammograms).
@@ -19,7 +23,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "1.0.1"
+__version__ = "1.0.3"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -47,26 +51,32 @@ mapping_fn = "mamo_patients_mapping_data.csv"
 # Define paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
-checking_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checking")
-checked_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checked")
-mapping_csv = os.path.join(root_dir, "dataset-multimodal-breast", "data", "inconsistencies", mapping_fn)
+comparing_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "comparing")
+compared_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "compared")
+mapping_csv = os.path.join(root_dir, "data-images-breast", "data", "mapping", mapping_fn)
 
 # Debugging output for paths
 logging.info(f"Mapping CSV: {mapping_csv}")
 logging.info(f"Non-anonymized directory: {non_anonymized_dir}")
-logging.info(f"Checking directory: {checking_dir}")
-logging.info(f"Checked directory: {checked_dir}")
+logging.info(f"Comparing directory: {comparing_dir}")
+logging.info(f"Compared directory: {compared_dir}")
 
 def load_mapping(csv_file):
   """Load mapping of anonymized_patient_id to real_patient_id from CSV."""
   logging.info(f"Loading mapping from {csv_file}")
   mapping = {}
-  with open(csv_file, mode='r') as file:
-    reader = csv.reader(file)
-    next(reader)  # Skip header
-    for row in reader:
-      real_id, anonymized_id = row
-      mapping[anonymized_id] = real_id
+  try:
+    with open(csv_file, mode='r') as file:
+      reader = csv.reader(file)
+      next(reader)  # Skip header
+      for row in reader:
+        if len(row) >= 2:
+          real_id, anonymized_id = row[:2]
+          mapping[anonymized_id] = real_id
+        else:
+          logging.warning(f"Invalid row in CSV: {row}")
+  except Exception as e:
+    logging.error(f"Failed to load mapping from {csv_file}: {e}")
   return mapping
 
 def is_dicom_file(filepath):
@@ -75,6 +85,7 @@ def is_dicom_file(filepath):
     pydicom.dcmread(filepath)
     return True
   except Exception:
+    logging.warning(f"File {filepath} is not a valid DICOM file.")
     return False
 
 def get_metadata(dicom_file, tags):
@@ -98,36 +109,46 @@ def find_dicom_files(search_path):
 
 def process_dicom(process_path, mapping):
   """Process DICOM files in process_path, map to real_patient_id, and extract metadata."""
-  dicom_tags = ["PatientID", "InstanceNumber", "ViewPosition", "ImageLaterality"]
-  
+  dicom_tags = ["PatientID", "SOPInstanceUID", "ViewPosition", "ImageLaterality"]
+
   for root, _, files in os.walk(process_path):
     for file in files:
       if "_MG_" in file:
         anonymized_id = file.split('_')[0]
         real_patient_id = mapping.get(anonymized_id)
         dicom_file_path = os.path.join(root, file)
-        
+
         if real_patient_id:
           non_anonymized_dicom_files = find_dicom_files(non_anonymized_dir)
           for non_anonymized_file in non_anonymized_dicom_files:
-            instance_number_1 = get_metadata(dicom_file_path, ["InstanceNumber"])["InstanceNumber"]
-            instance_number_2 = get_metadata(non_anonymized_file, ["InstanceNumber"])["InstanceNumber"]
-            
-            if instance_number_1 == instance_number_2:
+            sop_uid_1 = get_metadata(dicom_file_path, ["SOPInstanceUID"])["SOPInstanceUID"]
+            sop_uid_2 = get_metadata(non_anonymized_file, ["SOPInstanceUID"])["SOPInstanceUID"]
+
+            if sop_uid_1 == sop_uid_2:
               view_position = get_metadata(non_anonymized_file, ["ViewPosition"])["ViewPosition"]
               image_laterality = get_metadata(non_anonymized_file, ["ImageLaterality"])["ImageLaterality"]
-              
+
               if view_position == "Unknown" or image_laterality == "Unknown":
+                logging.warning(f"ViewPosition or ImageLaterality is unknown for file {non_anonymized_file}. Skipping file.")
                 continue
-              
+
               new_file_name = rename_file(file, view_position, image_laterality)
-              move_file(dicom_file_path, os.path.join(checked_dir, new_file_name))
+              move_file(dicom_file_path, os.path.join(compared_dir, new_file_name))
+              logging.info(f"Moved and renamed file {file} to {new_file_name}")
+              break
+          else:
+            logging.warning(f"No matching SOPInstanceUID found for {file}.")
+        else:
+          logging.warning(f"Anonymized ID {anonymized_id} not found in mapping.")
 
 def rename_file(file_name, view_position, image_laterality):
   """Rename the file based on the view position and image laterality."""
   parts = file_name.split('_')
-  parts[2] = view_position
-  parts[3] = image_laterality
+  if len(parts) > 3:
+    parts[2] = view_position
+    parts[3] = image_laterality
+  else:
+    logging.warning(f"Unexpected file name format: {file_name}. Skipping rename.")
   return '_'.join(parts)
 
 def move_file(src_path, dest_path):
@@ -135,12 +156,17 @@ def move_file(src_path, dest_path):
   if os.path.exists(src_path):
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     shutil.move(src_path, dest_path)
+    logging.info(f"File moved to {dest_path}")
+  else:
+    logging.warning(f"File not found: {src_path}")
 
 if __name__ == '__main__':
   logging.info("Starting processing...")
   mapping = load_mapping(mapping_csv)
-  logging.info("Mapping loaded!")
-  process_dicom(checking_dir, mapping)
-  logging.info("Processing complete!")
+  if not mapping:
+    logging.error("Mapping could not be loaded. Exiting...")
+  else:
+    process_dicom(comparing_dir, mapping)
+    logging.info("Processing complete!")
 
 # End of file

@@ -8,7 +8,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -18,62 +18,68 @@ __credits__ = ["Carlos Santiago",
 
 import logging
 import os
+from pathlib import Path
 from datetime import datetime
-from processor import process_directory
+from processing.processor import process_directory
+from config.logging_config import setup_logging
 
-# Define the source and output folders
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-source_folder = os.path.join(root_dir, "dicom-images-breast", "pipeline", "processed")
-output_folder = os.path.join(root_dir, "dataset-multimodal-breast", "tests", "dicom")
+# Define paths
+# root_dir = Path(__file__).resolve().parents[2]
+# source_folder = root_dir / "dicom-images-breast" / "known" / "raw"
+# output_folder = root_dir / "dataset-multimodal-breast" / "data" / "curation" / "verifying"
+# logs_folder = root_dir / "dicom-images-breast" / "data" / "logs" / "toprocess"
+# mapping_file = root_dir / "dicom-images-breast" / "data" / "mapping" / "mapping.csv"
 
-# Define the folder to save logs
-logs_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-logs_fs = f"log_{logs_timestamp}.log"
-logs_folder = os.path.join(root_dir, "dicom-images-breast", "data", "logs", "toprocess")
-logs_file = os.path.join(logs_folder, logs_fs)
+# Define paths
+root_dir = Path(__file__).resolve().parents[2]
+source_folder = root_dir / "dicom-images-breast" / "tests" / "test001"
+output_folder = root_dir / "dataset-multimodal-breast" / "data" / "curation" / "verifying"
+logs_folder = root_dir / "dicom-images-breast" / "data" / "logs" / "toprocess"
+mapping_file = root_dir / "dicom-images-breast" / "data" / "mapping" / "mapping.csv"
 
-# Create logs folder if it doesn't exist
-if not os.path.exists(logs_folder):
-  os.makedirs(logs_folder)
+# Setup logging
+def setup_logging(logs_folder):
+  """
+  Set up logging configuration.
+  """
+  logs_folder.mkdir(parents=True, exist_ok=True)
+  logs_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+  log_file = logs_folder / f"log_{logs_timestamp}.log"
 
-# Set up logging to write to the file and console
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-file_handler = logging.FileHandler(logs_file)
-file_handler.setFormatter(formatter)
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
-
-# Add both handlers to the root logger
-logging.root.addHandler(file_handler)
-logging.root.addHandler(console_handler)
-logging.root.setLevel(logging.INFO)
-
-# Define the mapping file path
-logging.info("Loading mapping file...")
-
-# Load mapping file
-mapping_file = os.path.join(root_dir, "dicom-images-breast", "data", "mapping", "mapping.csv")
-logging.info(f"Mapping file loaded: {mapping_file}")
+  logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+      logging.FileHandler(log_file),
+      logging.StreamHandler()
+    ]
+  )
+  logging.info(f"Logging to {log_file}")
 
 # Main function
 def main():
   """
   Main function for running the data processing pipeline.
   """
-  logging.info("Starting data processing pipeline...")
-  logging.info(f"Source folder: {source_folder}")
-  logging.info(f"Output folder: {output_folder}")
-  logging.info(f"Mapping file: {mapping_file}")
+  try:
+    logging.info("Starting data processing pipeline...")
+    logging.info(f"Source folder: {source_folder}")
+    logging.info(f"Output folder: {output_folder}")
+    logging.info(f"Mapping file: {mapping_file}")
 
-  # Create output folder if it doesn't exist
-  if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
+    # Create output folder if it doesn't exist
+    output_folder.mkdir(parents=True, exist_ok=True)
 
-  # Process DICOM files
-  process_directory(source_folder, output_folder, mapping_file)
-  logging.info("Data processing pipeline completed.")
+    # Process DICOM files
+    process_directory(source_folder, output_folder, mapping_file)
+    logging.info("Data processing pipeline completed.")
+    
+  except Exception as e:
+    logging.error(f"An error occurred: {e}")
+    raise
 
 if __name__ == "__main__":
+  setup_logging(logs_folder)
   main()
 
 # End of file

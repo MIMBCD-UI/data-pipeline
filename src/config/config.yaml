@@ -1,0 +1,11 @@
+# config.yaml
+
+# Logging configuration
+logging:
+  level: INFO
+  log_file: logs/data_pipeline.log
+
+# Web configuration
+web:
+  host: 0.0.0.0
+  port: 8080

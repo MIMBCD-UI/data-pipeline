@@ -8,13 +8,13 @@ It checks for the "_US_" pattern in the filenames and will only process files th
 If you intend to process other modalities, you will need to modify the script accordingly.
 
 This script processes DICOM files by mapping anonymized patient IDs to their corresponding real patient IDs, 
-extracting specific metadata (such as laterality and instance number), and then renaming and moving the files accordingly. 
+extracting specific metadata (such as laterality and SOP Instance UID), and then renaming and moving the files accordingly. 
 It ensures that medical imaging data is correctly linked and organized, particularly in the context of anonymization, 
 making it essential for research projects like the MIMBCD-UI initiative.
 
 Key Functions:
 - Load mappings between anonymized and real patient IDs from a CSV file.
-- Validate and extract metadata (e.g., laterality, instance number) from DICOM files.
+- Validate and extract metadata (e.g., laterality, SOP Instance UID) from DICOM files.
 - Rename files based on extracted metadata and move them to the appropriate directory.
 
 Intended Use Case:
@@ -31,7 +31,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.2.4"
+__version__ = "0.2.8"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -59,15 +59,17 @@ mapping_fn = "mamo_patients_mapping_data.csv"
 # Define paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
-checking_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checking")
-checked_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "checked")
-mapping_csv = os.path.join(root_dir, "dataset-multimodal-breast", "data", "inconsistencies", mapping_fn)
+verifying_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "verifying")
+incongruities_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "incongruities")
+unsolvable_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "unsolvable")
+mapping_csv = os.path.join(root_dir, "data-images-breast", "data", "mapping", mapping_fn)
 
 # Debugging output for paths
 logging.info(f"Mapping CSV: {mapping_csv}")
 logging.info(f"Non-anonymized directory: {non_anonymized_dir}")
-logging.info(f"Checking directory: {checking_dir}")
-logging.info(f"Checked directory: {checked_dir}")
+logging.info(f"Verifying directory: {verifying_dir}")
+logging.info(f"Incongruities directory: {incongruities_dir}")
+logging.info(f"Unsolvable directory: {unsolvable_dir}")
 
 def load_mapping(csv_file):
   """Load mapping of anonymized_patient_id to real_patient_id from CSV."""
@@ -101,18 +103,22 @@ def get_laterality(dicom_file):
   """Extract laterality from DICOM metadata."""
   try:
     dicom_data = pydicom.dcmread(dicom_file)
-    return dicom_data.get("ImageLaterality", "Unknown")
+    laterality = dicom_data.get("ImageLaterality", "_NA_")
+    if laterality not in ["L", "R"]:  # Ensure only valid laterality values
+      logging.warning(f"Invalid or missing laterality for {dicom_file}. Setting to '_NA_'.")
+      laterality = "_NA_"
+    return laterality
   except Exception as e:
     logging.warning(f"Failed to read laterality from {dicom_file}: {e}")
-    return "Unknown"
+    return "_NA_"
 
-def get_instance_number(dicom_file):
-  """Extract instance number from DICOM metadata."""
+def get_sop_instance_uid(dicom_file):
+  """Extract SOP Instance UID from DICOM metadata."""
   try:
     dicom_data = pydicom.dcmread(dicom_file)
-    return dicom_data.get("InstanceNumber", None)
+    return dicom_data.get("SOPInstanceUID", None)
   except Exception as e:
-    logging.warning(f"Failed to read instance number from {dicom_file}: {e}")
+    logging.warning(f"Failed to read SOP Instance UID from {dicom_file}: {e}")
     return None
 
 def check_patient_id(dicom_file, anonymized_id):
@@ -152,21 +158,22 @@ def process_dicom(process_path, mapping):
         if real_patient_id:
           dicom_files = find_real_patient_dicom(non_anonymized_dir)
           for dicom_file in dicom_files:
-            # Compare instance numbers
-            instance_number_1 = get_instance_number(dicom_file_path)
-            instance_number_2 = get_instance_number(dicom_file)
-            if instance_number_1 is None or instance_number_2 is None or instance_number_1 != instance_number_2:
-              logging.warning(f"Instance number mismatch: {instance_number_1} vs {instance_number_2}")
+            # Compare SOP Instance UIDs
+            sop_uid_1 = get_sop_instance_uid(dicom_file_path)
+            sop_uid_2 = get_sop_instance_uid(dicom_file)
+            if sop_uid_1 is None or sop_uid_2 is None or sop_uid_1 != sop_uid_2:
+              logging.warning(f"SOP Instance UID mismatch: {sop_uid_1} vs {sop_uid_2}")
+              move_to_unsolvable(dicom_file_path, file)
               continue
             
             laterality = get_laterality(dicom_file)
-            if laterality == "Unknown":
-              logging.warning(f"Laterality is unknown for DICOM file {dicom_file}")
-              continue
-            
-            new_file_name = rename_file(file, laterality)
-            move_file(dicom_file_path, os.path.join(checked_dir, new_file_name))
-            logging.info(f"Moved and renamed file {file} to {new_file_name}")
+            if laterality == "_NA_":
+              logging.warning(f"Laterality is '_NA_' for DICOM file {dicom_file}")
+              move_to_unsolvable(dicom_file_path, file)
+            else:
+              new_file_name = rename_file(file, laterality)
+              move_file(dicom_file_path, os.path.join(incongruities_dir, new_file_name))
+              logging.info(f"Moved and renamed file {file} to {new_file_name} in incongruities directory.")
 
 def rename_file(file_name, laterality):
   """Rename the file based on the laterality."""
@@ -183,11 +190,17 @@ def move_file(src_path, dest_path):
   else:
     logging.warning(f"File not found: {src_path}")
 
+def move_to_unsolvable(src_path, file):
+  """Move files to the unsolvable directory if they cannot be processed."""
+  new_file_name = rename_file(file, "_NA_")
+  move_file(src_path, os.path.join(unsolvable_dir, new_file_name))
+  logging.info(f"Moved and renamed file {file} to {new_file_name} in unsolvable directory.")
+
 if __name__ == '__main__':
   logging.info("Starting processing...")
   mapping = load_mapping(mapping_csv)
   logging.info("Mapping loaded!")
-  process_dicom(checking_dir, mapping)
+  process_dicom(verifying_dir, mapping)
   logging.info("Processing complete!")
 
 # End of file

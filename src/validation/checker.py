@@ -3,11 +3,11 @@
 """
 checker.py:
 
-This script compares anonymized and non-anonymized DICOM files to identify matching files based on the `InstanceNumber` metadata. It traverses specified directories, reads DICOM files, and checks for matches. The paths of the matching DICOM files are then saved to a CSV file for further analysis or verification.
+This script compares anonymized and non-anonymized DICOM files to identify matching files based on the `SOPInstanceUID` metadata. It traverses specified directories, reads DICOM files, and checks for matches. The paths of the matching DICOM files are then saved to a CSV file for further analysis or verification.
 
 Key Functions:
 - Identify and validate DICOM files in the anonymized and non-anonymized directories.
-- Compare DICOM files based on `InstanceNumber` to find matching pairs.
+- Compare DICOM files based on `SOPInstanceUID` to find matching pairs.
 - Save the paths of matched DICOM files to a CSV file for traceability.
 
 Intended Use Case:
@@ -18,7 +18,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 __status__ = "Development"
 __copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
@@ -42,7 +42,7 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 # Define paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-anonymized_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "dicom")
+anonymized_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "unchecked")
 non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
 output_csv_file = os.path.join(root_dir, "dicom-images-breast", "data", "checking", "mapping.csv")
 
@@ -77,8 +77,8 @@ def compare_dicom_files(anonymized_path, non_anonymized_path, output_csv):
       continue
     anonymized_dicom = pydicom.dcmread(anonymized_filepath)
 
-    if not hasattr(anonymized_dicom, 'InstanceNumber'):
-      logging.warning(f"InstanceNumber not found in DICOM file: {anonymized_filepath}")
+    if not hasattr(anonymized_dicom, 'SOPInstanceUID'):
+      logging.warning(f"SOPInstanceUID not found in DICOM file: {anonymized_filepath}")
       continue
 
     for non_anonymized_filepath in non_anonymized_files:
@@ -88,10 +88,10 @@ def compare_dicom_files(anonymized_path, non_anonymized_path, output_csv):
         continue
 
       non_anonymized_dicom = pydicom.dcmread(non_anonymized_filepath)
-      if not hasattr(non_anonymized_dicom, 'InstanceNumber'):
+      if not hasattr(non_anonymized_dicom, 'SOPInstanceUID'):
         continue
 
-      if (anonymized_dicom.InstanceNumber == non_anonymized_dicom.InstanceNumber):
+      if anonymized_dicom.SOPInstanceUID == non_anonymized_dicom.SOPInstanceUID:
         matching_paths.append((anonymized_filepath, non_anonymized_filepath))
         break
 
