@@ -63,13 +63,13 @@ This section details the scripts involved in processing DICOM files within the M
 
 ### Data Post-Processing Curation Order
 
-The data post-processing curation involves a series of steps to verify, anonymize, and validate DICOM files. Inside the [`curation/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/curation) folder of the [`dataset-multimodal-breast`](https://github.com/MIMBCD-UI/dataset-multimodal-breast) repository, containing DICOM files at different stages of processing.
+The data post-processing curation involves a series of steps to verify, anonymize, and validate DICOM files. Inside the [`curation/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/tree/main/data/curation) folder of the [`dataset-multimodal-breast`](https://github.com/MIMBCD-UI/dataset-multimodal-breast) repository, containing DICOM files at different stages of processing.
 
-The following sequence outlines the steps involved in the post-processing pipeline inside the [`curation/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/curation) folder:
+The following sequence outlines the steps involved in the post-processing pipeline inside the [`curation/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/tree/main/data/curation) folder:
 
 <img src="https://github.com/MIMBCD-UI/meta-private/blob/master/diagrams/schematics/data_pipeline_folder_workflows.png?raw=true" width="100%" />
 
-If at any stage we find the file to be incorrect, we move it to the `curation/unsolvable/` folder. If the file is correct, we move it to the `dicom/` folder.
+If at any stage we find the file to be incorrect, we move it to the [`curation/unsolvable/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/tree/main/data/curation/unsolvable) folder. If the file is correct, we move it to the [`dicom/`](https://github.com/MIMBCD-UI/dataset-multimodal-breast/tree/main/data/dicom) folder.
 
 ### Post-Processing Verification Workflow Overview
 
