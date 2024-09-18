@@ -3,44 +3,28 @@
 """
 laterality.py:
 
-WARNING: This script is designed to process DICOM files specifically for the US (ultrasound) modality. 
-It checks for the "_US_" pattern in the filenames and will only process files that match this pattern. 
-If you intend to process other modalities, you will need to modify the script accordingly.
+This script processes DICOM files by checking for the "Modality" and "Laterality" DICOM tags. It ensures that medical imaging data 
+is correctly linked and organized, particularly in the context of anonymization, for both US (ultrasound) and MG (mammography) modalities.
 
-This script processes DICOM files by mapping anonymized patient IDs to their corresponding real patient IDs, 
-extracting specific metadata (such as laterality and SOP Instance UID), and then renaming and moving the files accordingly. 
-It ensures that medical imaging data is correctly linked and organized, particularly in the context of anonymization, 
-making it essential for research projects like the MIMBCD-UI initiative.
+Files are moved based on laterality:
+- To the "incongruities" folder if laterality is found in the DICOM tags and correctly matches the filename.
+- To the "unsolvable" folder if laterality is missing or cannot be matched.
 
-Key Functions:
-- Load mappings between anonymized and real patient IDs from a CSV file.
-- Validate and extract metadata (e.g., laterality, SOP Instance UID) from DICOM files.
-- Rename files based on extracted metadata and move them to the appropriate directory.
-
-Intended Use Case:
-- This script is crucial in environments where maintaining connections between anonymized and non-anonymized 
-  medical imaging data is necessary, ensuring proper file management and data integrity within research projects like the MIMBCD-UI initiative.
-
-Expected Input:
-- DICOM files in a specific directory structure with filenames that include the anonymized patient ID.
-- A CSV file containing mappings from anonymized patient IDs to real patient IDs.
-
+This script is especially useful for managing anonymized imaging data for research projects.
 """
 
 __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.2.8"
+__version__ = "0.4.1"
 __status__ = "Development"
-__copyright__ = "Copyright 2024, Instituto Superior Técnico (IST)"
 __credits__ = ["Carlos Santiago",
                "Catarina Barata",
                "Jacinto C. Nascimento",
                "Diogo Araújo"]
 
 import os
-import csv
 import logging
 import pydicom
 import shutil
@@ -48,159 +32,145 @@ import warnings
 from urllib3.exceptions import NotOpenSSLWarning
 
 # Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Suppress warnings
+# Suppress specific warnings
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
-# Mapping file name
-mapping_fn = "mamo_patients_mapping_data.csv"
-
-# Define paths
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
-verifying_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "verifying")
-incongruities_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "incongruities")
-unsolvable_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curating", "unsolvable")
-mapping_csv = os.path.join(root_dir, "data-images-breast", "data", "mapping", mapping_fn)
+# Define paths for DICOM processing
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+verifying_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "verifying")
+incongruities_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "incongruities")
+unsolvable_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "unsolvable")
 
 # Debugging output for paths
-logging.info(f"Mapping CSV: {mapping_csv}")
-logging.info(f"Non-anonymized directory: {non_anonymized_dir}")
 logging.info(f"Verifying directory: {verifying_dir}")
 logging.info(f"Incongruities directory: {incongruities_dir}")
 logging.info(f"Unsolvable directory: {unsolvable_dir}")
 
-def load_mapping(csv_file):
-  """Load mapping of anonymized_patient_id to real_patient_id from CSV."""
-  logging.info(f"Loading mapping from {csv_file}")
-  mapping = {}
-  try:
-    with open(csv_file, mode='r') as file:
-      reader = csv.reader(file)
-      next(reader)  # Skip header
-      logging.info("Reading mapping data...")
-      for row in reader:
-        if len(row) < 2:
-          logging.warning(f"Invalid row in CSV: {row}")
-          continue
-        real_id, anonymized_id = row
-        mapping[anonymized_id] = real_id
-  except Exception as e:
-    logging.error(f"Failed to load mapping from {csv_file}: {e}")
-  return mapping
-
 def is_dicom_file(filepath):
-  """Check if a file is a DICOM file by attempting to read it."""
+  """
+  Check if the given file is a valid DICOM file.
+  
+  Args:
+    filepath (str): Path to the file to check.
+
+  Returns:
+    bool: True if the file is a valid DICOM file, False otherwise.
+  """
   try:
-    pydicom.dcmread(filepath)
+    pydicom.dcmread(filepath, stop_before_pixels=True)
+    logging.debug(f"File {filepath} is a valid DICOM file.")
     return True
+  except pydicom.errors.InvalidDicomError:
+    logging.warning(f"File {filepath} is not a valid DICOM file.")
+    return False
   except Exception as e:
-    logging.warning(f"File {filepath} is not a DICOM file: {e}")
+    logging.warning(f"Unexpected error reading file {filepath}: {e}")
     return False
 
-def get_laterality(dicom_file):
-  """Extract laterality from DICOM metadata."""
+def get_dicom_tag(dicom_file, tag):
+  """
+  Extract a specified DICOM tag from the DICOM metadata.
+  
+  Args:
+    dicom_file (str): Path to the DICOM file.
+    tag (str): Tag to extract (e.g., 'Modality', 'ImageLaterality').
+
+  Returns:
+    str: Value of the specified tag or an empty string if not found.
+  """
   try:
     dicom_data = pydicom.dcmread(dicom_file)
-    laterality = dicom_data.get("ImageLaterality", "_NA_")
-    if laterality not in ["L", "R"]:  # Ensure only valid laterality values
-      logging.warning(f"Invalid or missing laterality for {dicom_file}. Setting to '_NA_'.")
-      laterality = "_NA_"
-    return laterality
+    value = dicom_data.get(tag, "")
+    logging.debug(f"File {dicom_file} has {tag}: {value}.")
+    return value
   except Exception as e:
-    logging.warning(f"Failed to read laterality from {dicom_file}: {e}")
-    return "_NA_"
+    logging.warning(f"Failed to read {tag} from {dicom_file}: {e}")
+    return ""
 
-def get_sop_instance_uid(dicom_file):
-  """Extract SOP Instance UID from DICOM metadata."""
-  try:
-    dicom_data = pydicom.dcmread(dicom_file)
-    return dicom_data.get("SOPInstanceUID", None)
-  except Exception as e:
-    logging.warning(f"Failed to read SOP Instance UID from {dicom_file}: {e}")
-    return None
-
-def check_patient_id(dicom_file, anonymized_id):
-  """Check if the Patient ID inside the DICOM file matches the anonymized ID."""
-  try:
-    dicom_data = pydicom.dcmread(dicom_file)
-    dicom_patient_id = dicom_data.get("PatientID", "Unknown")
-    if dicom_patient_id != anonymized_id:
-      logging.warning(f"Patient ID mismatch in {dicom_file}: found {dicom_patient_id}, expected {anonymized_id}")
-  except Exception as e:
-    logging.warning(f"Failed to read Patient ID from {dicom_file}: {e}")
-
-def find_real_patient_dicom(search_path):
-  """Find all DICOM files in the search directory."""
-  dicom_files = []
-  for root, _, files in os.walk(search_path):
-    for file in files:
-      filepath = os.path.join(root, file)
-      if is_dicom_file(filepath):
-        dicom_files.append(filepath)
-  return dicom_files
-
-def process_dicom(process_path, mapping):
-  """Process DICOM files in process_path, map to real_patient_id, and extract laterality."""
-  logging.info(f"Processing DICOM files in directory: {process_path}")
-  for root, _, files in os.walk(process_path):
-    for file in files:
-      if "_US_" in file:
-        logging.info(f"Found file matching pattern: {file}")
-        anonymized_id = file.split('_')[0]
-        real_patient_id = mapping.get(anonymized_id)
-        dicom_file_path = os.path.join(root, file)
-        
-        # Check patient ID in the DICOM file
-        check_patient_id(dicom_file_path, anonymized_id)
-        
-        if real_patient_id:
-          dicom_files = find_real_patient_dicom(non_anonymized_dir)
-          for dicom_file in dicom_files:
-            # Compare SOP Instance UIDs
-            sop_uid_1 = get_sop_instance_uid(dicom_file_path)
-            sop_uid_2 = get_sop_instance_uid(dicom_file)
-            if sop_uid_1 is None or sop_uid_2 is None or sop_uid_1 != sop_uid_2:
-              logging.warning(f"SOP Instance UID mismatch: {sop_uid_1} vs {sop_uid_2}")
-              move_to_unsolvable(dicom_file_path, file)
-              continue
-            
-            laterality = get_laterality(dicom_file)
-            if laterality == "_NA_":
-              logging.warning(f"Laterality is '_NA_' for DICOM file {dicom_file}")
-              move_to_unsolvable(dicom_file_path, file)
-            else:
-              new_file_name = rename_file(file, laterality)
-              move_file(dicom_file_path, os.path.join(incongruities_dir, new_file_name))
-              logging.info(f"Moved and renamed file {file} to {new_file_name} in incongruities directory.")
-
-def rename_file(file_name, laterality):
-  """Rename the file based on the laterality."""
-  parts = file_name.split('_')
-  parts.insert(2, laterality)
-  return '_'.join(parts)
-
-def move_file(src_path, dest_path):
-  """Move the file from src_path to dest_path."""
-  if os.path.exists(src_path):
+def move_file(filepath, folder, laterality=None):
+  """
+  Move a file to a specified folder, renaming it if necessary.
+  
+  Args:
+    filepath (str): The path of the file to move.
+    folder (str): The destination folder.
+    laterality (str): Optional. If provided, it will be included in the filename.
+  """
+  filename = os.path.basename(filepath)
+  
+  # Ensure '_NA_' is formatted properly, not '__NA__'
+  if laterality:
+    filename = rename_file(filename, laterality)
+  
+  dest_path = os.path.join(folder, filename)
+  
+  if os.path.exists(filepath):
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-    shutil.move(src_path, dest_path)
+    shutil.move(filepath, dest_path)
     logging.info(f"File moved to {dest_path}")
   else:
-    logging.warning(f"File not found: {src_path}")
+    logging.warning(f"File not found: {filepath}")
 
-def move_to_unsolvable(src_path, file):
-  """Move files to the unsolvable directory if they cannot be processed."""
-  new_file_name = rename_file(file, "_NA_")
-  move_file(src_path, os.path.join(unsolvable_dir, new_file_name))
-  logging.info(f"Moved and renamed file {file} to {new_file_name} in unsolvable directory.")
+def rename_file(filename, laterality):
+  """
+  Rename the file by inserting the laterality if not already present.
+  
+  Args:
+    filename (str): The original filename.
+    laterality (str): The laterality (e.g., 'L', 'R', '_NA_') to insert.
+
+  Returns:
+    str: The new filename with laterality inserted.
+  """
+  parts = filename.split('_')
+  
+  # Ensure clean formatting and avoid double underscores
+  if laterality not in parts:
+    new_parts = [part for part in parts if part]  # Remove any empty parts
+    new_parts.insert(2, laterality.strip('_'))  # Insert the laterality properly
+    return '_'.join(new_parts)
+  
+  return filename
+
+def process_dicom_files(directory):
+  """
+  Process all DICOM files in a directory, checking modality and laterality.
+  
+  Args:
+    directory (str): The path to the directory containing DICOM files.
+  """
+  logging.info(f"Processing DICOM files in directory: {directory}")
+  processed_count = 0
+  
+  for root, _, files in os.walk(directory):
+    for file in files:
+      dicom_file_path = os.path.join(root, file)
+      logging.info(f"Processing file: {dicom_file_path}")
+
+      if not is_dicom_file(dicom_file_path):
+        logging.warning(f"Skipping non-DICOM file: {file}")
+        continue
+
+      modality = get_dicom_tag(dicom_file_path, "Modality")
+      if modality not in ["US", "MG"]:
+        logging.info(f"Skipping file {file} with unsupported modality {modality}.")
+        continue
+
+      laterality = get_dicom_tag(dicom_file_path, "ImageLaterality")
+      if laterality not in ["L", "R"]:
+        move_file(dicom_file_path, unsolvable_dir, laterality="_NA_")
+      else:
+        move_file(dicom_file_path, incongruities_dir, laterality)
+
+      processed_count += 1
+
+  logging.info(f"Processed {processed_count} DICOM files.")
 
 if __name__ == '__main__':
   logging.info("Starting processing...")
-  mapping = load_mapping(mapping_csv)
-  logging.info("Mapping loaded!")
-  process_dicom(verifying_dir, mapping)
+  process_dicom_files(verifying_dir)
   logging.info("Processing complete!")
 
 # End of file
