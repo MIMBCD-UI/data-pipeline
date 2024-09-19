@@ -43,13 +43,16 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 # Define supported modalities
 SUPPORTED_MODALITIES = ['US', 'MG', 'MRI']
 
+# Mapping file name
+mapping_fn = "mamo_patients_mapping_data.csv"
+
 # Define paths
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 anonymized_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "unchecked")
 checked_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "checked")
 unsolvable_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "unsolvable")
 non_anonymized_dir = os.path.join(root_dir, "dicom-images-breast", "known", "raw")
-output_csv_file = os.path.join(root_dir, "dicom-images-breast", "data", "checking", "mapping.csv")
+output_csv_file = os.path.join(root_dir, "dicom-images-breast", "data", "checking", mapping_fn)
 
 
 def is_supported_modality(dicom_file):
