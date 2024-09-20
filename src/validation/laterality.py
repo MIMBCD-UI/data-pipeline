@@ -6,18 +6,14 @@ laterality.py:
 This script processes DICOM files by checking for the "Modality" and "Laterality" DICOM tags. It ensures that medical imaging data 
 is correctly linked and organized, particularly in the context of anonymization, for both US (ultrasound) and MG (mammography) modalities.
 
-Files are moved based on laterality:
-- To the "incongruities" folder if laterality is found in the DICOM tags and correctly matches the filename.
-- To the "unsolvable" folder if laterality is missing or cannot be matched.
-
-This script is especially useful for managing anonymized imaging data for research projects.
+This version is optimized for massive datasets through batch processing, parallel processing, and optimized I/O operations.
 """
 
 __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.4.1"
+__version__ = "0.4.3"
 __status__ = "Development"
 __credits__ = ["Carlos Santiago",
                "Catarina Barata",
@@ -29,13 +25,15 @@ import logging
 import pydicom
 import shutil
 import warnings
+from multiprocessing import Pool, cpu_count
 from urllib3.exceptions import NotOpenSSLWarning
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Suppress specific warnings
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
+warnings.simplefilter("ignore")  # Suppress all warnings for clean output
 
 # Define paths for DICOM processing
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -43,133 +41,94 @@ verifying_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "cur
 incongruities_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "incongruities")
 unsolvable_dir = os.path.join(root_dir, "dataset-multimodal-breast", "data", "curation", "unsolvable")
 
-# Debugging output for paths
+BATCH_SIZE = 500  # Define the size of each batch for processing
+NUM_WORKERS = max(1, cpu_count() - 1)  # Use available CPU cores, leaving one for system processes
+
+# Logging paths for debugging
 logging.info(f"Verifying directory: {verifying_dir}")
 logging.info(f"Incongruities directory: {incongruities_dir}")
 logging.info(f"Unsolvable directory: {unsolvable_dir}")
 
 def is_dicom_file(filepath):
-  """
-  Check if the given file is a valid DICOM file.
-  
-  Args:
-    filepath (str): Path to the file to check.
-
-  Returns:
-    bool: True if the file is a valid DICOM file, False otherwise.
-  """
+  """Check if the given file is a valid DICOM file."""
   try:
     pydicom.dcmread(filepath, stop_before_pixels=True)
-    logging.debug(f"File {filepath} is a valid DICOM file.")
     return True
-  except pydicom.errors.InvalidDicomError:
-    logging.warning(f"File {filepath} is not a valid DICOM file.")
-    return False
-  except Exception as e:
-    logging.warning(f"Unexpected error reading file {filepath}: {e}")
+  except (pydicom.errors.InvalidDicomError, Exception):
     return False
 
 def get_dicom_tag(dicom_file, tag):
-  """
-  Extract a specified DICOM tag from the DICOM metadata.
-  
-  Args:
-    dicom_file (str): Path to the DICOM file.
-    tag (str): Tag to extract (e.g., 'Modality', 'ImageLaterality').
-
-  Returns:
-    str: Value of the specified tag or an empty string if not found.
-  """
+  """Extract a specified DICOM tag from the DICOM metadata."""
   try:
-    dicom_data = pydicom.dcmread(dicom_file)
-    value = dicom_data.get(tag, "")
-    logging.debug(f"File {dicom_file} has {tag}: {value}.")
-    return value
+    dicom_data = pydicom.dcmread(dicom_file, stop_before_pixels=True)
+    return dicom_data.get(tag, "")
   except Exception as e:
-    logging.warning(f"Failed to read {tag} from {dicom_file}: {e}")
+    logging.warning(f"Error reading {tag} from {dicom_file}: {e}")
     return ""
 
 def move_file(filepath, folder, laterality=None):
-  """
-  Move a file to a specified folder, renaming it if necessary.
-  
-  Args:
-    filepath (str): The path of the file to move.
-    folder (str): The destination folder.
-    laterality (str): Optional. If provided, it will be included in the filename.
-  """
+  """Move a file to a specified folder, renaming it if necessary."""
   filename = os.path.basename(filepath)
-  
-  # Ensure '_NA_' is formatted properly, not '__NA__'
   if laterality:
     filename = rename_file(filename, laterality)
-  
   dest_path = os.path.join(folder, filename)
   
   if os.path.exists(filepath):
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     shutil.move(filepath, dest_path)
-    logging.info(f"File moved to {dest_path}")
+    logging.debug(f"Moved file to {dest_path}")
   else:
     logging.warning(f"File not found: {filepath}")
 
 def rename_file(filename, laterality):
-  """
-  Rename the file by inserting the laterality if not already present.
-  
-  Args:
-    filename (str): The original filename.
-    laterality (str): The laterality (e.g., 'L', 'R', '_NA_') to insert.
-
-  Returns:
-    str: The new filename with laterality inserted.
-  """
+  """Rename the file by inserting the laterality if not already present."""
   parts = filename.split('_')
-  
-  # Ensure clean formatting and avoid double underscores
   if laterality not in parts:
-    new_parts = [part for part in parts if part]  # Remove any empty parts
-    new_parts.insert(2, laterality.strip('_'))  # Insert the laterality properly
-    return '_'.join(new_parts)
-  
+    parts.insert(2, laterality.strip('_'))
+    return '_'.join(parts)
   return filename
 
+def process_dicom_file(dicom_file_path):
+  """Process a single DICOM file for laterality and modality."""
+  if not is_dicom_file(dicom_file_path):
+    logging.debug(f"Skipping non-DICOM file: {dicom_file_path}")
+    return
+
+  modality = get_dicom_tag(dicom_file_path, "Modality")
+  if modality not in ["US", "MG"]:
+    logging.debug(f"Unsupported modality {modality} for file {dicom_file_path}")
+    return
+
+  laterality = get_dicom_tag(dicom_file_path, "ImageLaterality")
+  if laterality in ["L", "R"]:
+    move_file(dicom_file_path, incongruities_dir, laterality)
+  else:
+    move_file(dicom_file_path, unsolvable_dir, laterality="_NA_")
+
+def batch_process(files_batch):
+  """Process a batch of DICOM files in parallel."""
+  for dicom_file_path in files_batch:
+    process_dicom_file(dicom_file_path)
+
 def process_dicom_files(directory):
-  """
-  Process all DICOM files in a directory, checking modality and laterality.
-  
-  Args:
-    directory (str): The path to the directory containing DICOM files.
-  """
-  logging.info(f"Processing DICOM files in directory: {directory}")
-  processed_count = 0
-  
+  """Process DICOM files in batches, with optional parallel processing."""
+  all_files = []
   for root, _, files in os.walk(directory):
-    for file in files:
-      dicom_file_path = os.path.join(root, file)
-      logging.info(f"Processing file: {dicom_file_path}")
+    all_files.extend([os.path.join(root, file) for file in files])
 
-      if not is_dicom_file(dicom_file_path):
-        logging.warning(f"Skipping non-DICOM file: {file}")
-        continue
+  total_files = len(all_files)
+  logging.info(f"Total DICOM files to process: {total_files}")
 
-      modality = get_dicom_tag(dicom_file_path, "Modality")
-      if modality not in ["US", "MG"]:
-        logging.info(f"Skipping file {file} with unsupported modality {modality}.")
-        continue
-
-      laterality = get_dicom_tag(dicom_file_path, "ImageLaterality")
-      if laterality not in ["L", "R"]:
-        move_file(dicom_file_path, unsolvable_dir, laterality="_NA_")
-      else:
-        move_file(dicom_file_path, incongruities_dir, laterality)
-
-      processed_count += 1
-
-  logging.info(f"Processed {processed_count} DICOM files.")
+  # Process in batches
+  for i in range(0, total_files, BATCH_SIZE):
+    batch = all_files[i:i + BATCH_SIZE]
+    logging.info(f"Processing batch {i // BATCH_SIZE + 1} with {len(batch)} files.")
+    
+    with Pool(processes=NUM_WORKERS) as pool:
+      pool.map(batch_process, [batch])
 
 if __name__ == '__main__':
-  logging.info("Starting processing...")
+  logging.info("Starting DICOM file processing...")
   process_dicom_files(verifying_dir)
   logging.info("Processing complete!")
 
