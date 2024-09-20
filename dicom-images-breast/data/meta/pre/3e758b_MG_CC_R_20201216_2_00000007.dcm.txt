@@ -1,0 +1,317 @@
+Dataset.file_meta -------------------------------
+(0002, 0000) File Meta Information Group Length  UL: 164
+(0002, 0001) File Meta Information Version       OB: b'\x00\x01'
+(0002, 0002) Media Storage SOP Class UID         UI: Digital Mammography X-Ray Image Storage - For Presentation
+(0002, 0003) Media Storage SOP Instance UID      UI: 1.2.840.113704.7.1.0.872175101181194.1625863739.59
+(0002, 0010) Transfer Syntax UID                 UI: Explicit VR Little Endian
+(0002, 0012) Implementation Class UID            UI: 1.2.840.113704.7.0.2
+-------------------------------------------------
+(0008, 0005) Specific Character Set              CS: 'ISO_IR 100'
+(0008, 0008) Image Type                          CS: ['ORIGINAL', 'SECONDARY']
+(0008, 0012) Instance Creation Date              DA: '20210709'
+(0008, 0013) Instance Creation Time              TM: '214858'
+(0008, 0016) SOP Class UID                       UI: Digital Mammography X-Ray Image Storage - For Presentation
+(0008, 0018) SOP Instance UID                    UI: 1.2.840.113704.7.1.0.872175101181194.1625863739.59
+(0008, 0020) Study Date                          DA: '20201216'
+(0008, 0021) Series Date                         DA: '20201216'
+(0008, 0022) Acquisition Date                    DA: '20201216'
+(0008, 0023) Content Date                        DA: '20201216'
+(0008, 0030) Study Time                          TM: '120424'
+(0008, 0031) Series Time                         TM: '120539'
+(0008, 0032) Acquisition Time                    TM: '120621.000000'
+(0008, 0033) Content Time                        TM: '120626.000000'
+(0008, 0050) Accession Number                    SH: '215411407'
+(0008, 0060) Modality                            CS: 'MG'
+(0008, 0061) Modalities in Study                 CS: ['OT', 'MG']
+(0008, 0068) Presentation Intent Type            CS: 'FOR PRESENTATION'
+(0008, 0070) Manufacturer                        LO: 'GE MEDICAL SYSTEMS'
+(0008, 0080) Institution Name                    LO: 'HSP FERNANDO DA FONSECA'
+(0008, 0081) Institution Address                 ST: 'AMADORA'
+(0008, 0090) Referring Physician's Name          PN: 'MARIA CLARA ALELUIA'
+(0008, 1010) Station Name                        SH: 'MGIMA1'
+(0008, 1030) Study Description                   LO: '01'
+(0008, 1032)  Procedure Code Sequence  1 item(s) ---- 
+   (0008, 0100) Code Value                          SH: 'IMRX133'
+   (0008, 0104) Code Meaning                        LO: 'Mamografia'
+   ---------
+(0008, 103e) Series Description                  LO: 'MM'
+(0008, 1050) Performing Physician's Name         PN: 'DRA.CLARA ALELUIA'
+(0008, 1070) Operators' Name                     PN: 'CE'
+(0008, 1090) Manufacturer's Model Name           LO: 'Senographe Essential VERSION ADS_55.31.10'
+(0008, 1110)  Referenced Study Sequence  1 item(s) ---- 
+   (0008, 1150) Referenced SOP Class UID            UI: Detached Study Management SOP Class
+   (0008, 1155) Referenced SOP Instance UID         UI: 1.2.840.113564.99.1.345051241695.239.2020121693356527.221023.2
+   ---------
+(0008, 2112)  Source Image Sequence  2 item(s) ---- 
+   (0008, 1150) Referenced SOP Class UID            UI: Digital Mammography X-Ray Image Storage - For Processing
+   (0008, 1155) Referenced SOP Instance UID         UI: 1.2.840.113619.2.255.224244483568.2614201216120625.45
+   (0028, 135a) Spatial Locations Preserved         CS: 'YES'
+   ---------
+   (0008, 1150) Referenced SOP Class UID            UI: Digital Mammography X-Ray Image Storage - For Presentation
+   (0008, 1155) Referenced SOP Instance UID         UI: 1.2.840.113619.2.255.224244483568.2614201216120626.47
+   ---------
+(0008, 2218)  Anatomic Region Sequence  1 item(s) ---- 
+   (0008, 0100) Code Value                          SH: 'T-04000'
+   (0008, 0102) Coding Scheme Designator            SH: 'SNM3'
+   (0008, 0104) Code Meaning                        LO: 'Breast'
+   ---------
+(0010, 0010) Patient's Name                      PN: 'TELES FEIO^HORTENSE MARIA FERREIRA CONTENTE GAMA'
+(0010, 0020) Patient ID                          LO: '975634'
+(0010, 0021) Issuer of Patient ID                LO: ''
+(0010, 0030) Patient's Birth Date                DA: '19580730'
+(0010, 0040) Patient's Sex                       CS: 'F'
+(0010, 1010) Patient's Age                       AS: '062Y'
+(0010, 1020) Patient's Size                      DS: '0.0'
+(0010, 1030) Patient's Weight                    DS: '0.0'
+(0018, 0015) Body Part Examined                  CS: 'BREAST'
+(0018, 0060) KVP                                 DS: '29.0'
+(0018, 1000) Device Serial Number                LO: '224244483568'
+(0018, 1020) Software Versions                   LO: 'Ads Application Package VERSION ADS_55.31.10'
+(0018, 1030) Protocol Name                       LO: 'ROUTINE'
+(0018, 1074) Radionuclide Total Dose             DS: None
+(0018, 1110) Distance Source to Detector         DS: '660.0'
+(0018, 1111) Distance Source to Patient          DS: '660.0'
+(0018, 1114) Estimated Radiographic Magnificatio DS: '1.0'
+(0018, 1147) Field of View Shape                 CS: 'RECTANGLE'
+(0018, 1149) Field of View Dimension(s)          IS: [306, 239]
+(0018, 1150) Exposure Time                       IS: '651'
+(0018, 1151) X-Ray Tube Current                  IS: '62'
+(0018, 1152) Exposure                            IS: '40'
+(0018, 1153) Exposure in uAs                     IS: '40500'
+(0018, 1160) Filter Type                         SH: 'STRIP'
+(0018, 1164) Imager Pixel Spacing                DS: [0.1, 0.1]
+(0018, 1166) Grid                                CS: ['RECIPROCATING', 'FOCUSED']
+(0018, 1190) Focal Spot(s)                       DS: '0.3'
+(0018, 1191) Anode Target Material               CS: 'RHODIUM'
+(0018, 11a0) Body Part Thickness                 DS: '53.0'
+(0018, 11a2) Compression Force                   DS: '30.0'
+(0018, 1400) Acquisition Device Processing Descr LO: 'eContrast4'
+(0018, 1401) Acquisition Device Processing Code  LO: 'GEMS_FFDM_PV'
+(0018, 1405) Relative X-Ray Exposure             IS: '3758'
+(0018, 1508) Positioner Type                     CS: 'MAMMOGRAPHIC'
+(0018, 1510) Positioner Primary Angle            DS: '0.0'
+(0018, 1531) Detector Secondary Angle            DS: '0.0'
+(0018, 1700) Collimator Shape                    CS: 'RECTANGULAR'
+(0018, 1702) Collimator Left Vertical Edge       IS: '0'
+(0018, 1704) Collimator Right Vertical Edge      IS: '2395'
+(0018, 1706) Collimator Upper Horizontal Edge    IS: '0'
+(0018, 1708) Collimator Lower Horizontal Edge    IS: '3063'
+(0018, 5101) View Position                       CS: 'CC'
+(0018, 6000) Sensitivity                         DS: '0.00985522847623'
+(0018, 7000) Detector Conditions Nominal Flag    CS: 'YES'
+(0018, 7001) Detector Temperature                DS: '29.930410385132'
+(0018, 7004) Detector Type                       CS: 'SCINTILLATOR'
+(0018, 7005) Detector Configuration              CS: 'AREA'
+(0018, 7006) Detector Description                LT: Array of 32 elements
+(0018, 700a) Detector ID                         SH: 'PLC0353_06'
+(0018, 700c) Date of Last Detector Calibration   DA: '20200511'
+(0018, 701a) Detector Binning                    DS: [1, 1]
+(0018, 7020) Detector Element Physical Size      DS: [0.1, 0.1]
+(0018, 7022) Detector Element Spacing            DS: [0.1, 0.1]
+(0018, 7024) Detector Active Shape               CS: 'RECTANGLE'
+(0018, 7026) Detector Active Dimension(s)        DS: [307.2, 240]
+(0018, 7030) Field of View Origin                DS: [5, 1]
+(0018, 7032) Field of View Rotation              DS: '180.0'
+(0018, 7034) Field of View Horizontal Flip       CS: 'NO'
+(0018, 7050) Filter Material                     CS: 'RHODIUM'
+(0018, 7060) Exposure Control Mode               CS: 'AUTOMATIC'
+(0018, 7062) Exposure Control Mode Description   LT: Array of 199 elements
+(0018, 7064) Exposure Status                     CS: 'NORMAL'
+(0020, 000d) Study Instance UID                  UI: 1.2.840.113564.99.1.345051241695.239.2020121693356527.221023.2
+(0020, 000e) Series Instance UID                 UI: 1.2.840.113704.7.32.0.2.255.224244483568.11333201216120539.10005
+(0020, 0010) Study ID                            SH: '215411407'
+(0020, 0011) Series Number                       IS: '4703'
+(0020, 0013) Instance Number                     IS: '2'
+(0020, 0020) Patient Orientation                 CS: ['P', 'L']
+(0020, 0062) Image Laterality                    CS: 'R'
+(0020, 1208) Number of Study Related Instances   IS: '5'
+(0028, 0002) Samples per Pixel                   US: 1
+(0028, 0004) Photometric Interpretation          CS: 'MONOCHROME2'
+(0028, 0010) Rows                                US: 3062
+(0028, 0011) Columns                             US: 2396
+(0028, 0030) Pixel Spacing                       DS: [0.10000000149, 0.10000000149]
+(0028, 0100) Bits Allocated                      US: 16
+(0028, 0101) Bits Stored                         US: 12
+(0028, 0102) High Bit                            US: 11
+(0028, 0103) Pixel Representation                US: 0
+(0028, 0120) Pixel Padding Value                 US: 0
+(0028, 0121) Pixel Padding Range Limit           US: 532
+(0028, 0300) Quality Control Image               CS: 'NO'
+(0028, 0301) Burned In Annotation                CS: 'NO'
+(0028, 1040) Pixel Intensity Relationship        CS: 'LOG'
+(0028, 1041) Pixel Intensity Relationship Sign   SS: -1
+(0028, 1050) Window Center                       DS: '2749.0'
+(0028, 1051) Window Width                        DS: '800.0'
+(0028, 1052) Rescale Intercept                   DS: '0.0'
+(0028, 1053) Rescale Slope                       DS: '1.0'
+(0028, 1054) Rescale Type                        LO: 'US'
+(0028, 1055) Window Center & Width Explanation   LO: 'Selecção do utilizador'
+(0028, 1056) VOI LUT Function                    CS: 'SIGMOID'
+(0028, 1300) Breast Implant Present              CS: 'NO'
+(0028, 2110) Lossy Image Compression             CS: '00'
+(0040, 0275)  Request Attributes Sequence  1 item(s) ---- 
+   (0040, 0007) Scheduled Procedure Step Descriptio LO: 'MM'
+   (0040, 0009) Scheduled Procedure Step ID         SH: '215411407'
+   (0040, 1001) Requested Procedure ID              SH: '215411407'
+   ---------
+(0040, 0302) Entrance Dose                       US: 0
+(0040, 0306) Distance Source to Entrance         DS: '607.0'
+(0040, 0310) Comments on Radiation Dose          ST: '29 %'
+(0040, 0316) Organ Dose                          DS: '0.01014'
+(0040, 0318) Organ Exposed                       CS: 'BREAST'
+(0040, 0555)  Acquisition Context Sequence  0 item(s) ---- 
+(0040, 1008) Confidentiality Code                LO: 'N'
+(0040, 8302) Entrance Dose in mGy                DS: '3.758'
+(0045, 0010) Private Creator                     LO: 'GEMS_SENO_02'
+(0045, 101b) [Clinical View]                     CS: 'RCC'
+(0054, 0220)  View Code Sequence  1 item(s) ---- 
+   (0008, 0100) Code Value                          SH: 'R-10242'
+   (0008, 0102) Coding Scheme Designator            SH: 'SNM3'
+   (0008, 0104) Code Meaning                        LO: 'cranio-caudal'
+   (0054, 0222)  View Modifier Code Sequence  0 item(s) ---- 
+   ---------
+(0088, 0200)  Icon Image Sequence  1 item(s) ---- 
+   (0028, 0002) Samples per Pixel                   US: 1
+   (0028, 0004) Photometric Interpretation          CS: 'MONOCHROME2'
+   (0028, 0010) Rows                                US: 64
+   (0028, 0011) Columns                             US: 64
+   (0028, 0034) Pixel Aspect Ratio                  IS: [1, 1]
+   (0028, 0100) Bits Allocated                      US: 8
+   (0028, 0101) Bits Stored                         US: 8
+   (0028, 0102) High Bit                            US: 7
+   (0028, 0103) Pixel Representation                US: 0
+   (7fe0, 0010) Pixel Data                          OB: Array of 4096 elements
+   ---------
+(00e1, 0010) Private Creator                     LO: 'ELSCINT1'
+(00e1, 1014) [Unknown]                           CS: 'N'
+(00e1, 1022) [Presentation Relative Center]      DS: [0, 0]
+(00e1, 1023) [Presentation Relative Part]        DS: [1, 1]
+(00e1, 1024) [Presentation Horizontal Invert]    CS: 'N'
+(00e1, 1025) [Unknown]                           CS: 'N'
+(07a1, 0010) Private Creator                     LO: 'ELSCINT1'
+(07a1, 1002) [number of images in series]        UL: 4
+(07a1, 1010) [Tamar Software Version]            LO: '12.2.2.0'
+(07a1, 102a) [Tamar Study Status]                CS: 'UNREAD'
+(07a1, 1040) [Tamar Study Body Part]             CS: 'BREAST'
+(07a1, 1042) Private tag data                    SH: 'NOT ASSIGNED'
+(07a1, 1043) [Unknown]                           IS: '3'
+(07a1, 1047) Private tag data                    CS: 'UNKNOWN'
+(07a1, 1050) [Tamar Site Id]                     US: 0
+(07a1, 1058) Private tag data                    CS: 'A'
+(07a1, 105d) Private tag data                    DT: '20201216115730.000000'
+(07a1, 105f) Private tag data                    CS: 'N'
+(07a1, 1075) [Unknown]                           LO: ['2D', 'PALETTE']
+(07a1, 1085) [Tamar Translate Flags]             UL: 3
+(07a1, 10a7) Private tag data                    LO: '32273'
+(07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+(07a3, 1001) [Tamar Exe Software Version]        LO: '12.2.2.0'
+(07a3, 1003) [Tamar Study Has Sticky Note]       CS: 'N'
+(07a3, 1014) Private tag data                    ST: 'IMRX133'
+(07a3, 1017) Private tag data                    SH: 'SC'
+(07a3, 1043) [Unknown]                           DS: [2, 0, 0, 0, 1, 0, 0]
+(07a3, 1055) [Unknown]                           SH: 'N'
+(07a3, 1056) Private tag data                    CS: 'Y'
+(07a3, 1057) Private tag data                    CS: 'PIXEL_PADDING_VALUE'
+(07a3, 105c) Private tag data                    ST: '0'
+(07a3, 1062)  [Unknown]  8 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: Array of 19 elements
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: ''
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '4'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '1'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: 'suvtype'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: ''
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '8'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '2'
+   ---------
+(07a3, 1065) Private tag data                    CS: 'N'
+(07a3, 108c) Private tag data                    CS: 'N'
+(07a3, 108f) Private tag data                    CS: 'N'
+(07a3, 109c) [Unknown]                           CS: 'N'
+(07a3, 10b4) Private tag data                    US: 0
+(07a3, 10b9) Private tag data                    CS: 'N'
+(07a3, 10bb) Private tag data                    CS: 'N'
+(07a3, 10c0)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10c6)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10ca)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10cb)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10fd) Private tag data                    CS: 'Y'
+(07a5, 0010) Private Creator                     LO: 'ELSCINT1'
+(07a5, 1010) Private tag data                    UL: 1
+(07a5, 1056) Private tag data                    CS: 'N'
+(07a5, 1063) Private tag data                    CS: ['ORIGINAL', 'PRIMARY', '', 'UNKNOWN']
+(07a5, 1069) Private tag data                    AE: 'MGIMA1'
+(07a5, 1072) Private tag data                    DT: '20201216115730.000000'
+(07a5, 10c8) Private tag data                    CS: 'Y'
+(07a5, 10dc) Private tag data                    UL: 500
+(07a5, 10dd) Private tag data                    FL: 2.0
+(07a5, 10de) Private tag data                    LO: 'N/A'
+(07a5, 10e8) Private tag data                    IS: '0'
+(2050, 0020) Presentation LUT Shape              CS: 'IDENTITY'
+(6000, 0010) Overlay Rows                        US: 3062
+(6000, 0011) Overlay Columns                     US: 2368
+(6000, 0022) Overlay Description                 LO: 'ALG_ELEMENT_SET'
+(6000, 0040) Overlay Type                        CS: 'G'
+(6000, 0050) Overlay Origin                      SS: [0, 0]
+(6000, 0100) Overlay Bits Allocated              US: 1
+(6000, 0102) Overlay Bit Position                US: 0
+(6000, 3000) Overlay Data                        OW: Array of 906352 elements
+(7fe0, 0010) Pixel Data                          OW: Array of 14673104 elements

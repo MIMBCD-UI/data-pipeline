@@ -1,0 +1,244 @@
+Dataset.file_meta -------------------------------
+(0002, 0000) File Meta Information Group Length  UL: 166
+(0002, 0001) File Meta Information Version       OB: b'\x00\x01'
+(0002, 0002) Media Storage SOP Class UID         UI: Ultrasound Image Storage
+(0002, 0003) Media Storage SOP Instance UID      UI: 1.2.840.113704.7.1.0.872175101181194.1625864422.3140
+(0002, 0010) Transfer Syntax UID                 UI: Explicit VR Little Endian
+(0002, 0012) Implementation Class UID            UI: 1.2.840.113704.7.0.2
+-------------------------------------------------
+(0008, 0005) Specific Character Set              CS: 'ISO 2022 IR 100'
+(0008, 0008) Image Type                          CS: ['DERIVED', 'SECONDARY', 'SMALL PARTS', '0001', 'GEMSSINGLEFRAME', 'GEMSMGCOUNT1', 'CROPPED_IMAGE']
+(0008, 0012) Instance Creation Date              DA: '20210709'
+(0008, 0013) Instance Creation Time              TM: '220022'
+(0008, 0016) SOP Class UID                       UI: Ultrasound Image Storage
+(0008, 0018) SOP Instance UID                    UI: 1.2.840.113704.7.1.0.872175101181194.1625864422.3140
+(0008, 0020) Study Date                          DA: '20201223'
+(0008, 0021) Series Date                         DA: '20201223'
+(0008, 0023) Content Date                        DA: '20201223'
+(0008, 0030) Study Time                          TM: '084540'
+(0008, 0031) Series Time                         TM: '084540'
+(0008, 0033) Content Time                        TM: '085036'
+(0008, 0050) Accession Number                    SH: '215333358'
+(0008, 0060) Modality                            CS: 'US'
+(0008, 0061) Modalities in Study                 CS: ['US', 'SR']
+(0008, 0070) Manufacturer                        LO: 'GE Healthcare'
+(0008, 0080) Institution Name                    LO: 'H. FERNANDO FONSECA, EPE'
+(0008, 0090) Referring Physician's Name          PN: 'HELENA GASPAR^^^^DR.'
+(0008, 1010) Station Name                        SH: 'N00347'
+(0008, 1030) Study Description                   LO: 'Biópsia da Mama'
+(0008, 103e) Series Description                  LO: 'Biópsia da Mama'
+(0008, 1040) Institutional Department Name       LO: 'Development'
+(0008, 1070) Operators' Name                     PN: 'ADM'
+(0008, 1090) Manufacturer's Model Name           LO: 'LOGIQE10'
+(0008, 2112)  Source Image Sequence  1 item(s) ---- 
+   (0008, 1150) Referenced SOP Class UID            UI: Ultrasound Image Storage
+   (0008, 1155) Referenced SOP Instance UID         UI: 1.2.840.113704.7.1.0.872175101181194.1625864361.3135
+   ---------
+(0010, 0010) Patient's Name                      PN: 'DUARTE^SARA JOANA GONCALINHO'
+(0010, 0020) Patient ID                          LO: '92301'
+(0010, 0021) Issuer of Patient ID                LO: ''
+(0010, 0030) Patient's Birth Date                DA: '19940107'
+(0010, 0032) Patient's Birth Time                TM: '000000'
+(0010, 0040) Patient's Sex                       CS: 'F'
+(0010, 1010) Patient's Age                       AS: '026Y'
+(0010, 1020) Patient's Size                      DS: '0.0'
+(0010, 1030) Patient's Weight                    DS: '0.0'
+(0018, 1000) Device Serial Number                LO: '500607US7'
+(0018, 1020) Software Versions                   LO: 'LOGIQE10:R1.5.1'
+(0018, 1074) Radionuclide Total Dose             DS: None
+(0018, 1088) Heart Rate                          IS: '-1'
+(0018, 5010) Transducer Data                     LO: ['ML6-15', '529', '332118YP9']
+(0018, 6011)  Sequence of Ultrasound Regions  1 item(s) ---- 
+   (0018, 6012) Region Spatial Format               US: 1
+   (0018, 6014) Region Data Type                    US: 1
+   (0018, 6016) Region Flags                        UL: 0
+   (0018, 6018) Region Location Min X0              UL: 2
+   (0018, 601a) Region Location Min Y0              UL: 80
+   (0018, 601c) Region Location Max X1              UL: 974
+   (0018, 601e) Region Location Max Y1              UL: 696
+   (0018, 6020) Reference Pixel X0                  SL: 528
+   (0018, 6022) Reference Pixel Y0                  SL: -80
+   (0018, 6024) Physical Units X Direction          US: 3
+   (0018, 6026) Physical Units Y Direction          US: 3
+   (0018, 6028) Reference Pixel Physical Value X    FD: 0.0
+   (0018, 602a) Reference Pixel Physical Value Y    FD: 0.0
+   (0018, 602c) Physical Delta X                    FD: 0.005672609424475139
+   (0018, 602e) Physical Delta Y                    FD: 0.005672609424475139
+   (0018, 6030) Transducer Frequency                UL: 15000
+   ---------
+(0018, 6031) Transducer Type                     CS: 'LINEAR'
+(0020, 000d) Study Instance UID                  UI: 1.2.840.113564.99.1.345051241695.867.2020122392826890.225464.2
+(0020, 000e) Series Instance UID                 UI: 1.2.840.113704.7.32.040.113619.2.455.140911789099.1608734740.167
+(0020, 0010) Study ID                            SH: '215333358'
+(0020, 0011) Series Number                       IS: '1'
+(0020, 0013) Instance Number                     IS: '256'
+(0020, 0020) Patient Orientation                 CS: ''
+(0020, 0032) Image Position (Patient)            DS: [0, 0, 0]
+(0020, 1208) Number of Study Related Instances   IS: '15'
+(0028, 0002) Samples per Pixel                   US: 3
+(0028, 0004) Photometric Interpretation          CS: 'RGB'
+(0028, 0006) Planar Configuration                US: 1
+(0028, 0010) Rows                                US: 797
+(0028, 0011) Columns                             US: 890
+(0028, 0100) Bits Allocated                      US: 8
+(0028, 0101) Bits Stored                         US: 8
+(0028, 0102) High Bit                            US: 7
+(0028, 0103) Pixel Representation                US: 0
+(0028, 2110) Lossy Image Compression             CS: '00'
+(0040, 0275)  Request Attributes Sequence  1 item(s) ---- 
+   (0008, 0005) Specific Character Set              CS: 'ISO 2022 IR 100'
+   (0040, 0007) Scheduled Procedure Step Descriptio LO: 'Biópsia da Mama'
+   (0040, 0009) Scheduled Procedure Step ID         SH: '215333358'
+   (0040, 1001) Requested Procedure ID              SH: '215333358'
+   ---------
+(0040, 1008) Confidentiality Code                LO: 'N'
+(0088, 0200)  Icon Image Sequence  1 item(s) ---- 
+   (0028, 0002) Samples per Pixel                   US: 1
+   (0028, 0004) Photometric Interpretation          CS: 'MONOCHROME2'
+   (0028, 0010) Rows                                US: 64
+   (0028, 0011) Columns                             US: 64
+   (0028, 0034) Pixel Aspect Ratio                  IS: [1, 1]
+   (0028, 0100) Bits Allocated                      US: 8
+   (0028, 0101) Bits Stored                         US: 8
+   (0028, 0102) High Bit                            US: 7
+   (0028, 0103) Pixel Representation                US: 0
+   (7fe0, 0010) Pixel Data                          OB: Array of 4096 elements
+   ---------
+(00e1, 0010) Private Creator                     LO: 'ELSCINT1'
+(00e1, 1022) [Presentation Relative Center]      DS: [0, 0]
+(00e1, 1023) [Presentation Relative Part]        DS: [1, 1]
+(00e1, 1024) [Presentation Horizontal Invert]    CS: 'N'
+(00e1, 1025) [Unknown]                           CS: 'N'
+(07a1, 0010) Private Creator                     LO: 'ELSCINT1'
+(07a1, 1002) [number of images in series]        UL: 14
+(07a1, 1010) [Tamar Software Version]            LO: '12.2.2.0'
+(07a1, 102a) [Tamar Study Status]                CS: 'READ'
+(07a1, 1042) Private tag data                    SH: 'NOT ASSIGNED'
+(07a1, 1043) [Unknown]                           IS: '3'
+(07a1, 1047) Private tag data                    CS: 'UNKNOWN'
+(07a1, 1050) [Tamar Site Id]                     US: 0
+(07a1, 1058) Private tag data                    CS: 'A'
+(07a1, 105d) Private tag data                    DT: '20201223101217.000000'
+(07a1, 105f) Private tag data                    CS: 'N'
+(07a1, 1075) [Unknown]                           LO: ['2D', 'RGB']
+(07a1, 1085) [Tamar Translate Flags]             UL: 3
+(07a1, 10a7) Private tag data                    LO: '31446'
+(07a1, 10d0) Private tag data                    LO: '11409674272778'
+(07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+(07a3, 1001) [Tamar Exe Software Version]        LO: '12.2.2.0'
+(07a3, 1003) [Tamar Study Has Sticky Note]       CS: 'N'
+(07a3, 1005) [Unknown]                           CS: 'N'
+(07a3, 1014) Private tag data                    ST: 'IMPROC20'
+(07a3, 1017) Private tag data                    SH: 'SC'
+(07a3, 1019) Private tag data                    ST: 'MARIA CLARA ALELUIA'
+(07a3, 101b) Private tag data                    ST: '32273'
+(07a3, 101c) Private tag data                    ST: 'MARIA CLARA ALELUIA'
+(07a3, 101e) Private tag data                    ST: '32273'
+(07a3, 1043) [Unknown]                           DS: [0, 0, 0, 0, 1, 0, 0]
+(07a3, 1055) [Unknown]                           SH: 'N'
+(07a3, 105c) Private tag data                    ST: '0'
+(07a3, 1062)  [Unknown]  8 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: Array of 19 elements
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: ''
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '4'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '1'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: 'suvtype'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: ''
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '8'
+   ---------
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1061) [Unknown]                           LT: '2'
+   ---------
+(07a3, 1065) Private tag data                    CS: 'N'
+(07a3, 108c) Private tag data                    CS: 'N'
+(07a3, 108f) Private tag data                    CS: 'N'
+(07a3, 109c) [Unknown]                           CS: 'N'
+(07a3, 10b4) Private tag data                    US: 0
+(07a3, 10b9) Private tag data                    CS: 'N'
+(07a3, 10bb) Private tag data                    CS: 'N'
+(07a3, 10c0)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10c6)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10ca)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a3, 10cb)  Private tag data  1 item(s) ---- 
+   (07a3, 0010) Private Creator                     LO: 'ELSCINT1'
+   (07a3, 1039) Private tag data                    UL: 61
+   (07a3, 10c1) Private tag data                    LO: 'hffwpacs1'
+   (07a3, 10c2) Private tag data                    CS: 'FAST_NET'
+   (07a3, 10c3) Private tag data                    CS: 'SECURED_CON'
+   (07a3, 10c4) Private tag data                    LO: 'pacs.hff.corp'
+   (07a3, 10c5) Private tag data                    LO: '22104'
+   (07a3, 10c8) Private tag data                    AE: 'hffwpacs1FIR'
+   (07a3, 10c9) Private tag data                    CS: 'N'
+   (07a3, 10cc) Private tag data                    LO: '1.0.0.0'
+   ---------
+(07a5, 0010) Private Creator                     LO: 'ELSCINT1'
+(07a5, 1010) Private tag data                    UL: 1
+(07a5, 1041) Private tag data                    DT: '20210116131132.000000'
+(07a5, 1054) Private tag data                    DT: '20201223091500.000000'
+(07a5, 1056) Private tag data                    CS: 'N'
+(07a5, 1063) Private tag data                    CS: ['ORIGINAL', 'PRIMARY', 'SMALL PARTS', '0001', 'GEMSSINGLEFRAME', 'GEMSMGCOUNT1', 'UNKNOWN']
+(07a5, 1069) Private tag data                    AE: 'ECOIMA7'
+(07a5, 1072) Private tag data                    DT: '20201223101217.000000'
+(07a5, 10c8) Private tag data                    CS: 'Y'
+(07a5, 10d9) Private tag data                    FL: 0.0
+(07a5, 10da) Private tag data                    FL: 0.0
+(07a5, 10dc) Private tag data                    UL: 500
+(07a5, 10dd) Private tag data                    FL: 2.0
+(07a5, 10de) Private tag data                    LO: 'N/A'
+(07a5, 10e8) Private tag data                    IS: '0'
+(6000, 0010) Overlay Rows                        US: 797
+(6000, 0011) Overlay Columns                     US: 864
+(6000, 0022) Overlay Description                 LO: 'ALG_ELEMENT_SET'
+(6000, 0040) Overlay Type                        CS: 'G'
+(6000, 0050) Overlay Origin                      SS: [0, 0]
+(6000, 0100) Overlay Bits Allocated              US: 1
+(6000, 0102) Overlay Bit Position                US: 0
+(6000, 3000) Overlay Data                        OW: Array of 86076 elements
+(7fe0, 0010) Pixel Data                          OB: Array of 2127990 elements
+(7fe1, 0010) Private Creator                     LO: 'GEMS_Ultrasound_MovieGroup_001'

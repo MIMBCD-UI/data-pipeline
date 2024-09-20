@@ -10,7 +10,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.1.1"  # Updated to reflect improvements
+__version__ = "0.2.0"  # Version updated to reflect improvements
 __status__ = "Development"
 __credits__ = ["Carlos Santiago",
                "Catarina Barata",
@@ -45,7 +45,9 @@ class TestAnonymizer(unittest.TestCase):
     executed before each test, ensuring a clean environment.
     """
     logging.info("Setting up temporary directories and files for testing.")
+    # Create a temporary directory for the test case
     self.temp_dir = tempfile.TemporaryDirectory()
+    # Set the path for a temporary DICOM file
     self.dicom_file_path = os.path.join(self.temp_dir.name, 'temp_test.dcm')
     
     # Create a mock DICOM file (content is irrelevant as we are mocking dcmread)
@@ -58,6 +60,7 @@ class TestAnonymizer(unittest.TestCase):
     no leftover data persists between tests.
     """
     logging.info("Cleaning up temporary files and directories.")
+    # Remove the temporary directory and files after each test
     self.temp_dir.cleanup()
 
   @patch('processing.anonymizer.pydicom.dcmread')
@@ -155,15 +158,17 @@ class TestAnonymizer(unittest.TestCase):
       'instance': '0001'
     }
 
-    # Call the save_meta_pre function
-    save_meta_pre(self.temp_dir.name, self.dicom_file_path, anon_params)
+    # Call the save_meta_pre function and get the saved path
+    saved_meta_path = save_meta_pre(self.dicom_file_path, anon_params)
     
-    # Construct the expected metadata file path
-    expected_meta_path = os.path.join(self.temp_dir.name, '12345_MG_CC_L_20230101_0001.dcm.txt')
+    # Ensure that the saved path is not None
+    self.assertIsNotNone(saved_meta_path, "Saved metadata path should not be None")
+    
+    logging.info(f"Checking if pre-anonymization metadata exists at: {saved_meta_path}")
     
     # Assert the metadata file is created
-    self.assertTrue(os.path.exists(expected_meta_path), "Pre-anonymization metadata file should be saved.")
-    logging.info(f"test_save_meta_pre passed: Metadata saved in {expected_meta_path} before anonymization.")
+    self.assertTrue(os.path.exists(saved_meta_path), "Pre-anonymization metadata file should be saved.")
+    logging.info(f"test_save_meta_pre passed: Metadata saved in {saved_meta_path} before anonymization.")
 
   @patch('processing.anonymizer.pydicom.dcmread')
   def test_save_meta_post(self, mock_dcmread):
@@ -177,15 +182,17 @@ class TestAnonymizer(unittest.TestCase):
     mock_dataset = MagicMock()
     mock_dcmread.return_value = mock_dataset
 
-    # Call the save_meta_post function
-    save_meta_post(self.temp_dir.name, self.dicom_file_path)
+    # Call the save_meta_post function and get the saved path
+    saved_meta_path = save_meta_post(self.dicom_file_path)
     
-    # Construct the expected metadata file path
-    expected_meta_path = os.path.join(self.temp_dir.name, 'temp_test.dcm.txt')
+    # Ensure that the saved path is not None
+    self.assertIsNotNone(saved_meta_path, "Saved metadata path should not be None")
+    
+    logging.info(f"Checking if post-anonymization metadata exists at: {saved_meta_path}")
     
     # Assert the metadata file is created
-    self.assertTrue(os.path.exists(expected_meta_path), "Post-anonymization metadata file should be saved.")
-    logging.info(f"test_save_meta_post passed: Metadata saved in {expected_meta_path} after anonymization.")
+    self.assertTrue(os.path.exists(saved_meta_path), "Post-anonymization metadata file should be saved.")
+    logging.info(f"test_save_meta_post passed: Metadata saved in {saved_meta_path} after anonymization.")
 
 if __name__ == "__main__":
   logging.info("Starting the anonymizer test suite...")
