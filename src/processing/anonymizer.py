@@ -11,7 +11,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.6.6"  # Version incremented to reflect improvements
+__version__ = "0.6.8"  # Version incremented to reflect improvements
 __status__ = "Development"
 __credits__ = ["Carlos Santiago",
                "Catarina Barata",
@@ -58,7 +58,7 @@ def is_dicom_file(file_path):
 def save_meta_pre(dicom_file_path, anon_params):
   """
   Save the pre-anonymization metadata to the specified folder (pre_folder).
-  
+
   Args:
     dicom_file_path (str): Path to the original DICOM file.
     anon_params (dict): Dictionary containing anonymization parameters.
@@ -150,7 +150,7 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     ds = pydicom.dcmread(input_path)
 
     # List of fields to anonymize by clearing their values
-    fields_to_anonymize = ['PatientName', 'PatientID', 'PatientBirthDate', 'PatientSex', 'PatientAge',
+    fields_to_anonymize = ['PatientName', 'PatientBirthDate', 'PatientSex', 'PatientAge',
                            'StudyDescription', 'SeriesDescription', 'InstitutionName', 'InstitutionAddress',
                            'InstitutionalDepartmentName', 'ReferringPhysicianName', 'PhysiciansOfRecord',
                            'WindowCenterWidthExplanation', 'RequestingPhysician', 'RequestedProcedureDescription',
@@ -160,6 +160,9 @@ def anonymize_dicom_file(input_path, output_path, anon_params):
     # Anonymize each sensitive field
     for field in fields_to_anonymize:
       anonymize_field(ds, field, "")
+
+    # Update the PatientID with the anonymized ID
+    anonymize_field(ds, 'PatientID', anon_params['anon_patient_id'])
 
     # Handle anonymization of sequence fields (e.g., ProcedureCodeSequence)
     anonymize_sequences(ds)
