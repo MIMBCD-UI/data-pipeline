@@ -13,7 +13,10 @@ __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
 __version__ = "0.7.2"  # Version increment to reflect improvements
 __status__ = "Development"
-__credits__ = ["Carlos Santiago", "Catarina Barata", "Jacinto C. Nascimento", "Diogo Araújo"]
+__credits__ = ["Carlos Santiago",
+               "Catarina Barata",
+               "Jacinto C. Nascimento",
+               "Diogo Araújo"]
 
 import os
 import logging
