@@ -35,7 +35,7 @@ MAPPING_FN = "mapping.csv"
 
 # Define paths for input/output directories
 ROOT_DIR = Path(__file__).resolve().parents[2]
-SOURCE_FOLDER = ROOT_DIR / "dicom-images-breast" / "tests" / "test001"
+SOURCE_FOLDER = ROOT_DIR / "dicom-images-breast" / "known" / "raw"
 OUTPUT_FOLDER = ROOT_DIR / "dataset-multimodal-breast" / "data" / "curation" / "unexplored"
 LOGS_FOLDER = ROOT_DIR / "dicom-images-breast" / "data" / "logs" / "toprocess"
 MAPPING_FILE = ROOT_DIR / "dicom-images-breast" / "data" / "mapping" / MAPPING_FN
