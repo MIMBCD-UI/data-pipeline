@@ -1,9 +1,18 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
+# Maintainer: Francisco Maria Calisto
+# Email: francisco.calisto@tecnico.ulisboa.pt
+# License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-04
 # Revised Date: 2024-09-22  # Updated to reflect optimizations and improvements
 # Version: 1.1  # Incremented version to reflect the additional changes
+# Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./clean_batches.sh
 # Example: ./script/clean_batches.sh
 # Description: This script clears files in specified directories by removing them in batches.

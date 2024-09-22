@@ -1,9 +1,18 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
+# Maintainer: Francisco Maria Calisto
+# Email: francisco.calisto@tecnico.ulisboa.pt
+# License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-10
 # Revised Date: 2024-09-22  # Updated to reflect improvements
 # Version: 1.2  # Incremented version to reflect improvements
+# Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./split_log_files.sh
 # Example: ./script/split_log_files.sh
 # Description: This script splits large .log files into smaller parts based on a maximum 

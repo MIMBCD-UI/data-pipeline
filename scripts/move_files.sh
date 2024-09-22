@@ -4,6 +4,8 @@
 # Maintainer: Francisco Maria Calisto
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
+# Created Date: 2024-09-21
+# Revised Date: 2024-09-22  # Updated to reflect optimizations and improvements
 # Version: 1.5  # Incremented version to reflect new logging location
 # Status: Development
 # Credits:

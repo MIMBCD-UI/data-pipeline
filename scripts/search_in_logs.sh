@@ -1,9 +1,18 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
+# Maintainer: Francisco Maria Calisto
+# Email: francisco.calisto@tecnico.ulisboa.pt
+# License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-10
 # Revised Date: 2024-09-22  # Updated date to reflect revisions
 # Version: 1.1  # Incremented version to reflect improvements
+# Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./search_in_logs.sh
 # Example: ./script/search_in_logs.sh
 # Description: This script searches for a specified word within .log files

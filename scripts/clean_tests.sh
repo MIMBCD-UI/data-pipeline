@@ -1,9 +1,18 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
+# Maintainer: Francisco Maria Calisto
+# Email: francisco.calisto@tecnico.ulisboa.pt
+# License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-04
 # Revised Date: 2024-09-22  # Updated to reflect improvements
 # Version: 1.2  # Incremented version to reflect further optimizations
+# Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./clean_tests.sh
 # Example: ./script/clean_tests.sh
 # Description: This script clears all files from specified test and data directories.

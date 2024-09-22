@@ -1,9 +1,18 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
+# Maintainer: Francisco Maria Calisto
+# Email: francisco.calisto@tecnico.ulisboa.pt
+# License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-11
 # Revised Date: 2024-09-22
 # Version: 1.4  # Incremented version to reflect further improvements
+# Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./copy_to_server.sh
 # Example: ./script/copy_to_server.sh
 # Description: This script copies files from a local directory to a remote server using rsync.

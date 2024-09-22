@@ -1,9 +1,18 @@
 #!/bin/bash
 #
 # Author: Francisco Maria Calisto
+# Maintainer: Francisco Maria Calisto
+# Email: francisco.calisto@tecnico.ulisboa.pt
+# License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-07
 # Revised Date: 2024-09-22  # Updated to reflect improvements
 # Version: 1.3  # Incremented version to reflect further optimizations
+# Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./copy_testing_files.sh
 # Example: ./script/copy_testing_files.sh
 # Description: This script reads a list of file paths from a text file and copies them
