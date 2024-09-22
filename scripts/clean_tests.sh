@@ -2,19 +2,24 @@
 #
 # Author: Francisco Maria Calisto
 # Created Date: 2024-04-04
-# Revised Date: 2024-04-09
+# Revised Date: 2024-09-22  # Updated to reflect improvements
+# Version: 1.2  # Incremented version to reflect further optimizations
 # Usage: ./clean_tests.sh
 # Example: ./script/clean_tests.sh
-# Description: This script is used to clear all files in the specified directories
+# Description: This script clears all files from specified test and data directories.
+# It checks for directory existence, file removal permissions, and reports any errors.
 
-# Define home directory
+# Exit the script if any command fails to ensure safe execution
+set -e
+
+# Define the home directory using the system's HOME environment variable
 home="$HOME"
 
-# Define base directories relative to the home directory
+# Define base directories relative to the home directory using absolute paths for consistency
 dataset_multimodal_breast="$home/Git/dataset-multimodal-breast"
 dicom_images_breast="$home/Git/dicom-images-breast"
 
-# Define directories to clear
+# Define an array of directories to clear; these are paths where files will be deleted
 directories=(
   "$dataset_multimodal_breast/tests/dicom/"
   "$dataset_multimodal_breast/tests/test001/"
@@ -29,30 +34,41 @@ directories=(
 )
 
 # Function to remove files from a directory and handle permission errors
+# Arguments:
+#   $1: Directory from which to remove all files
 remove_files() {
-  local dir="$1"
-  echo "Removing all files in $dir"
+  local dir="$1"  # Directory path passed as argument
+
+  # Log the directory being processed
+  echo "Attempting to remove all files in $dir..."
+
+  # Check if the directory exists
   if [ -d "$dir" ]; then
+    # Try to remove files from the directory, suppressing error messages if none exist
     if rm -f "${dir}"* 2>/dev/null; then
-      echo "Files in $dir removed successfully"
+      echo "Files in $dir removed successfully."
     else
-      echo "Failed to remove files in $dir. Checking permissions..."
+      echo "Error removing files from $dir. Checking permissions..."
+
+      # Check if the directory is writable
       if [ -w "$dir" ]; then
-        echo "You have write permission for $dir, but there was an error removing files."
+        echo "You have write permissions for $dir, but there was an error removing files."
       else
-        echo "You do not have write permission for $dir. Please check permissions."
+        echo "No write permission for $dir. Please check permissions or run the script as a user with the appropriate permissions."
       fi
     fi
   else
-    echo "$dir does not exist."
+    # Log a message if the directory does not exist
+    echo "Directory $dir does not exist. Skipping..."
   fi
 }
 
-# Loop through each directory and remove its contents
+# Loop through the array of directories and attempt to remove all files from each
 for dir in "${directories[@]}"; do
   remove_files "$dir"
 done
 
-echo "All specified directories have been cleared."
+# Final log message indicating the script has completed its work
+echo "All specified directories have been processed and cleaned."
 
 # End of script

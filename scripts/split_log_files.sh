@@ -2,61 +2,98 @@
 #
 # Author: Francisco Maria Calisto
 # Created Date: 2024-04-10
-# Revised Date: 2024-04-11
+# Revised Date: 2024-09-22  # Updated to reflect improvements
+# Version: 1.2  # Incremented version to reflect improvements
 # Usage: ./split_log_files.sh
 # Example: ./script/split_log_files.sh
-# Description: Adjusted for macOS. Splits large .log files into smaller parts based
-# on a maximum file size and renames them using a specific filename pattern
-# to ensure a sortable, numeric sequence.
+# Description: This script splits large .log files into smaller parts based on a maximum 
+# file size and renames the split parts with a sortable numeric sequence. It captures 
+# operations and errors in a log file and ensures directories exist. Adjusted for handling 
+# larger datasets efficiently on macOS and Unix-based systems.
 
-# Define home directory
+# Exit script on any command failure
+set -e
+
+# Define home directory using the system's HOME environment variable
 home="$HOME"
 
-# Directory containing .log files
-LOG_DIR="$home/Git/dicom-images-breast/data/logs/toprocess"
+# Directory containing .log files to process (use realpath for absolute paths)
+LOG_DIR="$(realpath "$home/Git/dicom-images-breast/data/logs/toprocess")"
 
-# Directory to save the split files
-OUTPUT_DIR="$home/Git/dicom-images-breast/data/logs/processed"
+# Directory to save the split files (ensure it exists)
+OUTPUT_DIR="$(realpath "$home/Git/dicom-images-breast/data/logs/processed")"
+mkdir -p "$OUTPUT_DIR"  # Create output directory if it doesn't exist
 
-# Maximum file size (in bytes)
-# Example: 40m for 40MB files on macOS
+# Log file to capture script operations and errors
+LOG_FILE="$(realpath "$home/Git/dicom-images-breast/data/logs/splits/split_log_files.log")"
+mkdir -p "$(dirname "$LOG_FILE")"  # Ensure the log directory exists
+
+# Maximum file size for splitting (in bytes), e.g., "40m" for 40MB
 MAX_SIZE="40m"
 
-# Log file for capturing script operations and potential issues
-LOG_FILE="$home/Git/dicom-images-breast/data/logs/splits/split_log_files.log"
-
-# Ensure the output directory exists
-mkdir -p "$OUTPUT_DIR"
-
-# Initialize or clear the log file
+# Initialize or clear the log file at the start of each run
 echo "Starting new splitting session: $(date)" > "$LOG_FILE"
 
-# Loop through each .log file in the directory
-find "$LOG_DIR" -type f -name "*.log" | while read -r FILE; do
-    echo "Processing file: $FILE" | tee -a "$LOG_FILE"
-    BASE_NAME=$(basename "$FILE" .log)
+# Function to log messages to both the terminal and the log file
+# Arguments:
+#   $1: The message to log
+log_message() {
+  echo "$1" | tee -a "$LOG_FILE"
+}
 
-    # Split the file into parts of the specified size and use a temporary naming scheme
-    # Adjusted for macOS syntax
-    split -b "$MAX_SIZE" -a 8 "$FILE" "$OUTPUT_DIR/${BASE_NAME}_"
+# Function to handle errors gracefully
+# Arguments:
+#   $1: The error message to log
+handle_error() {
+  log_message "Error: $1"
+}
+
+# Function to split and rename log files
+# Arguments:
+#   $1: The full path of the log file to split
+split_log_file() {
+  local file="$1"
+  local base_name=$(basename "$file" .log)  # Extract the base name (without .log extension)
+  
+  log_message "Processing file: $file"
+
+  # Split the log file into parts of the specified size, appending an 8-character suffix
+  split -b "$MAX_SIZE" -a 8 "$file" "$OUTPUT_DIR/${base_name}_"
+
+  # Check if the split operation was successful
+  if [ $? -ne 0 ]; then
+    handle_error "Error splitting $file"
+    return 1  # Return with error code
+  fi
+
+  local count=1  # Initialize a counter for renaming the split parts
+  for part in "$OUTPUT_DIR/${base_name}_"*; do
+    # Create a new filename using a numeric sequence with leading zeros (e.g., 00000001)
+    local new_name="${OUTPUT_DIR}/${base_name}_$(printf "%08d" "$count").log"
+
+    # Rename the split part to the new filename
+    mv "$part" "$new_name"
+
+    # Check if the rename operation was successful
     if [ $? -ne 0 ]; then
-        echo "Error splitting $FILE" | tee -a "$LOG_FILE"
-        continue  # Skip to next file in case of error
+      handle_error "Error renaming $part to $new_name"
+      return 1  # Return with error code
     fi
 
-    COUNT=1
-    for PART in "$OUTPUT_DIR/${BASE_NAME}_"*; do
-        NEW_NAME="${OUTPUT_DIR}/${BASE_NAME}_$(printf "%08d" "$COUNT").log"
-        mv "$PART" "$NEW_NAME"
-        if [ $? -ne 0 ]; then
-            echo "Error renaming $PART to $NEW_NAME" | tee -a "$LOG_FILE"
-            continue  # Proceed to attempt to rename next part
-        fi
-        echo "Renamed $PART to $NEW_NAME" | tee -a "$LOG_FILE"
-        let COUNT++
-    done
+    log_message "Renamed $part to $new_name"
+    count=$((count + 1))  # Increment the counter for the next part
+  done
+
+  return 0  # Indicate success
+}
+
+# Main loop: find all .log files in the LOG_DIR and process them
+find "$LOG_DIR" -type f -name "*.log" | while read -r file; do
+  # Call the function to split and rename the log file
+  split_log_file "$file" || handle_error "Failed to process $file"
 done
 
-echo "Splitting session completed: $(date)" | tee -a "$LOG_FILE"
+# Log the completion of the session
+log_message "Splitting session completed: $(date)"
 
 # End of script
