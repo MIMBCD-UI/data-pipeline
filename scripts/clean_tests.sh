@@ -38,7 +38,6 @@ directories=(
   "$dataset_multimodal_breast/tests/test005/"
   "$dicom_images_breast/data/meta/pre/"
   "$dicom_images_breast/data/meta/post/"
-  "$dicom_images_breast/data/mapping/"
   "$dicom_images_breast/data/logs/"
 )
 
