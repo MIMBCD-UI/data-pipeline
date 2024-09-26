@@ -5,101 +5,126 @@
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-09-22
-# Revised Date: 2024-09-22  # First version of this shell script
-# Version: 1.0
+# Revised Date: 2024-09-26  # Enhanced logging and optimized Patient ID matching.
+# Version: 2.26
 # Status: Development
-# Credits:
-#   - Carlos Santiago
-#   - Catarina Barata
-#   - Jacinto C. Nascimento
-#   - Diogo Araújo
 # Usage: ./explorer.sh
-# Example: ./script/explorer.sh
-# Description: This script reads DICOM files from the "unexplored" folder, extracts the Patient ID from the DICOM metainformation, 
-# checks if the Patient ID exists in the second column of the 'anonymized_patients_birads_curation.csv' file.
-# If a match is found, the DICOM file is moved to the "checking" folder. The script processes up to 10 files.
+# Example: ./scripts/explorer.sh
+# Description: Processes DICOM files, extracts Patient IDs, compares with CSV, and moves matches to the "checking" folder.
 
-# Exit the script if any command fails
+# Exit script immediately if any command fails
 set -e
 
-# Limit for the number of files to process
-FILE_LIMIT=10
+# Configuration: Define how many files to process in one run.
+FILE_LIMIT=50000  # Adjust the limit for production use
 
-# Define root directory relative to this script's location
-home="$HOME"
-root_dir="$home/Git/dataset-multimodal-breast"
-unexplored_dir="$root_dir/data/curation/unexplored"
-checking_dir="$root_dir/data/curation/checking"
-csv_file="$root_dir/data/birads/anonymized_patients_birads_curation.csv"
-LOG_DIR="$root_dir/data/logs"
-LOG_FILE="$LOG_DIR/explorer_$(date +'%Y%m%d_%H%M%S').log"
+# Define key directories and file paths
+home="$HOME"  # User's home directory
+root_dir="$home/Git"  # Root directory for the project
+unchecked_dir="$root_dir/dataset-multimodal-breast/data/curation/unexplored"  # Directory with unprocessed DICOM files
+checking_dir="$root_dir/dataset-multimodal-breast/data/curation/checking"  # Directory to move matched DICOM files
+csv_file="$root_dir/dataset-multimodal-breast/data/birads/anonymized_patients_birads_curation.csv"  # CSV file with patient data
+LOG_DIR="$root_dir/dataset-multimodal-breast/data/logs"  # Log directory
+LOG_FILE="$LOG_DIR/explorer_$(date +'%Y%m%d_%H%M%S').log"  # Log file with timestamp
 
-# Create log directory if it does not exist
+# Ensure the log directory exists
 mkdir -p "$LOG_DIR"
 
-# Log messages to both the console and the log file
+# Function to log messages to both console and log file
 log_message() {
-  echo "$1" | tee -a "$LOG_FILE"
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
-# Validate directory existence
-validate_directory() {
-  local dir_path="$1"
-  local dir_name="$2"
-  if [ ! -d "$dir_path" ]; then
-    log_message "Error: $dir_name directory $dir_path does not exist. Exiting."
+# Validate that required directories and files exist
+validate_path() {
+  if [ ! -e "$1" ]; then
+    log_message "Error: $2 ($1) does not exist. Exiting."
     exit 1
   fi
 }
 
-# Validate that all directories exist
-validate_directory "$unexplored_dir" "Unexplored"
-validate_directory "$checking_dir" "Checking"
-validate_directory "$(dirname "$csv_file")" "CSV"
+# Ensure essential paths exist
+validate_path "$unchecked_dir" "Unchecked folder"
+validate_path "$checking_dir" "Checking folder"
+validate_path "$csv_file" "CSV file"
 
-# Load Patient IDs from the CSV file into a set (hashmap equivalent in shell)
-declare -A patient_ids
-log_message "Loading Patient IDs from CSV file..."
+# Function to extract the Patient ID from DICOM file metadata
+# Uses `dcmdump` and extracts the Patient ID from the DICOM tag (0010,0020)
+extract_patient_id() {
+  local dicom_file="$1"
+  log_message "Attempting to extract Patient ID from: $dicom_file"
+  
+  # Extract Patient ID from DICOM metadata, cleaning up any whitespace
+  local patient_id=$(dcmdump +P PatientID "$dicom_file" 2>/dev/null | awk -F'[][]' '{print $2}' | tr -d '[:space:]')
+  
+  if [ -n "$patient_id" ]; then
+    log_message "Successfully extracted Patient ID: $patient_id"
+    echo "$patient_id"
+  else
+    log_message "No Patient ID found in DICOM file: $dicom_file"
+    echo ""
+  fi
+}
 
-while IFS=, read -r col1 col2; do
-  patient_ids["$col2"]=1  # Use patient ID from the second column
-done < <(tail -n +2 "$csv_file")  # Skip the header row
+# Function to check if a Patient ID exists in the CSV file
+# Uses grep to look for exact matches in the second column of the CSV
+patient_id_in_csv() {
+  local patient_id="$1"
+  
+  # Log that we're checking for the patient ID in the CSV
+  log_message "Checking if Patient ID: $patient_id exists in CSV..."
+  
+  # Use grep to search for the patient ID in the CSV
+  if grep -q ",${patient_id}," "$csv_file"; then
+    log_message "Patient ID: $patient_id found in CSV"
+    return 0  # Found
+  else
+    log_message "Patient ID: $patient_id not found in CSV"
+    return 1  # Not found
+  fi
+}
 
-log_message "Loaded ${#patient_ids[@]} Patient IDs from the CSV."
-
-# Move files to the "checking" directory if their Patient ID is found in the CSV
+# Main function to process DICOM files
 process_files() {
-  local count=0
-  log_message "Processing DICOM files from $unexplored_dir..."
+  local count=0  # Track number of processed files
 
-  find "$unexplored_dir" -type f -name "*.dcm" | while IFS= read -r dicom_file; do
+  log_message "Starting to process DICOM files from: $unchecked_dir"
+  
+  # Find and process DICOM files in the unchecked directory
+  find "$unchecked_dir" -type f -name "*.dcm" | head -n "$FILE_LIMIT" | while IFS= read -r dicom_file; do
     if (( count >= FILE_LIMIT )); then
-      log_message "Reached file limit of $FILE_LIMIT."
+      log_message "File limit of $FILE_LIMIT reached. Stopping."
       break
     fi
 
-    # Extract Patient ID using `dcmdump` (DCMTK package required)
-    patient_id=$(dcmdump +P PatientID "$dicom_file" 2>/dev/null | awk -F'\\' '{print $2}')
-
+    # Extract Patient ID from DICOM file
+    patient_id=$(extract_patient_id "$dicom_file")
+    
+    # Proceed if a valid Patient ID was extracted
     if [ -n "$patient_id" ]; then
-      if [ "${patient_ids[$patient_id]+exists}" ]; then
-        mv "$dicom_file" "$checking_dir"
-        log_message "Moved $dicom_file to $checking_dir (Patient ID: $patient_id)"
-        ((count++))
+      if patient_id_in_csv "$patient_id"; then
+        # If the Patient ID exists in the CSV, move the DICOM file to the checking directory
+        if mv "$dicom_file" "$checking_dir"; then
+          log_message "Successfully moved $dicom_file to $checking_dir (Patient ID: $patient_id)"
+        else
+          log_message "Failed to move $dicom_file to $checking_dir. Skipping."
+        fi
       else
-        log_message "Patient ID $patient_id not found in CSV. File remains in unexplored."
+        log_message "No matching Patient ID in CSV for: $dicom_file"
       fi
     else
-      log_message "No Patient ID found for $dicom_file."
+      log_message "Skipping $dicom_file due to missing Patient ID."
     fi
+
+    ((count++))  # Increment the file counter after each processed file
   done
 
-  log_message "Processed $count files."
+  log_message "Processed $count file(s) out of the $FILE_LIMIT limit."
 }
 
-# Call the function to process files
+# Start processing DICOM files
 process_files
 
-log_message "DICOM file exploration complete."
+log_message "DICOM file exploration completed successfully."
 
 # End of script
