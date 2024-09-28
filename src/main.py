@@ -17,7 +17,7 @@ __author__ = "Francisco Maria Calisto"
 __maintainer__ = "Francisco Maria Calisto"
 __email__ = "francisco.calisto@tecnico.ulisboa.pt"
 __license__ = "ACADEMIC & COMMERCIAL"
-__version__ = "0.7.2"  # Updated version after improvements
+__version__ = "0.7.3"  # Updated version after improvements
 __status__ = "Development"
 __credits__ = ["Carlos Santiago", "Catarina Barata", "Jacinto C. Nascimento", "Diogo Araújo"]
 
@@ -31,7 +31,10 @@ from processing.processor import process_directory  # Import the main processing
 
 # Define constants for batch size and mapping file
 BATCH_SIZE = int(os.getenv('BATCH_SIZE', 100))  # Default batch size of 100, adjustable via environment variable
-MAPPING_FN = "mapping.csv"
+
+# Generate a timestamp for the mapping file name (e.g., "mapping_20240914_104530.csv")
+timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+MAPPING_FN = f"mapping_{timestamp}.csv"  # Timestamped file name
 
 # Define root and folder paths for input/output/logging
 ROOT_DIR = Path(__file__).resolve().parents[2]
