@@ -5,6 +5,43 @@ checker.py:
 
 This script compares anonymized and non-anonymized DICOM files to identify matching files based on the `SOPInstanceUID` metadata.
 It is optimized for large datasets by using batch processing, lazy loading of files, and memory management techniques.
+
+Key Functions:
+- Compare anonymized and non-anonymized DICOM files in batches.
+- Index non-anonymized files by `SOPInstanceUID` for fast lookup.
+- Move files to the `checked` or `unsolvable` directories based on the comparison results.
+
+Expected Input:
+- Anonymized and non-anonymized DICOM files in separate directories.
+- A CSV file containing mappings from Real Patient IDs to Anonymized Patient IDs.
+
+Output:
+- The script moves anonymized files to the `checked` directory if a match is found.
+- If no match is found, the files are moved to the `unsolvable` directory.
+- The script logs the progress and results of the comparison.
+
+Intended Use Case:
+- This script is useful for validating the anonymization process and ensuring that the correct files are anonymized.
+- It can be used as part of a data curation pipeline to verify the integrity of DICOM files.
+
+Customization & Flexibility:
+- The script can be easily extended to support additional metadata fields for comparison.
+- The batch size can be adjusted to optimize performance based on the available system resources.
+- The script can be adapted to handle other types of medical imaging data or metadata.
+
+Performance & Compatibility:
+- The script is designed for performance and efficiency when processing large datasets.
+- It uses multiprocessing to parallelize the comparison of DICOM files and optimize resource utilization.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

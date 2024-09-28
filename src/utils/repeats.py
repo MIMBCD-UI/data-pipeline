@@ -6,13 +6,39 @@ repeats.py:
 This script processes a CSV file and identifies rows where the 'anonymized_patient_id' or 'real_patient_id' columns contain repeated values.
 The script then prints these rows for further analysis.
 
-Intended Use Case:
-- This script is useful for identifying duplicate entries in either the 'anonymized_patient_id' or 'real_patient_id' columns of a CSV file, 
-  which can be critical for data cleaning, validation, or analysis tasks.
+Key Functions:
+- Load a CSV file containing patient mapping data.
+- Identify and print rows with repeated 'anonymized_patient_id' or 'real_patient_id' values.
+- Provide summary statistics on the number of repeated values and unique values.
 
 Expected Input:
-- A CSV file containing the data to be analyzed.
+- A CSV file containing patient mapping data with 'anonymized_patient_id' and 'real_patient_id' columns.
 
+Output:
+- The script prints rows with repeated 'anonymized_patient_id' or 'real_patient_id' values.
+- It also provides summary statistics on the number of repeated values and unique values.
+
+Intended Use Case:
+- This script is useful for identifying potential issues with patient mapping data.
+- It can be used to detect duplicate or inconsistent patient IDs in a dataset.
+
+Customization & Flexibility:
+- The script can be extended to check for repeats in additional columns or fields.
+- It can be adapted to handle other types of data or metadata.
+
+Performance & Compatibility:
+- The script is designed for performance and efficiency when processing large datasets.
+- It uses the pandas library for data manipulation and analysis.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

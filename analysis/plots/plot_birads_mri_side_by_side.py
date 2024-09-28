@@ -2,6 +2,44 @@
 
 """
 plot_birads_mri_side_by_side.py: Plot the frequency of patients with MRI images per BIRADS category, displayed side-by-side.
+This script reads a dataset of patients with BIRADS scores for mammography, ultrasound, and MRI modalities.
+It then calculates the number of patients with different combinations of modalities and plots a stacked bar chart.
+
+Key Functions:
+- Load the dataset of patients with BIRADS scores for different modalities.
+- Calculate the number of patients with different combinations of modalities.
+- Plot a stacked bar chart showing the distribution of patients across different modality combinations.
+
+Expected Usage:
+- Run the script to generate a stacked bar chart of imaging modality combinations.
+- Check the output figure to visualize the distribution of patients across different combinations.
+- Update the script to customize the dataset or modify the plot as needed.
+
+Customization & Flexibility:
+- The script can be adapted to work with different datasets or modalities.
+- Additional metadata or information can be included in the stacked bar chart.
+- The plot style, colors, and labels can be customized based on requirements.
+
+Performance & Compatibility:
+- The script is optimized for performance when handling large datasets.
+- It uses the Plotly library to create interactive and visually appealing plots.
+- The script is compatible with Python 3.6+ and common data science libraries.
+
+Best Practices & Maintenance:
+- The script follows best practices for data visualization and analysis.
+- It provides a clear and informative representation of imaging modality data.
+- The script is well-documented and can be easily maintained or extended.
+
+Notes:
+- This script is part of a data analysis pipeline for multimodal breast imaging data.
+- It is designed to visualize the distribution of imaging modalities for patients.
+- The script can be integrated into a larger data processing or analysis workflow.
+
+References:
+- Plotly library: https://plotly.com/python/
+- Stacked bar charts: https://en.wikipedia.org/wiki/Stacked_bar_chart
+- Data visualization: https://en.wikipedia.org/wiki/Data_visualization
+- Data analysis: https://en.wikipedia.org/wiki/Data_analysis
 """
 
 __author__ = "Francisco Maria Calisto"

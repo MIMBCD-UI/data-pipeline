@@ -5,6 +5,45 @@ processor.py: Optimized for handling large datasets with batch processing and im
 
 This script processes DICOM files by anonymizing and preparing the dataset,
 ensuring efficient handling of large files using batch processing.
+It extracts metadata from DICOM files, anonymizes patient IDs, and saves the files for further analysis.
+
+Key Functions:
+- Process a directory of DICOM files in batches using the `process_directory` function.
+- Extract metadata from DICOM files and anonymize patient IDs.
+- Save anonymized DICOM files to an output directory and update the mapping file.
+
+Expected Input:
+- A directory containing DICOM files to be processed.
+- An output directory to save anonymized DICOM files.
+- A mapping file to store the mapping of original and anonymized patient IDs.
+
+Output:
+- Anonymized DICOM files saved in the output directory.
+- A mapping file with the original and anonymized patient IDs for reference.
+
+Intended Use Case:
+- This script is designed for processing large datasets of DICOM files efficiently.
+- It can be used to curate and prepare medical imaging data for research or analysis.
+- The script is optimized for handling memory-intensive tasks and monitoring resource usage.
+
+Customization & Flexibility:
+- The batch size can be adjusted based on the available system resources.
+- Additional logging configurations or output formats can be added for specific use cases.
+- The script can be extended to support other types of medical imaging data or metadata.
+
+Performance & Compatibility:
+- The script is optimized for performance and efficiency when processing large datasets.
+- It uses memory monitoring and garbage collection to optimize resource utilization.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

@@ -6,13 +6,43 @@ reanonimyzer.py:
 This script processes DICOM files by comparing anonymized and non-anonymized versions to ensure that the anonymized patient IDs are correct. It corrects any discrepancies in filenames and DICOM metadata based on predefined mappings, and then moves the corrected files to a designated 'checked' directory. This ensures the integrity and consistency of patient data, which is crucial for maintaining accurate and reliable datasets in research projects like the MIMBCD-UI initiative.
 
 Key Functions:
-- Load and use mappings between real and anonymized patient IDs to validate and correct DICOM files.
-- Compare SOPInstanceUID between anonymized and non-anonymized files to identify corresponding pairs.
-- Update filenames and DICOM metadata to reflect the correct anonymized patient ID.
-- Move processed and validated files to a designated directory for further use.
+- Load a CSV file containing patient mapping data.
+- Find DICOM files in specified directories.
+- Extract metadata (`SOPInstanceUID` and `PatientID`) from DICOM files.
+- Update DICOM metadata with corrected `PatientID` values.
+- Move corrected files to a 'checked' directory for further processing.
+
+Expected Input:
+- Anonymized and non-anonymized DICOM files in separate directories.
+- A CSV file containing mappings from Real Patient IDs to Anonymized Patient IDs.
+
+Output:
+- The script moves anonymized files to the `checked` directory if a match is found.
+- The matched files are renamed based on the `ViewPosition` and `ImageLaterality` metadata.
+- The script logs the progress and results of the comparison.
 
 Intended Use Case:
-- This script is vital in environments where maintaining the integrity of anonymized medical imaging data is crucial. It supports the correct linkage between anonymized and non-anonymized datasets, ensuring accurate data management in research projects like the MIMBCD-UI initiative.
+- This script is useful for validating the anonymization process and ensuring that the correct files are anonymized.
+- It can be used as part of a data curation pipeline to verify the integrity of DICOM files.
+
+Customization & Flexibility:
+- The script can be easily extended to support additional metadata fields for comparison.
+- It can be adapted to handle other types of medical imaging data or metadata.
+- The script can be integrated into automated workflows for data curation and quality control.
+
+Performance & Compatibility:
+- The script is designed for performance and efficiency when processing large datasets.
+- It uses multiprocessing to parallelize the comparison of DICOM files and optimize resource utilization.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -42,7 +72,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 # Mapping file name
-mapping_fn = "mamo_patients_mapping_data_curated_21052024.csv"
+mapping_fn = "mamo_patients_mapping_data.csv"
 
 # Define root directory
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))

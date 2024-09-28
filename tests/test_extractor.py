@@ -4,6 +4,47 @@
 test_extractor.py: Unit tests for the DICOM information extractor module.
 These tests ensure that the extractor correctly handles DICOM files 
 and properly extracts relevant metadata.
+
+Key Functions:
+- test_extract_dicom_info: Test the extraction of metadata from a DICOM file.
+- test_extract_patient_id: Test the extraction of the patient ID from DICOM metadata.
+- test_extract_modality: Test the extraction of the modality (e.g., CT, MR) from DICOM metadata.
+- test_extract_image_laterality: Test the extraction of the image laterality from DICOM metadata.
+- test_extract_view_position: Test the extraction of the image view position from DICOM metadata.
+- test_extract_study_date: Test the extraction of the study date from DICOM metadata.
+- test_extract_scanning_sequence: Test the extraction of the scanning sequence from DICOM metadata.
+- test_extract_series_description: Test the extraction of the series description from DICOM metadata.
+- test_extract_instance_number: Test the extraction of the instance number from DICOM metadata.
+
+Expected Usage:
+- Run the test suite to verify the functionality of the extractor module.
+- Check the test results to ensure that the extraction functions work as expected.
+- Update the tests as needed to cover additional scenarios or edge cases.
+
+Customization & Flexibility:
+- The test cases can be extended to cover more attributes or metadata fields.
+- Additional tests can be added to validate specific extraction scenarios.
+- The test suite can be integrated into a continuous integration pipeline.
+
+Performance & Compatibility:
+- The tests are designed to be run in a local development environment.
+- The test suite is compatible with Python 3.6+ and the unittest module.
+- The tests are optimized for efficiency and reliability.
+
+Best Practices & Maintenance:
+- The test suite follows best practices for unit testing and validation.
+- It provides comprehensive coverage of the extractor module functionality.
+- The tests are well-documented and can be easily maintained or extended.
+
+Notes:
+- This test suite is part of a larger data curation pipeline for medical imaging data.
+- It is designed to validate the functionality of the DICOM information extractor module.
+- The tests can be run automatically using a continuous integration service.
+
+References:
+- pydicom library: https://pydicom.github.io/
+- DICOM standard: https://www.dicomstandard.org/
+- unittest module: https://docs.python.org/3/library/unittest.html
 """
 
 __author__ = "Francisco Maria Calisto"

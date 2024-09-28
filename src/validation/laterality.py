@@ -7,6 +7,44 @@ This script processes DICOM files by checking for the "Modality" and "Laterality
 is correctly linked and organized, particularly in the context of anonymization, for both US (ultrasound) and MG (mammography) modalities.
 
 This version is optimized for massive datasets through batch processing, parallel processing, and optimized I/O operations.
+
+Key Functions:
+- Process a directory of DICOM files in batches using the `process_directory` function.
+- Extract metadata from DICOM files and check for the "Modality" and "Laterality" tags.
+- Organize DICOM files based on the "Modality" and "Laterality" tags for further analysis.
+
+Expected Input:
+- A directory containing DICOM files to be processed.
+- An output directory to save organized DICOM files.
+- A batch size for processing a specified number of files at a time.
+
+Output:
+- Organized DICOM files saved in the output directory based on the "Modality" and "Laterality" tags.
+- Log files with detailed information on the processing steps and results.
+
+Intended Use Case:
+- This script is designed for processing large datasets of DICOM files efficiently.
+- It can be used to organize and prepare medical imaging data for research or analysis.
+- The script is optimized for handling memory-intensive tasks and monitoring resource usage.
+
+Customization & Flexibility:
+- The batch size can be adjusted based on the available system resources.
+- Additional logging configurations or output formats can be added for specific use cases.
+- The script can be extended to support other types of medical imaging data or metadata.
+
+Performance & Compatibility:
+- The script is designed for performance and efficiency when processing large datasets.
+- It uses multiprocessing to parallelize the file processing and optimize resource utilization.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

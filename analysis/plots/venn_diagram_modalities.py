@@ -2,6 +2,45 @@
 
 """
 venn_diagram_modalities.py: Plot a Venn diagram of patients with different combinations of imaging modalities.
+
+This script reads a dataset of patients with BIRADS scores for mammography, ultrasound, and MRI modalities.
+It then calculates the number of patients with different combinations of modalities and plots a Venn diagram.
+
+Key Functions:
+- Load the dataset of patients with BIRADS scores for different modalities.
+- Calculate the number of patients with different combinations of modalities.
+- Plot a Venn diagram showing the overlap between different modalities.
+
+Expected Usage:
+- Run the script to generate a Venn diagram of imaging modality combinations.
+- Check the output figure to visualize the overlap between modalities.
+- Update the script to customize the dataset or modify the plot as needed.
+
+Customization & Flexibility:
+- The script can be adapted to work with different datasets or modalities.
+- Additional metadata or information can be included in the Venn diagram.
+- The plot style, colors, and labels can be customized based on requirements.
+
+Performance & Compatibility:
+- The script is optimized for performance when handling large datasets.
+- It uses the matplotlib_venn library to create Venn diagrams efficiently.
+- The script is compatible with Python 3.6+ and common data science libraries.
+
+Best Practices & Maintenance:
+- The script follows best practices for data visualization and analysis.
+- It provides a clear and informative representation of imaging modality data.
+- The script is well-documented and can be easily maintained or extended.
+
+Notes:
+- This script is part of a data analysis pipeline for multimodal breast imaging data.
+- It is designed to visualize the distribution of imaging modalities for patients.
+- The script can be integrated into a larger data processing or analysis workflow.
+
+References:
+- matplotlib_venn library: https://pypi.org/project/matplotlib-venn/
+- Venn diagrams: https://en.wikipedia.org/wiki/Venn_diagram
+- Data visualization: https://en.wikipedia.org/wiki/Data_visualization
+- Data analysis: https://en.wikipedia.org/wiki/Data_analysis
 """
 
 __author__ = "Francisco Maria Calisto"

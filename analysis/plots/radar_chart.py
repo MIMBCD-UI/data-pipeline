@@ -2,6 +2,44 @@
 
 """
 radar_chart.py: Plot a radar chart showing the frequency distribution of BIRADS scores across different imaging modalities.
+This script reads a dataset of patients with BIRADS scores for mammography, ultrasound, and MRI modalities.
+It then calculates the frequency distribution of BIRADS scores for each modality and plots a radar chart.
+
+Key Functions:
+- Load the dataset of patients with BIRADS scores for different modalities.
+- Prepare data for radar chart visualization by processing BIRADS scores.
+- Plot a radar chart showing the frequency distribution of BIRADS scores by modality.
+
+Expected Usage:
+- Run the script to generate a radar chart of BIRADS score distributions.
+- Check the output figure to visualize the distribution of BIRADS scores across different modalities.
+- Update the script to customize the dataset or modify the plot as needed.
+
+Customization & Flexibility:
+- The script can be adapted to work with different datasets or modalities.
+- Additional metadata or information can be included in the radar chart.
+- The plot style, colors, and labels can be customized based on requirements.
+
+Performance & Compatibility:
+- The script is optimized for performance when handling large datasets.
+- It uses the Plotly library to create interactive and visually appealing plots.
+- The script is compatible with Python 3.6+ and common data science libraries.
+
+Best Practices & Maintenance:
+- The script follows best practices for data visualization and analysis.
+- It provides a clear and informative representation of imaging modality data.
+- The script is well-documented and can be easily maintained or extended.
+
+Notes:
+- This script is part of a data analysis pipeline for multimodal breast imaging data.
+- It is designed to visualize the distribution of BIRADS scores for different imaging modalities.
+- The script can be integrated into a larger data processing or analysis workflow.
+
+References:
+- Plotly library: https://plotly.com/python/
+- Radar charts: https://en.wikipedia.org/wiki/Radar_chart
+- Data visualization: https://en.wikipedia.org/wiki/Data_visualization
+- Data analysis: https://en.wikipedia.org/wiki/Data_analysis
 """
 
 __author__ = "Francisco Maria Calisto"

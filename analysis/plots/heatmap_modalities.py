@@ -2,6 +2,50 @@
 
 """
 heatmap_modalities.py: Plot the frequency of patients with different combinations of imaging modalities using a heatmap.
+This script reads a dataset of patients with BIRADS scores for mammography, ultrasound, and MRI modalities.
+It then calculates the number of patients with different combinations of modalities and plots a heatmap.
+
+Key Functions:
+- Load the dataset of patients with BIRADS scores for different modalities.
+- Calculate the number of patients with different combinations of modalities.
+- Plot a heatmap showing the frequency of patients with different imaging modality combinations.
+
+Expected Usage:
+- Run the script to generate a heatmap of imaging modality combinations.
+- Check the output figure to visualize the frequency of patients across different combinations.
+- Update the script to customize the dataset or modify the plot as needed.
+
+Customization & Flexibility:
+- The script can be adapted to work with different datasets or modalities.
+- Additional metadata or information can be included in the heatmap.
+- The plot style, colors, and labels can be customized based on requirements.
+
+Performance & Compatibility:
+- The script is optimized for performance when handling large datasets.
+- It uses the Plotly library to create interactive and visually appealing plots.
+- The script is compatible with Python 3.6+ and common data science libraries.
+
+Best Practices & Maintenance:
+- The script follows best practices for data visualization and analysis.
+- It provides a clear and informative representation of imaging modality data.
+- The script is well-documented and can be easily maintained or extended.
+
+Notes:
+- This script is part of a data analysis pipeline for multimodal breast imaging data.
+- It is designed to visualize the distribution of imaging modalities for patients.
+- The script can be integrated into a larger data processing or analysis workflow.
+
+References:
+- Plotly library: https://plotly.com/python/
+- Heatmaps: https://en.wikipedia.org/wiki/Heat_map
+- Data visualization: https://en.wikipedia.org/wiki/Data_visualization
+- Data analysis: https://en.wikipedia.org/wiki/Data_analysis
+
+Example:
+- Run the script to generate a heatmap of imaging modality combinations.
+- Check the output figure to visualize the frequency of patients across different combinations.
+- Update the script to customize the dataset or modify the plot as needed.
+- python heatmap_modalities.py
 """
 
 __author__ = "Francisco Maria Calisto"

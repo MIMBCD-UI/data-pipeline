@@ -5,6 +5,17 @@ test_processor.py: Unit tests for the processor module.
 
 These tests ensure that the DICOM batch processing script functions correctly,
 including anonymization, file handling, and batch processing.
+
+The tests use mock directories and files to simulate the processing environment
+and verify the behavior of the processing functions.
+
+Unit testing is achieved using the unittest framework.
+
+Key Functions:
+- setUp: Initialize the test environment with mock directories and files.
+- test_process_directory_batch: Test the batch processing mechanism in process_directory.
+- test_anonymization_flow: Test the full anonymization flow from metadata extraction to file anonymization.
+- test_construct_filename_prefix: Test the filename prefix construction logic based on DICOM metadata.
 """
 
 __author__ = "Francisco Maria Calisto"
@@ -52,7 +63,7 @@ class TestProcessor(unittest.TestCase):
     # Define mock directories and files for testing
     self.source_folder = os.path.join(os.sep, 'mock', 'source')  # Mock source directory
     self.output_folder = os.path.join(os.sep, 'mock', 'output')  # Mock output directory for anonymized files
-    self.mapping_file = os.path.join(os.sep, 'mock', 'mapping.csv')  # Mock mapping file for patient ID mapping
+    self.mapping_file = os.path.join(os.sep, 'mock', 'test_mapping.csv')  # Mock mapping file for patient ID mapping
     self.batch_size = 2  # Small batch size for testing purposes
 
     # Ensure the mock directories exist by mocking os.makedirs

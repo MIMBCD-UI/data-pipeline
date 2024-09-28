@@ -10,6 +10,40 @@ The test ensures that the encryption process is working as expected,
 and that the secret phrase is correctly read from a temporary file.
 
 Unit testing is achieved using the unittest framework.
+The tests are run by executing this script directly.
+
+Key Functions:
+- test_encrypt_patient_id: Test the encryption of a patient ID.
+- test_read_secret_phrase: Test the reading of a secret phrase from a temporary file.
+
+Expected Usage:
+- Run the test suite to verify the encryption and secret phrase reading functionality.
+- Check the test results to ensure that the functions work as expected.
+- Update the tests as needed to cover additional scenarios or edge cases.
+
+Customization & Flexibility:
+- The test cases can be extended to cover more encryption scenarios.
+- Additional tests can be added to validate specific encryption or secret phrase reading scenarios.
+- The test suite can be integrated into a continuous integration pipeline.
+
+Performance & Compatibility:
+- The tests are designed to be run in a local development environment.
+- The test suite is compatible with Python 3.6+ and the unittest module.
+- The tests are optimized for efficiency and reliability.
+
+Best Practices & Maintenance:
+- The test suite follows best practices for unit testing and validation.
+- It provides comprehensive coverage of the encryption and secret phrase reading functionality.
+- The tests are well-documented and can be easily maintained or extended.
+
+Notes:
+- This test suite is part of a larger data curation pipeline for medical imaging data.
+- It is designed to validate the functionality of the encryption and secret phrase reading modules.
+- The tests can be run automatically using a continuous integration service.
+
+References:
+- unittest module: https://docs.python.org/3/library/unittest.html
+- hashlib module: https://docs.python.org/3/library/hashlib.html
 """
 
 __author__ = "Francisco Maria Calisto"

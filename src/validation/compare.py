@@ -6,10 +6,43 @@ compare.py:
 This script processes and compares anonymized and non-anonymized DICOM files. It supports MG (Mammography), US (Ultrasound), and MRI (Magnetic Resonance Imaging) modalities. The script matches DICOM files based on metadata such as `SOPInstanceUID`, `ViewPosition`, and `ImageLaterality`. Once matched, anonymized files are renamed and moved to a 'compared' directory for further processing.
 
 Key Functions:
-- Load a mapping between anonymized and real patient IDs from a CSV file.
-- Identify and validate DICOM files across different modalities.
-- Extract and compare relevant metadata from anonymized and non-anonymized DICOM files.
-- Rename files according to metadata and organize them into a 'compared' directory.
+- Load a CSV file containing patient mapping data.
+- Find all DICOM files in the 'comparing' directory.
+- Index non-anonymized files by `SOPInstanceUID` for fast lookup.
+- Process anonymized files, match based on `PatientID` and `SOPInstanceUID`, and rename.
+- Move the matched files to the 'compared' directory for further analysis.
+
+Expected Input:
+- Anonymized and non-anonymized DICOM files in separate directories.
+- A CSV file containing mappings from Real Patient IDs to Anonymized Patient IDs.
+
+Output:
+- The script moves anonymized files to the `compared` directory if a match is found.
+- The matched files are renamed based on the `ViewPosition` and `ImageLaterality` metadata.
+- The script logs the progress and results of the comparison.
+
+Intended Use Case:
+- This script is useful for validating the anonymization process and ensuring that the correct files are anonymized.
+- It can be used as part of a data curation pipeline to verify the integrity of DICOM files.
+
+Customization & Flexibility:
+- The script can be easily extended to support additional metadata fields for comparison.
+- It can be adapted to handle other types of medical imaging data or metadata.
+- The script can be modified to support other modalities or imaging techniques.
+
+Performance & Compatibility:
+- The script is designed for performance and efficiency when processing large datasets.
+- It uses multiprocessing to parallelize the comparison of DICOM files and optimize resource utilization.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

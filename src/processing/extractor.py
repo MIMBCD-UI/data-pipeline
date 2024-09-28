@@ -4,6 +4,47 @@
 extractor.py: Module to extract relevant information from DICOM files.
 This module reads DICOM files and extracts essential metadata, 
 including patient information, modality, and image details.
+The extracted information is used for data processing and analysis.
+
+Key Functions:
+- extract_dicom_info: Extract relevant information from a DICOM file.
+- extract_patient_id: Extract the patient ID from DICOM metadata.
+- extract_modality: Extract the modality (e.g., CT, MR) from DICOM metadata.
+- extract_image_laterality: Extract the image laterality from DICOM metadata.
+- extract_view_position: Extract the image view position from DICOM metadata.
+- extract_study_date: Extract the study date from DICOM metadata.
+- extract_scanning_sequence: Extract the scanning sequence from DICOM metadata.
+- extract_series_description: Extract the series description from DICOM metadata.
+- extract_instance_number: Extract the instance number from DICOM metadata.
+
+Expected Usage:
+- Extract relevant information from a DICOM file using `extract_dicom_info`.
+- Access specific attributes using individual extraction functions.
+- Process the extracted information for analysis or visualization.
+
+Customization & Flexibility:
+- The extraction functions can be extended to include additional attributes.
+- The extracted information can be formatted or transformed based on requirements.
+- The module can be integrated into existing data processing pipelines.
+
+Performance & Compatibility:
+- The module is optimized for processing DICOM files efficiently.
+- It uses the pydicom library for reading DICOM files.
+- The module is compatible with Python 3.6+ and can be used in various environments and platforms.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This module is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
+
+References:
+- pydicom library: https://pydicom.github.io/
+- DICOM standard: https://www.dicomstandard.org/
 """
 
 __author__ = "Francisco Maria Calisto"

@@ -1,7 +1,55 @@
 #!/usr/bin/env python
 
 """
-interactive_dashboard.py: Create an interactive dashboard to explore the frequency distribution of BIRADS scores across different imaging modalities.
+interactive_dashboard.py: Create an interactive dashboard to explore the frequency
+distribution of BIRADS scores across different imaging modalities.
+This script reads a dataset of patients with BIRADS scores for mammography,
+ultrasound, and MRI modalities. It then calculates the number of patients with
+different combinations of modalities and creates an interactive dashboard.
+The dashboard allows users to explore the distribution of BIRADS scores for
+each modality and their combinations.
+
+Key Functions:
+- Load the dataset of patients with BIRADS scores for different modalities.
+- Calculate the number of patients with different combinations of modalities.
+- Create an interactive dashboard to explore the distribution of BIRADS scores.
+
+Expected Usage:
+- Run the script to generate an interactive dashboard.
+- Open the dashboard in a web browser to explore the data interactively.
+- Update the script to customize the dataset or modify the dashboard as needed.
+
+Customization & Flexibility:
+- The script can be adapted to work with different datasets or modalities.
+- Additional metadata or information can be included in the dashboard.
+- The dashboard layout, style, and interactivity can be customized based on requirements.
+
+Performance & Compatibility:
+- The script is optimized for performance when handling large datasets.
+- It uses the Plotly library to create interactive and visually appealing plots.
+- The script is compatible with Python 3.6+ and common data science libraries.
+
+Best Practices & Maintenance:
+- The script follows best practices for data visualization and analysis.
+- It provides a clear and informative representation of imaging modality data.
+- The script is well-documented and can be easily maintained or extended.
+
+Notes:
+- This script is part of a data analysis pipeline for multimodal breast imaging data.
+- It is designed to visualize the distribution of imaging modalities for patients.
+- The script can be integrated into a larger data processing or analysis workflow.
+
+References:
+- Plotly library: https://plotly.com/python/
+- Dash library: https://dash.plotly.com/
+- Data visualization: https://en.wikipedia.org/wiki/Data_visualization
+- Data analysis: https://en.wikipedia.org/wiki/Data_analysis
+
+Example:
+- Run the script to generate an interactive dashboard of BIRADS score distributions.
+- Open the dashboard in a web browser to explore the data interactively.
+- Update the script to customize the dataset or modify the dashboard as needed.
+- python interactive_dashboard.py
 """
 
 __author__ = "Francisco Maria Calisto"

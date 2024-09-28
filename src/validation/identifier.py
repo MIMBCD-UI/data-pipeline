@@ -6,10 +6,48 @@ identifier.py:
 This script processes DICOM files located in the "checking" folder by extracting the SOP Instance UID
 from each DICOM file. It then searches the "raw" folder and its subfolders to find a matching SOP Instance UID.
 If a match is found, it reads the Real Patient ID from the matching file in the "raw" folder and compares
-it to the Anonymized Patient ID in the "mapping.csv" file. If a matching Anonymized Patient ID is found,
+it to the Anonymized Patient ID in the "mamo_patients_mapping_data.csv" file. If a matching Anonymized Patient ID is found,
 the script renames the DICOM file in the "checking" folder by replacing the Patient ID part of the filename
 with the Anonymized Patient ID, and then moves the file to the "identified" folder. If no match is found, the DICOM file
 is moved to the "unsolvable" folder. Optimized for large datasets with parallel processing and efficient file handling.
+
+Key Functions:
+- Load a CSV file containing patient mapping data.
+- Load SOP Instance UIDs from the raw DICOM folder.
+- Extract the Patient ID from DICOM metadata.
+- Move files between folders based on processing results.
+- Rename DICOM files with anonymized Patient IDs.
+
+Expected Input:
+- DICOM files in the "checking" folder and DICOM files in the "raw" folder.
+- A CSV file containing mappings from Real Patient IDs to Anonymized Patient IDs.
+
+Output:
+- The script renames and moves DICOM files to the "identified" folder if a match is found.
+- The script moves DICOM files to the "unsolvable" folder if no match is found.
+
+Intended Use Case:
+- This script is useful for identifying and renaming DICOM files with anonymized Patient IDs.
+- It can be used to validate the anonymization process and ensure that the correct files are anonymized.
+
+Customization & Flexibility:
+- The script can be extended to handle additional metadata fields or file formats.
+- It can be adapted to process other types of medical imaging data or metadata.
+- The script can be integrated into a larger data curation pipeline for multimodal breast imaging data.
+
+Performance & Compatibility:
+- The script is designed for performance and efficiency when processing large datasets.
+- It uses multiprocessing to parallelize the file processing and optimize resource utilization.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

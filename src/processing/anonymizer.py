@@ -5,6 +5,47 @@ anonymizer.py: Anonymize DICOM files by removing patient-related
 information and renaming them according to a specified format.
 This script handles the anonymization of sensitive fields in DICOM files 
 and provides options to save the metadata before and after the anonymization process.
+
+Key Functions:
+- is_dicom_file: Check if a file is a valid DICOM file.
+- anonymize_dicom_file: Anonymize a DICOM file by removing patient-related information.
+- anonymize_field: Replace a DICOM field's value with a new value.
+- anonymize_sequences: Anonymize specific DICOM sequence fields.
+- save_dicom: Save the anonymized DICOM file with a new name.
+- anonymize_directory: Anonymize all DICOM files in a directory.
+
+Expected Input:
+- A directory containing DICOM files to be anonymized.
+- An optional configuration file with anonymization rules.
+- Output directory for saving the anonymized files.
+
+Output:
+- Anonymized DICOM files saved in the output directory.
+- Metadata files saved before and after anonymization for each DICOM file.
+
+Intended Use Case:
+- This script is useful for anonymizing DICOM files for research or sharing purposes.
+- It can be used to remove sensitive patient information from medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
+
+Customization & Flexibility:
+- The script can be extended to support additional anonymization rules or fields.
+- It can be adapted to handle other types of medical imaging data or metadata.
+- The script can be integrated into a larger data curation pipeline for multimodal breast imaging data.
+
+Performance & Compatibility:
+- The script is optimized for performance and efficiency when processing DICOM files.
+- It uses the pydicom library for reading and writing DICOM files.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This script is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
 """
 
 __author__ = "Francisco Maria Calisto"

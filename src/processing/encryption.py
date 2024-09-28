@@ -2,6 +2,43 @@
 
 """
 encryption.py: Module for encrypting patient IDs.
+
+This module provides functions for encrypting patient IDs using the SHA-256 hash function
+combined with a secret phrase. The encrypted patient IDs are truncated to match the length
+of the original IDs to ensure consistency and compatibility with existing data.
+
+Key Functions:
+- read_secret_phrase: Read the secret phrase from an external file.
+- encrypt_patient_id: Encrypt a patient ID using the secret phrase.
+
+Expected Usage:
+- Read the secret phrase from a file using `read_secret_phrase`.
+- Encrypt a patient ID using `encrypt_patient_id`.
+
+Customization & Flexibility:
+- The encryption algorithm can be easily modified or extended to use different hash functions.
+- The secret phrase can be updated or changed to enhance security and protect sensitive data.
+- The encryption process can be adapted to include additional metadata or parameters.
+
+Performance & Compatibility:
+- The encryption process is optimized for efficiency and security using the SHA-256 hash function.
+- The module is compatible with Python 3.6+ and can be used in various environments and platforms.
+- The encryption functions are designed to handle large datasets and sensitive patient information.
+
+Best Practices & Maintenance:
+- The script follows best practices for error handling, logging, and code readability.
+- It is well-documented and can be easily maintained or extended by other developers.
+- The script is designed to be robust and reliable for long-term use in data curation workflows.
+
+Notes:
+- This module is part of a larger data curation pipeline for multimodal breast imaging data.
+- It is optimized for processing DICOM files but can be adapted for other types of medical imaging data.
+- The script is designed to be run from the command line or as part of an automated workflow.
+
+References:
+- SHA-256 hash function: https://en.wikipedia.org/wiki/SHA-2
+- Secure hash algorithms: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+- Cryptographic hash functions: https://en.wikipedia.org/wiki/Cryptographic_hash_function
 """
 
 __author__ = "Francisco Maria Calisto"
