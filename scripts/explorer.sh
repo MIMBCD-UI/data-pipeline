@@ -5,7 +5,7 @@
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-09-22
-# Revised Date: 2024-09-29  # Improved logging, error handling, and optimized Patient ID processing
+# Revised Date: 2024-09-28  # Improved logging, error handling, and optimized Patient ID processing
 # Version: 2.28
 # Status: Development
 # Usage: ./explorer.sh
@@ -16,7 +16,7 @@
 set -e
 
 # Configuration: Set the maximum number of DICOM files to process in one run
-FILE_LIMIT=1  # You can adjust this for testing or set higher for production
+FILE_LIMIT=50000  # You can adjust this for testing or set higher for production
 
 # Define key directories and file paths for processing
 home="$HOME"  # User's home directory
