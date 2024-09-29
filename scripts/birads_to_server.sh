@@ -5,8 +5,8 @@
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-04-11
-# Revised Date: 2024-09-22  # Updated to reflect improvements
-# Version: 1.2  # Incremented version to reflect further optimizations for large datasets
+# Revised Date: 2024-09-29  # Directory modularization and enhanced batch processing for large datasets
+# Version: 1.4.2
 # Status: Development
 # Credits:
 #   - Carlos Santiago
@@ -15,102 +15,151 @@
 #   - Diogo Araújo
 # Usage: ./birads_to_server.sh
 # Example: ./script/birads_to_server.sh
-# Description: This script copies files from a local directory to a remote server using scp.
-# It includes error handling, path validation, and optimizations for transferring large datasets.
+# Description: This script copies files from a local directory to a remote server in batches using `scp`.
+# It handles massive datasets, includes detailed logging, and ensures safe execution with password-based authentication.
 
-# Exit the script if any command fails to ensure safe execution
+# Exit immediately if any command fails to ensure safe execution
 set -e
+
+#############################
+# Directory Structure Setup
+#############################
 
 # Define the home directory using the system's HOME environment variable
 home="$HOME"
 
-# Source directory on your macOS system (using realpath for robustness)
-# 'realpath' ensures the path is absolute and valid
-SOURCE_DIR="$(realpath "$home/Git/dataset-multimodal-breast/data/birads/")"
+# Root directory for Git projects
+git_root="$home/Git"
 
-# Define the target directory path on the remote server
-TARGET_PATH="/data/datasets/dataset-multimodal-breast/data/birads/"
+# Project-specific directory
+project_name="dataset-multimodal-breast"
+project_dir="$git_root/$project_name"
 
-# Define batch size for handling large datasets
+# Data directory inside the project
+data_dir="$project_dir/data"
+
+# Subdirectory for BIRADS data
+birads_dir="$data_dir/birads"
+
+# Set the source directory to the BIRADS folder for the copy operation
+source_dir="$(realpath "$birads_dir")"
+
+# Remote server directory structure split into modular parts
+server_protocol="scp"  # Protocol used for copying
+server_base="/data"  # Base directory on the server
+server_datasets="datasets"  # Datasets directory on the server
+server_project="$project_name"  # Project directory on the server
+server_data="data"  # Data directory inside the project on the server
+server_birads="birads"  # BIRADS data subdirectory
+
+# Combine all parts to form the full remote target directory
+target_dir="$server_base/$server_datasets/$server_project/$server_data/$server_birads/"
+
+#############################
+# Batch Processing Setup
+#############################
+
+# Define the batch size for handling large datasets
 BATCH_SIZE=100  # Number of files to process in each batch
 
-# Function to log messages to the terminal for better visibility
+#############################
+# Logging Function
+#############################
+
+# Function to log messages with timestamps for better visibility
+# Arguments:
+#   $1: Message to log
 log_message() {
-  echo "$1"
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1"
 }
 
-# Prompt for the server's username and store it in the 'username' variable
-read -p "Enter the server's username: " username
+#############################
+# User Inputs and Setup
+#############################
 
-# Prompt for the server's IP address and store it in the 'server_ip' variable
+# Prompt for the server's username and IP address
+read -p "Enter the server's username: " username
 read -p "Enter the server's IP address: " server_ip
 
-# Handle IPv6 addresses by enclosing them in square brackets to form the full target directory
+# Handle IPv6 addresses by enclosing them in square brackets
 if [[ "$server_ip" == *":"* ]]; then
-  TARGET_DIR="${username}@[$server_ip]:${TARGET_PATH}"
+  remote_target="${username}@[$server_ip]:$target_dir"
 else
-  TARGET_DIR="${username}@${server_ip}:${TARGET_PATH}"
+  remote_target="${username}@${server_ip}:$target_dir"
 fi
 
-# Prompt for the server's password and hide the input for security
+# Prompt for the server's password (optional if using SSH keys), and hide the input for security
 read -s -p "Enter the server's password: " password
-echo  # Move to a new line after the password input
+echo  # Move to a new line after password input
+
+#############################
+# Pre-execution Validations
+#############################
 
 # Check if the source directory exists and is not empty
-if [ ! -d "$SOURCE_DIR" ]; then
-  log_message "Error: Source directory $SOURCE_DIR does not exist. Exiting."
+if [ ! -d "$source_dir" ]; then
+  log_message "Error: Source directory $source_dir does not exist. Exiting."
   exit 1
-elif [ -z "$(ls -A "$SOURCE_DIR")" ]; then
-  log_message "Error: Source directory $SOURCE_DIR is empty. Exiting."
+elif [ -z "$(ls -A "$source_dir")" ]; then
+  log_message "Error: Source directory $source_dir is empty. Exiting."
   exit 1
 fi
 
-# Check if sshpass is installed (required for password-based scp)
+# Ensure sshpass is installed for password-based scp
 if ! command -v sshpass &> /dev/null; then
-  log_message "Error: sshpass could not be found. Please install it and try again."
+  log_message "Error: sshpass is required but not installed. Please install sshpass and try again."
   exit 1
 fi
 
-# Function to copy files to the remote server using scp and sshpass
+#############################
+# File Transfer Function
+#############################
+
+# Function to copy a file to the remote server using scp and sshpass for password authentication
+# Arguments:
+#   $1: Full path of the file to be copied
 copy_files_to_server() {
   local file="$1"
-  log_message "Copying $file to $TARGET_DIR..."
-  
-  # Copy the file using scp and sshpass for password-based authentication
-  sshpass -p "$password" scp "$file" "$TARGET_DIR"
-  
-  # Check if the file copy was successful
+  log_message "Copying $file to $remote_target..."
+
+  # Use sshpass to handle password-based scp file transfers
+  sshpass -p "$password" scp "$file" "$remote_target"
+
+  # Verify if the file was copied successfully
   if [ $? -eq 0 ]; then
     log_message "Successfully copied $file."
   else
-    log_message "Error: Failed to copy $file. Continuing with next file."
+    log_message "Error: Failed to copy $file. Continuing with the next file."
   fi
 }
 
-# Function to process files in batches
-# This is important to prevent memory or performance issues when dealing with large datasets.
-process_files_in_batches() {
-  local file_count=0
-  local files_to_copy=()
-  
-  # Loop through all files in the source directory
-  for file in "$SOURCE_DIR"*; do
-    if [ -f "$file" ]; then
-      files_to_copy+=("$file")  # Add file to the batch
-      file_count=$((file_count + 1))
+#############################
+# Batch Processing Function
+#############################
 
-      # Process the batch if we reach the BATCH_SIZE limit
+# Function to process files in batches to prevent overloading system resources
+process_files_in_batches() {
+  local file_count=0  # Counter for files processed
+  local files_to_copy=()  # Array to store files in batches
+
+  log_message "Starting to process files from $source_dir and transfer them to $remote_target"
+
+  # Loop through each file in the source directory
+  for file in "$source_dir"/*; do
+    if [ -f "$file" ]; then
+      files_to_copy+=("$file")  # Add the file to the batch
+      file_count=$((file_count + 1))  # Increment file count
+
+      # Process the batch once it reaches the defined BATCH_SIZE
       if [ "$file_count" -ge "$BATCH_SIZE" ]; then
-        log_message "Processing batch of $BATCH_SIZE files..."
+        log_message "Processing a batch of $BATCH_SIZE files..."
         for batch_file in "${files_to_copy[@]}"; do
           copy_files_to_server "$batch_file"
         done
-        # Reset the batch
+        # Reset the batch after processing
         file_count=0
         files_to_copy=()
       fi
-    else
-      log_message "No files found in $SOURCE_DIR. Skipping."
     fi
   done
 
@@ -121,12 +170,17 @@ process_files_in_batches() {
       copy_files_to_server "$batch_file"
     done
   fi
+
+  log_message "File transfer completed successfully."
 }
 
-# Call the batch processing function to start transferring files
+#############################
+# Execution: Start Batch Processing
+#############################
+
 process_files_in_batches
 
-# Final message indicating the script has completed successfully
-log_message "All files have been copied to the server successfully."
+# Final log message indicating the script completed successfully
+log_message "All files have been successfully transferred to the server."
 
 # End of script

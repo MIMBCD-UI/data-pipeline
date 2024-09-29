@@ -5,55 +5,105 @@
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-09-28
-# Revised Date: 2024-09-28
-# Version: 1.3
+# Revised Date: 2024-09-29  # Improved directory modularization and file handling
+# Version: 1.5.4
 # Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./check_missing_patients.sh
-# Description: This script checks whether each anonymized Patient ID from the CSV file exists in any DICOM file within the "unexplored" folder.
+# Example: ./scripts/check_missing_patients.sh
+# Description: This script checks whether anonymized Patient IDs from the CSV file exist in any DICOM files
+#              located in the "unexplored" folder. It logs all steps and handles large datasets.
 
-# Exit script immediately if any command fails
+# Exit the script immediately if any command fails
 set -e
 
-# Configuration: Define key directories and file paths
-home="$HOME"  # User's home directory
-root_dir="$home/Git"  # Root directory where the project is located
-# unchecked_dir="$root_dir/dataset-multimodal-breast/data/curation/unexplored"  # Directory with unprocessed DICOM files
-unchecked_dir="$root_dir/dataset-multimodal-breast/data/curation/checking"  # TO DELETE
-csv_file="$root_dir/dataset-multimodal-breast/data/birads/anonymized_patients_birads_curation.csv"  # CSV file with anonymized patient IDs
-LOG_DIR="$root_dir/dataset-multimodal-breast/data/logs"  # Directory for log files
-LOG_FILE="$LOG_DIR/check_missing_patients_$(date +'%Y%m%d_%H%M%S').log"  # Unique log file with timestamp
+#############################
+# Directory and File Setup
+#############################
 
-# Ensure the log directory exists (if not, create it)
-mkdir -p "$LOG_DIR"
+# Define the home directory using the system's HOME environment variable
+home="$HOME"
 
-# Function to log messages to both the console and log file with a timestamp
+# Modular directory structure (one level per variable for flexibility)
+git_dir="$home/Git"                               # Git root directory
+project_name="dataset-multimodal-breast"          # Project folder name
+project_dir="$git_dir/$project_name"              # Full project directory
+
+data_name="data"                                  # Data folder name
+data_dir="$project_dir/$data_name"                # Full data directory
+
+curation_name="curation"                          # Curation folder name
+curation_dir="$data_dir/$curation_name"           # Full curation directory
+
+unexplored_name="unexplored"                      # Folder containing unexplored DICOM files
+unexplored_dir="$curation_dir/$unexplored_name"   # Full unexplored DICOM folder path
+
+birads_name="birads"                              # BIRADS folder name
+birads_dir="$data_dir/$birads_name"               # Full BIRADS directory
+
+csv_filename="anonymized_patients_birads_curation.csv"  # CSV file name
+csv_file="$birads_dir/$csv_filename"              # Full CSV file path
+
+logs_name="logs"                                  # Logs folder name
+logs_dir="$data_dir/$logs_name"                   # Full logs directory
+
+# Log filename with a timestamp to keep logs unique
+log_filename="check_missing_patients_$(date +'%Y%m%d_%H%M%S').log"
+log_file="$logs_dir/$log_filename"                # Full log file path
+
+# Ensure the log directory exists (create if necessary)
+mkdir -p "$logs_dir"
+
+#############################
+# Logging Function
+#############################
+
+# Function to log messages with timestamps for better visibility
+# Arguments:
+#   $1: Message to log
 log_message() {
-  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a "$log_file"
 }
 
-# Function to validate the existence of required paths (directories or files)
+#############################
+# Path Validation Function
+#############################
+
+# Function to validate that directories or files exist
 # Arguments:
 #   $1: Path to validate
 #   $2: Friendly name for the error message
 validate_path() {
   if [ ! -e "$1" ]; then
     log_message "Error: $2 ($1) does not exist. Exiting."
-    exit 1  # Terminate script if the path is missing
+    exit 1  # Exit if the path is missing
   fi
 }
 
-# Ensure essential directories and CSV file exist before continuing
-validate_path "$unchecked_dir" "Unchecked folder (DICOM directory)"
-validate_path "$csv_file" "CSV file (Patient data)"
+# Ensure that the necessary directories and files exist
+validate_path "$unexplored_dir" "Unexplored DICOM folder"
+validate_path "$csv_file" "CSV file containing patient data"
 
-# Initialize arrays to store unique Patient IDs and Patient IDs not found in DICOM files
-unique_patients=()  # Array to store unique Patient IDs
-not_found_patients=()  # Array to store Patient IDs not found in DICOM files
+#############################
+# Initialize Arrays
+#############################
+
+# Arrays to store unique and missing Patient IDs
+unique_patients=()     # To store unique Patient IDs from the CSV
+not_found_patients=()  # To store Patient IDs not found in DICOM files
+
+#############################
+# Array Element Check Function
+#############################
 
 # Function to check if an element exists in an array
 # Arguments:
-#   $1: Element to search
-#   $2: Array to search in
+#   $1: Element to search for
+#   $2: Array to search within
 element_in_array() {
   local element="$1"
   shift
@@ -65,33 +115,41 @@ element_in_array() {
   return 1  # Element not found
 }
 
-# Function to check if a given Patient ID exists in any DICOM file within the "unexplored" directory
+#############################
+# Patient ID Check Function
+#############################
+
+# Function to check whether a given Patient ID exists in DICOM filenames
 # Arguments:
-#   $1: The anonymized Patient ID to search for in the DICOM files
+#   $1: Anonymized Patient ID to search for
 check_patient_in_dicom_files() {
   local patient_id="$1"
-
-  # Search for the Patient ID in the filenames of the DICOM files
-  if find "$unchecked_dir" -type f -name "*.dcm" | grep -q "$patient_id"; then
+  
+  # Search for the Patient ID in DICOM filenames
+  if find "$unexplored_dir" -type f -name "*.dcm" | grep -q "$patient_id"; then
     log_message "Patient ID: $patient_id found in DICOM files."
   else
     log_message "Patient ID: $patient_id NOT found in any DICOM file."
-    not_found_patients+=("$patient_id")  # Add to the list of missing Patient IDs
+    not_found_patients+=("$patient_id")  # Add the missing Patient ID to the array
   fi
 }
 
-# Function to process the CSV and check for Patient IDs
+#############################
+# CSV Processing Function
+#############################
+
+# Function to process the CSV and check for unique Patient IDs
 process_csv() {
   log_message "Starting to process the CSV file: $csv_file"
-
-  # Read the CSV file line by line, assuming Patient ID is in the second column
-  while IFS=',' read -r col1 patient_id rest; do
+  
+  # Read the CSV, assuming the Patient IDs are in the second column
+  while IFS=',' read -r _ patient_id _; do
     if [ -n "$patient_id" ]; then  # Ensure the Patient ID is not empty
-      # Only process if the Patient ID is unique (not already in the array)
+      # Check for unique Patient IDs
       if ! element_in_array "$patient_id" "${unique_patients[@]}"; then
-        unique_patients+=("$patient_id")  # Add to unique list
-        log_message "Checking Patient ID: $patient_id from CSV"
-        check_patient_in_dicom_files "$patient_id"  # Call function to check if the Patient ID exists in DICOM files
+        unique_patients+=("$patient_id")  # Add unique Patient ID to the array
+        log_message "Checking Patient ID: $patient_id from the CSV"
+        check_patient_in_dicom_files "$patient_id"  # Check if the Patient ID exists in DICOM files
       else
         log_message "Skipping duplicate Patient ID: $patient_id"
       fi
@@ -99,10 +157,17 @@ process_csv() {
   done < "$csv_file"
 }
 
-# Start the process of checking Patient IDs from the CSV
+#############################
+# Begin CSV Processing
+#############################
+
 process_csv
 
-# After checking all Patient IDs, report any that were not found
+#############################
+# Summarize Missing Patient IDs
+#############################
+
+# Summarize missing Patient IDs if any were not found in DICOM files
 if [ ${#not_found_patients[@]} -ne 0 ]; then
   log_message "Summary: The following Patient IDs were NOT found in any DICOM files:"
   for patient_id in "${not_found_patients[@]}"; do
@@ -115,6 +180,7 @@ fi
 # Log the total number of unique Patient IDs processed
 log_message "Total number of unique Patient IDs processed: ${#unique_patients[@]}"
 
+# Completion log message
 log_message "Patient ID check completed successfully."
 
 # End of script

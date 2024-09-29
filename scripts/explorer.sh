@@ -5,54 +5,85 @@
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-09-22
-# Revised Date: 2024-09-28  # Improved logging, error handling, and optimized Patient ID processing
-# Version: 2.28
+# Revised Date: 2024-09-29  # Modularized directory structure with enhanced logging
+# Version: 2.2.11  # Version increment for modularity and handling massive datasets
 # Status: Development
+# Credits:
+#   - Carlos Santiago
+#   - Catarina Barata
+#   - Jacinto C. Nascimento
+#   - Diogo Araújo
 # Usage: ./explorer.sh
 # Example: ./scripts/explorer.sh
-# Description: Processes DICOM files, extracts Patient IDs, compares with CSV, and moves matches to the "checking" folder.
+# Description: Processes DICOM files, extracts Patient IDs, compares them with a CSV file, and moves matching files to the "checking" folder.
 
-# Exit script immediately if any command fails to prevent further errors
+# Exit script immediately if any command fails
 set -e
 
 # Configuration: Set the maximum number of DICOM files to process in one run
-FILE_LIMIT=50000  # You can adjust this for testing or set higher for production
+FILE_LIMIT=50000  # Adjust for production or testing needs
 
-# Define key directories and file paths for processing
+#############################
+# Modular Directory Structure
+#############################
+
+# Define user and project directories
 home="$HOME"  # User's home directory
-root_dir="$home/Git"  # Root project directory
-unchecked_dir="$root_dir/dataset-multimodal-breast/data/curation/unexplored"  # Unprocessed DICOM files
-checking_dir="$root_dir/dataset-multimodal-breast/data/curation/checking"  # Folder for files with matching Patient IDs
-csv_file="$root_dir/dataset-multimodal-breast/data/birads/anonymized_patients_birads_curation.csv"  # CSV file containing anonymized patient IDs
-LOG_DIR="$root_dir/dataset-multimodal-breast/data/logs"  # Log directory for all logging
-LOG_FILE="$LOG_DIR/explorer_$(date +'%Y%m%d_%H%M%S').log"  # Log file with timestamp for uniqueness
+git_root="$home/Git"  # Root directory for Git projects
+dataset_project="dataset-multimodal-breast"  # Project name
 
-# Ensure the log directory exists, creating it if necessary
-mkdir -p "$LOG_DIR"
+# Define the structure of the directories using modular components
+data_dir="$git_root/$dataset_project/data"  # Data folder within the project
+curation_dir="$data_dir/curation"  # Curation folder within the data directory
+unchecked_dir="$curation_dir/unexplored"  # Directory for unprocessed DICOM files
+checking_dir="$curation_dir/checking"  # Directory to move files with matching Patient IDs
+birads_dir="$data_dir/birads"  # BIRADS-related data directory
 
-# Function to log messages with timestamps
+# Define the CSV file and log paths
+csv_filename="anonymized_patients_birads_curation.csv"  # Name of the CSV file containing anonymized Patient IDs
+csv_file="$birads_dir/$csv_filename"  # Full path to the CSV file
+log_dir="$data_dir/logs"  # Log directory
+log_file="$log_dir/explorer_$(date +'%Y%m%d_%H%M%S').log"  # Log file with a timestamp for uniqueness
+
+# Ensure the log directory exists; create it if it does not
+mkdir -p "$log_dir"
+
+#############################
+# Logging Function
+#############################
+
+# Function to log messages with timestamps to both console and log file
+# Arguments:
+#   $1: Message to log
 log_message() {
-  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a "$log_file"
 }
 
-# Validate if a directory or file exists, exiting the script if it doesn't
+#############################
+# Path Validation Function
+#############################
+
+# Function to validate that directories or files exist before proceeding
 # Arguments:
 #   $1: Path to validate
 #   $2: Friendly name to display in case of an error
 validate_path() {
   if [ ! -e "$1" ]; then
     log_message "Error: $2 ($1) does not exist. Exiting."
-    exit 1  # Terminate the script if the path is invalid
+    exit 1  # Exit the script if the path is invalid
   fi
 }
 
-# Validate that all required paths (directories and CSV file) exist before starting
+# Validate that all required paths (directories and the CSV file) exist before proceeding
 validate_path "$unchecked_dir" "Unchecked DICOM folder"
 validate_path "$checking_dir" "Checking folder"
 validate_path "$csv_file" "CSV file"
 
-# Function to extract the Patient ID from a DICOM file
-# Uses dcmdump to extract Patient ID from tag (0010,0020) and cleans output
+#############################
+# DICOM Processing Functions
+#############################
+
+# Function to extract the Patient ID from a DICOM file using dcmdump
 # Arguments:
 #   $1: Full path to the DICOM file
 extract_patient_id() {
@@ -60,21 +91,19 @@ extract_patient_id() {
   
   log_message "Attempting to extract Patient ID from: $dicom_file"
   
-  # Extract Patient ID using dcmdump, capturing only the ID and removing extra whitespace
+  # Use dcmdump to extract the Patient ID from tag (0010,0020), clean the output, and remove extra spaces
   local patient_id=$(dcmdump +P PatientID "$dicom_file" 2>/dev/null | awk -F'[][]' '{print $2}' | tr -d '[:space:]')
   
-  # Check if a Patient ID was extracted and log the result
   if [ -n "$patient_id" ]; then
     log_message "Successfully extracted Patient ID: $patient_id"
-    echo "$patient_id"  # Return the Patient ID
+    echo "$patient_id"  # Return the extracted Patient ID
   else
     log_message "No Patient ID found in DICOM file: $dicom_file"
-    echo ""  # Return an empty string if no ID was found
+    echo ""  # Return an empty string if extraction fails
   fi
 }
 
 # Function to check if a given Patient ID exists in the CSV file
-# Uses grep to search for the ID in the second column of the CSV
 # Arguments:
 #   $1: The Patient ID to search for
 patient_id_in_csv() {
@@ -82,17 +111,21 @@ patient_id_in_csv() {
   
   log_message "Checking if Patient ID: $patient_id exists in the CSV file..."
   
-  # Search for the Patient ID in the CSV, ensuring an exact match in the correct column
+  # Search for the Patient ID in the CSV, ensuring an exact match in the second column
   if grep -q ",${patient_id}," "$csv_file"; then
-    log_message "Patient ID: $patient_id found in the CSV"
-    return 0  # Return 0 (success) if the Patient ID is found
+    log_message "Patient ID: $patient_id found in the CSV."
+    return 0  # Patient ID found
   else
-    log_message "Patient ID: $patient_id not found in the CSV"
-    return 1  # Return 1 (failure) if the Patient ID is not found
+    log_message "Patient ID: $patient_id not found in the CSV."
+    return 1  # Patient ID not found
   fi
 }
 
-# Main function to process the DICOM files
+#############################
+# Main File Processing Function
+#############################
+
+# Function to process DICOM files and check Patient IDs against the CSV
 process_files() {
   local count=0  # Initialize a counter for processed files
 
@@ -100,7 +133,7 @@ process_files() {
   
   # Find all DICOM files in the unexplored folder, limiting to the FILE_LIMIT
   find "$unchecked_dir" -type f -name "*.dcm" | head -n "$FILE_LIMIT" | while IFS= read -r dicom_file; do
-    # Stop processing if the file limit has been reached
+    # Stop processing if the file limit is reached
     if (( count >= FILE_LIMIT )); then
       log_message "File limit of $FILE_LIMIT reached. Stopping."
       break
@@ -109,11 +142,10 @@ process_files() {
     # Extract the Patient ID from the DICOM file
     patient_id=$(extract_patient_id "$dicom_file")
     
-    # Proceed if a valid Patient ID was extracted
+    # If a valid Patient ID is extracted, check if it exists in the CSV
     if [ -n "$patient_id" ]; then
-      # Check if the Patient ID exists in the CSV
       if patient_id_in_csv "$patient_id"; then
-        # Attempt to move the DICOM file if the Patient ID matches
+        # Move the DICOM file to the checking folder if the Patient ID matches
         if mv "$dicom_file" "$checking_dir"; then
           log_message "Successfully moved $dicom_file to $checking_dir (Patient ID: $patient_id)"
         else

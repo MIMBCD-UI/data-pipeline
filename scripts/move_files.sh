@@ -5,8 +5,8 @@
 # Email: francisco.calisto@tecnico.ulisboa.pt
 # License: ACADEMIC & COMMERCIAL
 # Created Date: 2024-09-21
-# Revised Date: 2024-09-23  # Updated to reflect optimizations and improvements
-# Version: 1.6  # Incremented version to reflect additional logging and optimizations
+# Revised Date: 2024-09-29  # Split directory structure and file paths into individual variables
+# Version: 1.6.3
 # Status: Development
 # Credits:
 #   - Carlos Santiago
@@ -15,50 +15,59 @@
 #   - Diogo Araújo
 # Usage: ./move_files.sh
 # Example: ./scripts/move_files.sh
-# Description: This script moves files from the unexplored folder to the checking folder 
+# Description: This script moves files from the "unexplored" folder to the "checking" folder 
 # inside the dataset-multimodal-breast repository. It handles large datasets by processing files in batches, 
 # offers parallelism for speed, checks disk space, and logs errors in the curation/logs folder.
 
-# Exit script on any command failure to ensure safe execution
-set -e
+set -e  # Exit script on any command failure to ensure safe execution
 
-# Define the home directory using the system's HOME environment variable
+#############################
+# Modular Directory Structure
+#############################
+
+# Base user home directory
 home="$HOME"
 
-# Log file with timestamp to prevent overwriting previous logs
-timestamp=$(date +"%Y%m%d_%H%M%S")
-LOG_DIR="$(realpath "$home/Git/dataset-multimodal-breast/data/curation/logs")"
-LOG_FILE="$LOG_DIR/move_files_$timestamp.log"
+# Git root directory (base for all Git repositories)
+git_root="$home/Git"
 
-# Ensure the logs directory exists, create if it doesn't
-if [ ! -d "$LOG_DIR" ]; then
-  mkdir -p "$LOG_DIR"
-fi
+# Project directories, split by levels for modularity
+dataset_project="dataset-multimodal-breast"
+data_dir="data"
+curation_dir="curation"
+unexplored_dir="unexplored"
+checking_dir="checking"
+logs_dir="logs"
 
-# Log the beginning of the script execution
-echo "$(date): Starting move_files.sh script" >> "$LOG_FILE"
+# Construct full directory paths using modular variables
+src_dir="$git_root/$dataset_project/$data_dir/$curation_dir/$unexplored_dir"
+dest_dir="$git_root/$dataset_project/$data_dir/$curation_dir/$checking_dir"
+log_dir="$git_root/$dataset_project/$data_dir/$curation_dir/$logs_dir"
 
-# Define the absolute paths for source and destination directories
-SRC_DIR="$(realpath "$home/Git/dataset-multimodal-breast/data/curation/unexplored")"
-DEST_DIR="$(realpath "$home/Git/dataset-multimodal-breast/data/curation/checking")"
+# Log file name and path (modularized and timestamped)
+log_filename="move_files_$(date +'%Y%m%d_%H%M%S').log"
+log_file="$log_dir/$log_filename"
 
-# Log the source and destination directories
-echo "$(date): Source directory: $SRC_DIR" >> "$LOG_FILE"
-echo "$(date): Destination directory: $DEST_DIR" >> "$LOG_FILE"
+#############################
+# Logging and Error Handling Functions
+#############################
 
-# Function to log both errors and standard messages
+# Function to log messages with timestamps for tracking
 log_message() {
-  echo "$1"
-  echo "$(date): $1" >> "$LOG_FILE"
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a "$log_file"
 }
 
-# Function to log errors, print to stderr, and log to the log file
+# Function to log errors, print to stderr, and log them
 # Arguments:
 #   $1: The error message to display and log
 print_error() {
   echo "$1" >&2  # Print the error message to stderr
-  echo "$(date): ERROR: $1" >> "$LOG_FILE"  # Log the error message to the log file
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - ERROR: $1" >> "$log_file"  # Log the error message
 }
+
+#############################
+# Directory and Disk Space Validation Functions
+#############################
 
 # Function to validate the existence of a directory
 # Arguments:
@@ -80,7 +89,7 @@ validate_directory() {
 #   $1: The required minimum free space in kilobytes (e.g., 10485760 for 10GB)
 check_disk_space() {
   local required_space="$1"
-  local available_space=$(df "$DEST_DIR" | awk 'NR==2 {print $4}')
+  local available_space=$(df "$dest_dir" | awk 'NR==2 {print $4}')
 
   # Check if the available disk space is sufficient
   if (( available_space < required_space )); then
@@ -90,6 +99,10 @@ check_disk_space() {
     log_message "Sufficient disk space available: ${available_space}KB"
   fi
 }
+
+#############################
+# File Moving and Batch Processing Function
+#############################
 
 # Function to move files from the source directory to the destination in batches
 # Arguments:
@@ -120,6 +133,10 @@ move_files_in_batches() {
   log_message "Finished moving files. Total files moved: $count"
 }
 
+#############################
+# Move Success Validation Function
+#############################
+
 # Function to check if the move operation was successful
 check_move_success() {
   if [ $? -eq 0 ]; then
@@ -130,22 +147,27 @@ check_move_success() {
   fi
 }
 
-# Main script execution begins here
+#############################
+# Main Script Execution
+#############################
+
+# Ensure the log directory exists (create it if it doesn't)
+mkdir -p "$log_dir"
 
 # Validate the source and destination directories
-validate_directory "$SRC_DIR" "Source"
-validate_directory "$DEST_DIR" "Destination"
+validate_directory "$src_dir" "Source"
+validate_directory "$dest_dir" "Destination"
 
 # Check for sufficient disk space (assuming a minimum of 10GB required space)
 check_disk_space 10485760  # 10GB in kilobytes
 
 # Move the files from the source to the destination in batches
-move_files_in_batches "$SRC_DIR" "$DEST_DIR"
+move_files_in_batches "$src_dir" "$dest_dir"
 
 # Check if the move operation was successful
 check_move_success
 
 # Final log message indicating that the script has completed
-log_message "Operation complete. Logs saved in $LOG_FILE."
+log_message "Operation complete. Logs saved in $log_file."
 
 # End of script
