@@ -4,7 +4,7 @@ cachetools==5.3.3
 certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
-cryptography==43.0.1
+cryptography==44.0.1
 dicom-anonymizer==1.0.11
 DicomAnonymizer==0.0.1
 et-xmlfile==1.1.0
@@ -50,7 +50,7 @@ requests==2.32.2
 rsa==4.9
 six @ file:///AppleInternal/Library/BuildRoots/860631e9-c1c5-11ee-98ee-b6ef2fd8d87b/Library/Caches/com.apple.xbs/Sources/python3/six-1.15.0-py2.py3-none-any.whl
 sympy==1.12
-torch==2.2.2
+torch==2.6.0
 torchaudio==2.2.2
 torchvision==0.17.2
 tqdm==4.66.3
