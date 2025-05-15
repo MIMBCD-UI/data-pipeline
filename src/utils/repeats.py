@@ -53,11 +53,13 @@ __credits__ = ["Carlos Santiago",
                "Jacinto C. Nascimento",
                "Diogo Araújo"]
 
+
 import os
 import logging
 import pandas as pd
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning
+import argparse
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -65,46 +67,50 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Suppress warnings
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
-# Mapping file name
-mapping_fn = "mamo_patients_mapping_data.csv"
-
-# Define paths
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-mapping_csv = os.path.join(root_dir, "data-images-breast", "data", "mapping", mapping_fn)
-
-# Debugging output for paths
-logging.info(f"Mapping CSV: {mapping_csv}")
-
-# Define the column names you want to check for repeats
-columns_to_check = ['anonymized_patient_id', 'real_patient_id']  # List of columns to check
-
 def find_repeats(csv_file, columns):
-  """Find and print rows in the CSV where the specified columns have repeated values."""
-  logging.info(f"Loading data from {csv_file}")
-  try:
-    df = pd.read_csv(csv_file)
-    
-    for column in columns:
-      logging.info(f"Counting occurrences of values in column: {column}")
-      value_counts = df[column].value_counts()
-      
-      logging.info(f"Filtering repeated values in column: {column}")
-      repeated_values = value_counts[value_counts > 1].index
-      
-      if repeated_values.empty:
-        logging.info(f"No repeated values found in column: {column}")
-      else:
-        logging.info(f"Printing rows with repeated values in column: {column}")
-        repeated_rows = df[df[column].isin(repeated_values)]
-        print(f"\nRepeated rows in column '{column}':\n")
-        print(repeated_rows)
+    """Find and print rows in the CSV where the specified columns have repeated values."""
+    logging.info(f"Loading data from {csv_file}")
+    try:
+        df = pd.read_csv(csv_file)
         
-  except Exception as e:
-    logging.error(f"An error occurred: {e}")
+        for column in columns:
+            logging.info(f"Counting occurrences of values in column: {column}")
+            value_counts = df[column].value_counts()
+            
+            logging.info(f"Filtering repeated values in column: {column}")
+            repeated_values = value_counts[value_counts > 1].index
+            
+            if repeated_values.empty:
+                logging.info(f"No repeated values found in column: {column}")
+            else:
+                logging.info(f"Printing rows with repeated values in column: {column}")
+                repeated_rows = df[df[column].isin(repeated_values)]
+                print(f"\nRepeated rows in column '{column}':\n")
+                print(repeated_rows)
+                
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+
+def main(csv_filename, columns_to_check):
+    logging.info("Starting repeat detection...")
+    
+    # Define paths
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    mapping_csv = os.path.join(root_dir, "data-images-breast", "data", "mapping", csv_filename)
+
+    # Debugging output for paths
+    logging.info(f"Mapping CSV: {mapping_csv}")
+
+    find_repeats(mapping_csv, columns_to_check)
+    
+    logging.info("Repeat detection complete!")
 
 if __name__ == '__main__':
-  logging.info("Starting repeat detection...")
-  find_repeats(mapping_csv, columns_to_check)
-  logging.info("Repeat detection complete!")
+    parser = argparse.ArgumentParser(description="Detect repeated values in specified columns of a CSV file.")
+    parser.add_argument("csv_filename", help="Name of the CSV file to analyze")
+    parser.add_argument("columns", nargs='+', help="Columns to check for repeated values")
+    args = parser.parse_args()
+
+    main(args.csv_filename, args.columns)
 
 # End of file
