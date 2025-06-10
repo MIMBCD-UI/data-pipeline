@@ -46,11 +46,11 @@ PyJWT==2.8.0
 pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 pytz==2024.1
-requests==2.32.2
+requests==2.32.4
 rsa==4.9
 six @ file:///AppleInternal/Library/BuildRoots/860631e9-c1c5-11ee-98ee-b6ef2fd8d87b/Library/Caches/com.apple.xbs/Sources/python3/six-1.15.0-py2.py3-none-any.whl
 sympy==1.12
-torch==2.7.0
+torch==2.7.1
 torchaudio==2.2.2
 torchvision==0.17.2
 tqdm==4.66.3
