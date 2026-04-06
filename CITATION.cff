@@ -1,1 +1,25 @@
-.zenodo.json (already prepared)
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Data Pipeline for Multimodal Breast Imaging Analysis"
+version: "v0.6.2-beta"
+date-released: 2026-04-06
+
+authors:
+  - family-names: Calisto
+    given-names: Francisco Maria
+    orcid: "https://orcid.org/0000-0001-8179-7872"
+
+contributors:
+  - family-names: Santiago
+    given-names: Carlos
+  - family-names: Nascimento
+    given-names: Jacinto C.
+  - family-names: Barata
+    given-names: Catarina
+  - family-names: Araújo
+    given-names: Diogo
+  - family-names: Prazeres
+    given-names: Nathaniel
+
+repository-code: "https://github.com/MIMBCD-UI/data-pipeline"
+license: "MIT"
