@@ -1,0 +1,19 @@
+{
+  "title": "Data Pipeline for Multimodal Breast Imaging Analysis",
+  "creators": [
+    {
+      "name": "Calisto, Francisco Maria",
+      "affiliation": "Instituto Superior Técnico",
+      "orcid": "0000-0001-8179-7872"
+    }
+  ],
+  "description": "Pipeline for anonymization, processing, and BIRADS analysis across MG, US, and MRI modalities.",
+  "keywords": [
+    "medical imaging",
+    "BIRADS",
+    "DICOM",
+    "breast cancer",
+    "AI"
+  ],
+  "license": "MIT"
+}
