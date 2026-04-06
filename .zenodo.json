@@ -1,0 +1,99 @@
+{
+  "title": "MIMBCD-UI Data Pipeline",
+  "description": "A comprehensive data pipeline for processing medical imaging data. It includes modules for anonymizing DICOM files, encrypting patient IDs, extracting metadata, and processing the data. With a focus on scalability and performance optimization, the pipeline is capable of handling large volumes of medical imaging data efficiently.",
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Calisto, Francisco Maria",
+      "affiliation": "Instituto Superior Técnico, Universidade de Lisboa",
+      "orcid": "0000-0002-5609-6691"
+    },
+    {
+      "name": "Araújo, Diogo",
+      "affiliation": "Instituto Superior Técnico, Universidade de Lisboa"
+    },
+    {
+      "name": "Santiago, Carlos",
+      "affiliation": "Instituto Superior Técnico, Universidade de Lisboa"
+    },
+    {
+      "name": "Barata, Catarina",
+      "affiliation": "Instituto Superior Técnico, Universidade de Lisboa"
+    },
+    {
+      "name": "Nascimento, Jacinto C.",
+      "affiliation": "Instituto Superior Técnico, Universidade de Lisboa"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Fernandes, João",
+      "affiliation": "Hospital Fernando Fonseca",
+      "type": "Supervisor"
+    },
+    {
+      "name": "Morais, Margarida",
+      "affiliation": "Hospital Fernando Fonseca",
+      "type": "Supervisor"
+    },
+    {
+      "name": "Abrantes, João Maria",
+      "affiliation": "Hospital Fernando Fonseca",
+      "type": "Supervisor"
+    },
+    {
+      "name": "Nunes, Nuno",
+      "affiliation": "Instituto Superior Técnico, Universidade de Lisboa",
+      "type": "Supervisor"
+    }
+  ],
+  "keywords": [
+    "medical imaging",
+    "DICOM",
+    "data pipeline",
+    "anonymization",
+    "encryption",
+    "metadata extraction",
+    "breast cancer",
+    "biomedical imaging",
+    "healthcare",
+    "data processing",
+    "MIMBCD-UI"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.1007/s10278-021-00522-6",
+      "relation": "isDocumentedBy",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/MIMBCD-UI/data-pipeline",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "grants": [
+    {
+      "id": "UID/EEA/50009/2013"
+    },
+    {
+      "id": "2022.04485.PTDC"
+    },
+    {
+      "id": "BL89/2017-IST-ID"
+    },
+    {
+      "id": "PD/BD/150629/2020"
+    }
+  ],
+  "communities": [
+    {
+      "identifier": "medical-imaging"
+    },
+    {
+      "identifier": "healthcare"
+    }
+  ]
+}

@@ -5,6 +5,7 @@
 <img src="assets/header.png" width="100%" />
 
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/MIMBCD-UI/data-pipeline/blob/master/LICENSE.md)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
 [![Last commit](https://img.shields.io/github/last-commit/MIMBCD-UI/data-pipeline?style=flat-square)](https://github.com/MIMBCD-UI/data-pipeline/commits/master)
 [![OpenCollective](https://opencollective.com/oppr/backers/badge.svg?style=flat-square)](#backers)
 [![OpenCollective](https://opencollective.com/oppr/sponsors/badge.svg?style=flat-square)](#sponsors)
