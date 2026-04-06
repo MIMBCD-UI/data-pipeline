@@ -1,6 +1,6 @@
 {
   "title": "Data Pipeline for Multimodal Breast Imaging Analysis",
-  "version": "0.6.9-beta",
+  "version": "0.6.10-beta",
   "publication_date": "2026-04-06",
   "upload_type": "software",
   "access_right": "open",
@@ -70,17 +70,17 @@
     },
     {
       "identifier": "https://github.com/mida-project",
-      "relation": "isRelatedTo",
+      "relation": "references",
       "scheme": "url"
     },
     {
       "identifier": "https://github.com/BreastScreening",
-      "relation": "isRelatedTo",
+      "relation": "references",
       "scheme": "url"
     },
     {
       "identifier": "https://github.com/BreastScreeningAI",
-      "relation": "isRelatedTo",
+      "relation": "references",
       "scheme": "url"
     }
   ]

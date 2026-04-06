@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "Data Pipeline for Multimodal Breast Imaging Analysis"
-version: "v0.6.9-beta"
+version: "v0.6.10-beta"
 date-released: 2026-04-06
 
 authors:
