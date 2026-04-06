@@ -1,5 +1,12 @@
 {
   "title": "Data Pipeline for Multimodal Breast Imaging Analysis",
+  "version": "0.6.1-beta",
+  "publication_date": "2026-04-06",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "language": "eng",
+  "description": "The data-pipeline repository provides a software pipeline for multimodal breast imaging analysis, including anonymization, metadata extraction, processing, and BIRADS-based analytical workflows across MammoGraphy (MG), UltraSound (US), and Magnetic Resonance Imaging (MRI) modalities. This repository is part of the broader MIMBCD-UI initiative, which preceded the MIDA, BreastScreening, and BreastScreening-AI initiatives. The work is connected to research and development supported by the FCT-funded projects MIA-BREAST (2022.04485.PTDC, DOI: 10.54499/2022.04485.PTDC) and Integration of an Artificial Intelligence Agent in Radiology to Assist in Breast Cancer Diagnosis (2024.07344.IACDC, DOI: 10.54499/2024.07344.IACDC).",
   "creators": [
     {
       "name": "Calisto, Francisco Maria",
@@ -7,13 +14,86 @@
       "orcid": "0000-0001-8179-7872"
     }
   ],
-  "description": "Pipeline for anonymization, processing, and BIRADS analysis across MG, US, and MRI modalities.",
+  "contributors": [
+    {
+      "name": "Santiago, Carlos",
+      "type": "ProjectLeader"
+    },
+    {
+      "name": "Nascimento, Jacinto C.",
+      "type": "ProjectLeader"
+    },
+    {
+      "name": "Barata, Catarina",
+      "type": "Researcher"
+    },
+    {
+      "name": "Araújo, Diogo",
+      "type": "DataCurator"
+    },
+    {
+      "name": "Prazeres, Nathaniel",
+      "type": "SoftwareEngineer"
+    }
+  ],
   "keywords": [
     "medical imaging",
-    "BIRADS",
     "DICOM",
+    "data pipeline",
+    "anonymization",
     "breast cancer",
-    "AI"
+    "breast imaging",
+    "BIRADS",
+    "mammography",
+    "ultrasound imaging",
+    "MRI",
+    "artificial intelligence",
+    "clinical decision support",
+    "multimodal data",
+    "reproducible research"
   ],
-  "license": "MIT"
+  "communities": [
+    {
+      "identifier": "zenodo"
+    }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/MIMBCD-UI/data-pipeline",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.54499/2022.04485.PTDC",
+      "relation": "isFundedBy",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.54499/2024.07344.IACDC",
+      "relation": "isFundedBy",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/MIMBCD-UI",
+      "relation": "isPartOf",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/mida-project",
+      "relation": "isRelatedTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/BreastScreening",
+      "relation": "isRelatedTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/BreastScreeningAI",
+      "relation": "isRelatedTo",
+      "scheme": "url"
+    }
+  ],
+  "notes": "This work was supported by FCT-funded projects MIA-BREAST (2022.04485.PTDC) and 2024.07344.IACDC. Carlos Santiago and Jacinto C. Nascimento contributed through project leadership and funding support. Nathaniel Prazeres contributed to software development and repository integration. Catarina Barata and Diogo Araujo contributed to research and data curation.",
+  "development_status": "beta"
 }
