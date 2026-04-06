@@ -1,38 +1,12 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "Data Pipeline for Multimodal Breast Imaging Analysis"
-version: "v0.6.4-beta"
+version: "v0.6.5-beta"
 date-released: 2026-04-06
-abstract: "A data pipeline for multimodal breast imaging analysis, integrating anonymization, metadata extraction, processing, and BIRADS-based analytical workflows across MammoGraphy (MG), UltraSound (US), and Magnetic Resonance Imaging (MRI) modalities for research and AI development."
-keywords:
-  - breast cancer
-  - breast imaging
-  - medical imaging
-  - multimodal data
-  - BIRADS
-  - DICOM
-  - radiology
-  - artificial intelligence
-  - machine learning
-  - data pipeline
 
 authors:
   - family-names: Calisto
     given-names: Francisco Maria
     orcid: "https://orcid.org/0000-0001-8179-7872"
 
-contributors:
-  - family-names: Santiago
-    given-names: Carlos
-  - family-names: Nascimento
-    given-names: Jacinto C.
-  - family-names: Barata
-    given-names: Catarina
-  - family-names: Araújo
-    given-names: Diogo
-  - family-names: Prazeres
-    given-names: Nathaniel
-
-repository-code: "https://github.com/MIMBCD-UI/data-pipeline"
-url: "https://github.com/MIMBCD-UI/data-pipeline"
 license: "MIT"
