@@ -32,7 +32,7 @@ We kindly ask **scientific works and studies** that make use of the repository t
 You can cite our work using the following BibTeX entry:
 
 ```
-@software{calisto_2026_19439016,
+@software{calisto_2026_19440437,
   author       = {Calisto, Francisco Maria},
   title        = {Data Pipeline for Multimodal Breast Imaging
                    Analysis
@@ -40,15 +40,9 @@ You can cite our work using the following BibTeX entry:
   month        = apr,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {v0.6.1-beta},
-  doi          = {10.5281/zenodo.19439016},
-  url          = {https://doi.org/10.5281/zenodo.19439016},
-  swhid        = {swh:1:dir:803095e3225db9dbc64a3a80c223a8a7a0e91435
-                   ;origin=https://doi.org/10.5281/zenodo.19438921;vi
-                   sit=swh:1:snp:93e1bb01a4af033581d565ec1af3aed2d95f
-                   40e0;anchor=swh:1:rel:b064c2f70cfe1900bc48aed79602
-                   82c281a8cbb6;path=MIMBCD-UI-data-pipeline-10cb0b1
-                  },
+  version      = {0.6.10-beta},
+  doi          = {10.5281/zenodo.19440437},
+  url          = {https://doi.org/10.5281/zenodo.19440437},
 }
 ```
 
