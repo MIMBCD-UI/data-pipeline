@@ -28,7 +28,7 @@
       "type": "Researcher"
     },
     {
-      "name": "Araújo, Diogo",
+      "name": "Araujo, Diogo",
       "type": "DataCurator"
     },
     {
@@ -83,7 +83,5 @@
       "relation": "isRelatedTo",
       "scheme": "url"
     }
-  ],
-  "notes": "This work was supported by FCT-funded projects MIA-BREAST (2022.04485.PTDC) and 2024.07344.IACDC. Carlos Santiago and Jacinto C. Nascimento contributed through project leadership and funding support. Nathaniel Prazeres contributed to software development and repository integration. Catarina Barata and Diogo Araujo contributed to research and data curation.",
-  "development_status": "beta"
+  ]
 }
