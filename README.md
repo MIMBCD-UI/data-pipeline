@@ -25,6 +25,33 @@ Below are the key functionalities encapsulated within the pipeline:
 
 Encompassing these modules, the data pipeline provides a robust framework for effectively managing medical imaging data. Whether it involves anonymizing patient information, encrypting identifiers, extracting metadata, or processing imaging data, the pipeline offers a versatile solution tailored to meet the intricate [demands of medical and biomedical imaging](https://medium.com/oppr/medical-imaging-downloader-for-cornerstonejs-and-orthanc-d08c3a508d9b) workflows ([10.1007/s10278-021-00522-6](https://doi.org/10.1007/s10278-021-00522-6)). With its modular architecture, the pipeline facilitates seamless integration into existing healthcare systems and can be customized to accommodate specific use cases and requirements.
 
+## Citing
+
+We kindly ask **scientific works and studies** that make use of the repository to cite it in their associated publications. Similarly, we ask **open-source** and **closed-source** works that make use of the repository to warn us about this use.
+
+You can cite our work using the following BibTeX entry:
+
+```
+@software{calisto_2026_19439016,
+  author       = {Calisto, Francisco Maria},
+  title        = {Data Pipeline for Multimodal Breast Imaging
+                   Analysis
+                  },
+  month        = apr,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {v0.6.1-beta},
+  doi          = {10.5281/zenodo.19439016},
+  url          = {https://doi.org/10.5281/zenodo.19439016},
+  swhid        = {swh:1:dir:803095e3225db9dbc64a3a80c223a8a7a0e91435
+                   ;origin=https://doi.org/10.5281/zenodo.19438921;vi
+                   sit=swh:1:snp:93e1bb01a4af033581d565ec1af3aed2d95f
+                   40e0;anchor=swh:1:rel:b064c2f70cfe1900bc48aed79602
+                   82c281a8cbb6;path=MIMBCD-UI-data-pipeline-10cb0b1
+                  },
+}
+```
+
 ## Modules
 
 - `identifier.py`: This script processes DICOM files in the "checking" folder by extracting the SOP Instance UID and comparing it to files in the "raw" folder. If a match is found, it renames the file with the corresponding Anonymized Patient ID and moves it to the "identified" folder.
